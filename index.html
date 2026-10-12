@@ -143,11 +143,74 @@
     <main class="max-w-4xl mx-auto px-4 pt-4">
 
         <!-- 1. PERSONAJES -->
-        <section id="tab-personajes" class="content-section">
-            <h2 class="font-title font-extrabold text-xl text-cyan-400 mb-1">ROSTER DE PERSONAJES</h2>
-            <p class="text-xs text-slate-400 mb-4">Héroes y luchadores oficiales de Belana</p>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" id="charGrid"></div>
-        </section>
+<section id="tab-personajes" class="content-section">
+    <div class="flex justify-between items-center mb-3">
+        <div>
+            <h2 class="font-title font-extrabold text-xl text-cyan-400">ROSTER DE PERSONAJES</h2>
+            <p class="text-xs text-slate-400">Héroes y luchadores oficiales de Belana</p>
+        </div>
+        <span id="charCount" class="text-xs px-2 py-1 bg-brand-card rounded border border-white/10 text-slate-300 font-semibold">Mostrando: 0</span>
+    </div>
+
+    <!-- PANEL DE FILTROS COMBINABLES -->
+    <div class="bg-brand-surface border border-white/10 rounded-xl p-3 mb-4 space-y-3">
+        <!-- Búsqueda y Ordenamiento -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                <input type="text" id="charSearch" oninput="filterCharacters()" placeholder="Buscar personaje por nombre..." class="w-full bg-brand-card border border-white/10 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+            </div>
+            <div>
+                <select id="charSort" onchange="filterCharacters()" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+                    <option value="default">Ordenar por: Defecto</option>
+                    <option value="az">Nombre: A - Z</option>
+                    <option value="za">Nombre: Z - A</option>
+                    <option value="rarity-desc">Rareza: Mayor a Menor (5★ - 4★)</option>
+                    <option value="rarity-asc">Rareza: Menor a Mayor (4★ - 5★)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Filtros de Categorías -->
+        <div class="grid grid-cols-3 gap-2">
+            <div>
+                <label class="block text-[10px] text-slate-400 mb-0.5">Rareza</label>
+                <select id="charRarity" onchange="filterCharacters()" class="w-full bg-brand-card border border-white/10 rounded-lg px-2 py-1 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+                    <option value="all">Todas (5★ y 4★)</option>
+                    <option value="5★">Solo 5★</option>
+                    <option value="4★">Solo 4★</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] text-slate-400 mb-0.5">Rol</label>
+                <select id="charRole" onchange="filterCharacters()" class="w-full bg-brand-card border border-white/10 rounded-lg px-2 py-1 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+                    <option value="all">Todos los Roles</option>
+                    <option value="Vértice de Batalla">Vértice de Batalla</option>
+                    <option value="Destructor">Destructor</option>
+                    <option value="Soporte">Soporte</option>
+                    <option value="Ruptura">Ruptura</option>
+                    <option value="Tanque">Tanque</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] text-slate-400 mb-0.5">Elemento</label>
+                <select id="charElement" onchange="filterCharacters()" class="w-full bg-brand-card border border-white/10 rounded-lg px-2 py-1 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+                    <option value="all">Todos los Elementos</option>
+                    <option value="Fuego">Fuego</option>
+                    <option value="Hielo">Hielo</option>
+                    <option value="Rayo">Rayo</option>
+                    <option value="Agua">Agua</option>
+                    <option value="Viento">Viento</option>
+                    <option value="Tierra">Tierra</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grilla de Personajes -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" id="charGrid"></div>
+</section>
+
 
         <!-- 2. EQUIPAMIENTOS -->
         <section id="tab-equipamientos" class="content-section">
