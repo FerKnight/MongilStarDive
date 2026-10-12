@@ -1,12 +1,18 @@
 let deferredPrompt;
 
-// LÓGICA DE FILTRADO DE PERSONAJES (COMBINABLE)
+// LÓGICA DE FILTRADO COMBINABLE DE PERSONAJES
 function filterCharacters() {
-    const searchVal = (document.getElementById('charSearch')?.value || '').toLowerCase();
-    const sortVal = document.getElementById('charSort')?.value || 'default';
-    const rarityVal = document.getElementById('charRarity')?.value || 'all';
-    const roleVal = document.getElementById('charRole')?.value || 'all';
-    const elementVal = document.getElementById('charElement')?.value || 'all';
+    const searchInput = document.getElementById('charSearch');
+    const sortSelect = document.getElementById('charSort');
+    const raritySelect = document.getElementById('charRarity');
+    const roleSelect = document.getElementById('charRole');
+    const elementSelect = document.getElementById('charElement');
+
+    const searchVal = searchInput ? searchInput.value.trim().toLowerCase() : '';
+    const sortVal = sortSelect ? sortSelect.value : 'default';
+    const rarityVal = raritySelect ? raritySelect.value : 'all';
+    const roleVal = roleSelect ? roleSelect.value : 'all';
+    const elementVal = elementSelect ? elementSelect.value : 'all';
 
     let filtered = charactersData.filter(c => {
         const matchName = c.name.toLowerCase().includes(searchVal);
@@ -63,7 +69,7 @@ function renderCharacterGrid(list) {
 }
 
 function renderAll() {
-    filterCharacters(); // Inicializa la grilla de personajes con filtros
+    filterCharacters(); // Inicializa y llena la grilla de personajes con filtros al cargar
 
     const equipGrid = document.getElementById('equipGrid');
     if (equipGrid) {
@@ -236,4 +242,3 @@ window.onload = function() {
     renderAll();
     loadProfile();
 };
-                        
