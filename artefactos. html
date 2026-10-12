@@ -27,42 +27,38 @@
         </div>
     </header>
 
-    <!-- BOTÓN DE MENÚ FLOTANTE (ESQUINA SUPERIOR IZQUIERDA) -->
+    <!-- BOTÓN DE MENÚ FLOTANTE -->
     <button onclick="toggleSidebar()" class="lg:hidden fixed top-4 left-4 bg-gray-900 text-white p-5 rounded-full shadow-2xl z-50 text-4xl hover:scale-110 transition">
         ☰
     </button>
 
-    <!-- BARRA LATERAL -->
+    <!-- BARRA LATERAL (solo menús) -->
     <div id="sidebar" class="sidebar fixed top-0 left-0 w-80 h-full bg-gray-900 p-8 overflow-y-auto shadow-2xl z-50 hidden lg:block">
-        <div class="flex justify-between items-center mb-10">
-            <h2 class="text-3xl font-bold text-white">Mongil: Star Dive</h2>
-            <button onclick="toggleSidebar()" class="lg:hidden text-4xl text-white">✕</button>
-        </div>
         <nav class="space-y-2">
-            <a href="index.html" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">🏠 Inicio</a>
-            <a href="equipamientos.html" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">⚙️ Equipamientos</a>
-            <a href="monsterlings.html" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">🦁 Monsterlings</a>
-            <a href="artefactos.html" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">🔮 Artefactos</a>
+            <a href="index.html" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">Inicio</a>
+            <a href="equipamientos.html" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">Equipamientos</a>
+            <a href="monsterlings.html" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">Monsterlings</a>
+            <a href="artefactos.html" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">Artefactos</a>
         </nav>
     </div>
 
     <!-- CONTENIDO -->
     <div class="flex-1 lg:ml-80 px-6">
 
-        <h2 class="text-4xl font-bold mb-8">🔮 Artefactos</h2>
+        <h2 class="text-4xl font-bold mb-8">Artefactos</h2>
         <div class="grid md:grid-cols-2 gap-10">
             <div>
-                <h3 class="text-2xl font-bold mb-4 text-blue-400">Flare (Fire Destroyer)</h3>
+                <h3 class="text-2xl font-bold mb-4">Flare (Fire Destroyer)</h3>
                 <ul class="space-y-3">
-                    <li>• Exquisite Dragon Fire 5★ – ATK + Fire DMG</li>
-                    <li>• Thunder-raising Tremors 5★ – Neutralization + ATK</li>
+                    <li>Exquisite Dragon Fire 5★ – ATK + Fire DMG</li>
+                    <li>Thunder-raising Tremors 5★ – Neutralization + ATK</li>
                 </ul>
             </div>
             <div>
-                <h3 class="text-2xl font-bold mb-4 text-purple-400">Esther (Wind Assassin)</h3>
+                <h3 class="text-2xl font-bold mb-4">Esther (Wind Assassin)</h3>
                 <ul class="space-y-3">
-                    <li>• Wind-Harboring Broom 5★ – ATK + Crit DMG 45%</li>
-                    <li>• Suffocating Darkness 5★ – Crit DMG Support</li>
+                    <li>Wind-Harboring Broom 5★ – ATK + Crit DMG 45%</li>
+                    <li>Suffocating Darkness 5★ – Crit DMG Support</li>
                 </ul>
             </div>
         </div>
