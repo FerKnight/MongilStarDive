@@ -75,8 +75,8 @@ function renderCharacterGrid(list) {
         const elemBadge = getElementBadge(c.element);
         return `
             <div onclick="openCharacterModal('${c.id}')" class="bg-brand-card border border-white/10 rounded-xl p-3 hover:border-cyan-400 cursor-pointer active:scale-95 transition transform relative overflow-hidden group">
-                <div class="w-full h-28 rounded-lg bg-slate-900 overflow-hidden mb-2 relative flex items-center justify-center">
-                    <img src="${c.image}" alt="${c.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src='https://sgimage.netmarble.com/common/gamemediahub/uploads/1bf60dc6-fde1-43ea-9599-d4fb8b224f8d.png';">
+                <div class="w-full h-32 rounded-lg bg-slate-900 overflow-hidden mb-2 relative flex items-center justify-center">
+                    <img src="${c.image}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\"text-2xl text-cyan-400\"><i class=\"fa-solid ${c.icon}\"></i></div>';">
                     <span class="absolute top-1 right-1 bg-black/60 backdrop-blur-md text-yellow-400 font-bold text-[10px] px-1.5 py-0.5 rounded border border-yellow-500/30">${c.rarity}</span>
                 </div>
                 <div class="flex items-center justify-between">
@@ -106,7 +106,7 @@ function openCharacterModal(charId) {
     modalContent.innerHTML = `
         <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
             <div class="flex items-center gap-3">
-                <img src="${char.image}" alt="${char.name}" class="w-14 h-14 rounded-xl object-cover border border-purple-500/40 shadow-lg" onerror="this.onerror=null; this.src='https://sgimage.netmarble.com/common/gamemediahub/uploads/1bf60dc6-fde1-43ea-9599-d4fb8b224f8d.png';">
+                <img src="${char.image}" alt="${char.name}" class="w-16 h-16 rounded-xl object-cover object-top border border-purple-500/40 shadow-lg bg-slate-900" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Verna_01.png';">
                 <div>
                     <h3 class="font-title font-black text-lg text-slate-100">${char.name}</h3>
                     <div class="flex items-center gap-2 mt-0.5">
@@ -333,4 +333,4 @@ window.onload = function() {
     renderAll();
     loadProfile();
 };
-    
+        
