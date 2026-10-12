@@ -43,33 +43,36 @@
         </nav>
     </div>
 
-    <!-- CONTENIDO MEJORADO -->
-    <div class="flex-1 lg:ml-80 px-6">
+    <!-- CONTENIDO - ÚNICO RECUADRO -->
+    <div class="flex-1 lg:ml-80 px-6 py-12">
 
-        <h2 class="text-4xl font-bold mb-8">Datos del Jugador</h2>
-
-        <!-- RECUADRO DATOS DEL JUGADOR -->
-        <div class="bg-gray-900 p-10 rounded-3xl mb-12">
-            <h3 class="text-2xl font-bold mb-6">Tu Nivel: <span class="text-green-400">LV. 65</span></h3>
-            <p class="text-xl">Joyas: 1.247 • Stamina: 850/850 • Monedas: 48.320</p>
-            <p class="text-xl mt-4">Eventos completados: 12/15 • Semi-aniversario (Patch 1.4)</p>
-
-            <!-- Selector de Icono de Personaje -->
-            <div class="mt-8">
-                <h4 class="text-xl font-bold mb-4">Selector de Icono</h4>
-                <div class="flex gap-6 flex-wrap">
-                    <button onclick="selectCharacter(this)" class="character-btn active p-4 bg-gray-800 rounded-2xl text-4xl hover:scale-110 transition">Flare</button>
-                    <button onclick="selectCharacter(this)" class="character-btn p-4 bg-gray-800 rounded-2xl text-4xl hover:scale-110 transition">Esther</button>
-                    <button onclick="selectCharacter(this)" class="character-btn p-4 bg-gray-800 rounded-2xl text-4xl hover:scale-110 transition">Narae</button>
-                    <button onclick="selectCharacter(this)" class="character-btn p-4 bg-gray-800 rounded-2xl text-4xl hover:scale-110 transition">Mina</button>
+        <div class="bg-gray-900 p-10 rounded-3xl max-w-2xl mx-auto">
+            <h2 class="text-4xl font-bold mb-8 text-center">Datos del Jugador</h2>
+            
+            <div class="grid md:grid-cols-2 gap-10">
+                <div>
+                    <h3 class="text-2xl font-bold mb-6">Tu Nivel: <span class="text-green-400">LV. 65</span></h3>
+                    <p class="text-xl">Joyas: 1.247 • Stamina: 850/850 • Monedas: 48.320</p>
+                    <p class="text-xl mt-4">Eventos completados: 12/15 • Semi-aniversario (Patch 1.4)</p>
+                </div>
+                
+                <!-- Selector de Icono -->
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Selector de Icono</h4>
+                    <div class="flex gap-6 flex-wrap">
+                        <button onclick="selectCharacter(this)" class="character-btn active p-4 bg-gray-800 rounded-2xl text-4xl hover:scale-110 transition">Flare</button>
+                        <button onclick="selectCharacter(this)" class="character-btn p-4 bg-gray-800 rounded-2xl text-4xl hover:scale-110 transition">Esther</button>
+                        <button onclick="selectCharacter(this)" class="character-btn p-4 bg-gray-800 rounded-2xl text-4xl hover:scale-110 transition">Narae</button>
+                        <button onclick="selectCharacter(this)" class="character-btn p-4 bg-gray-800 rounded-2xl text-4xl hover:scale-110 transition">Mina</button>
+                    </div>
                 </div>
             </div>
 
             <!-- Código de Amistad -->
-            <div class="mt-8">
+            <div class="mt-10">
                 <h4 class="text-xl font-bold mb-4">Código de Amistad</h4>
                 <div class="bg-gray-950 p-4 rounded-2xl text-xl font-mono">FRIENDCODE2026</div>
-                <p class="text-sm text-gray-400 mt-2">Copia y pega en el juego</p>
+                <p class="text-sm text-gray-400 mt-2">Copia y pega en el juego para reclutar amigos</p>
             </div>
         </div>
 
