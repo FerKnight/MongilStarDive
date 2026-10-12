@@ -20,10 +20,10 @@
 </head>
 <body class="bg-gray-950 text-gray-200">
 
-    <!-- HEADER -->
+    <!-- HEADER - MongilStarDive lleva al inicio -->
     <header class="hero text-white py-16 text-center">
         <div class="max-w-6xl mx-auto px-6">
-            <h1 class="text-6xl font-bold mb-2 tracking-tight">MongilStarDive</h1>
+            <h1 onclick="window.location.href='index.html'" class="text-6xl font-bold mb-2 tracking-tight cursor-pointer">MongilStarDive</h1>
         </div>
     </header>
 
@@ -42,7 +42,7 @@
         </nav>
     </div>
 
-    <!-- CONTENIDO CORREGIDO -->
+    <!-- CONTENIDO -->
     <div class="flex-1 lg:ml-80 px-6">
 
         <h2 class="text-4xl font-bold mb-8">Artefactos</h2>
@@ -55,4 +55,56 @@
                 </ul>
             </div>
             <div>
-                <h3 class="text-2xl font-bold
+                <h3 class="text-2xl font-bold mb-4">Esther (Wind Assassin)</h3>
+                <ul class="space-y-3">
+                    <li>Wind-Harboring Broom 5★ – ATK + Crit DMG 45%</li>
+                    <li>Suffocating Darkness 5★ – Crit DMG Support</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SECCIÓN EQUIPAMIENTOS -->
+        <div class="mt-16">
+            <h2 class="text-4xl font-bold mb-8">Equipamientos</h2>
+            <p class="text-2xl mb-8">Farm en Abyss Gear Dungeons + sets de 4 piezas</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-gray-900 p-8 rounded-3xl">
+                    <h3 class="text-2xl font-bold mb-4">Sets recomendados</h3>
+                    <ul class="space-y-4 text-lg">
+                        <li class="flex justify-between"><span>Hahnul's Roar 5★</span><span class="text-green-400">Fire + Crit DMG</span></li>
+                        <li class="flex justify-between"><span>Mountain Peak Majesty 4★</span><span class="text-green-400">Fire RES -3%</span></li>
+                        <li class="flex justify-between"><span>Abyss 5★</span><span class="text-green-400">Wind + Crit</span></li>
+                    </ul>
+                </div>
+                <div class="bg-gray-900 p-8 rounded-3xl">
+                    <h3 class="text-2xl font-bold mb-4">Tips</h3>
+                    <ul class="list-disc pl-6 space-y-3 text-lg">
+                        <li>Equipa % stats altos (ATK, Crit DMG, RES)</li>
+                        <li>Alternativas de 2 piezas si no tienes 4</li>
+                        <li>Sube primero los personajes antes de los equipos</li>
+                        <li>Tu nivel 65 es ideal para farmar ahora</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-black py-12 text-center text-gray-500">
+        <p>Guía 100% original y exclusiva • Octubre 2026 • Creada para ti 🔥</p>
+        <p class="mt-4">¡Comparte y dale estrellas a tu repositorio!</p>
+    </footer>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('hidden');
+        }
+        function closeSidebar() {
+            if (window.innerWidth < 1024) {
+                document.getElementById('sidebar').classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
