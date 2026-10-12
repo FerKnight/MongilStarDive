@@ -41,7 +41,7 @@
             <button onclick="toggleSidebar()" class="lg:hidden text-4xl text-white">✕</button>
         </div>
         <nav class="space-y-2">
-            <a href="#inicio" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">🏠 Inicio</a>
+            <a href="#inicio" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">🏠 Inicio (Datos del Jugador)</a>
             <a href="#equipamientos" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">⚙️ Equipamientos</a>
             
             <!-- Monsterlings desplegable -->
@@ -62,21 +62,34 @@
         </nav>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL -->
+    <!-- CONTENIDO PRINCIPAL (páginas diferentes) -->
     <div class="flex-1 lg:ml-80">
 
-        <!-- INTRO -->
+        <!-- INICIO - Datos del Jugador -->
         <section id="inicio" class="mb-20 px-6">
-            <h2 class="text-4xl font-bold mb-6 text-center">¿Qué es Mongil: Star Dive?</h2>
-            <p class="text-xl text-center max-w-3xl mx-auto">
-                RPG de acción con captura de Monsterlings adorables. Equipa accesorios, domina el combate tag-team y sube de nivel tu equipo.
-            </p>
-            <p class="text-center mt-6 text-lg">Patch 1.4 • Actualizado octubre 2026</p>
+            <h2 class="text-4xl font-bold mb-8">📊 Datos del Jugador</h2>
+            <div class="bg-gray-900 p-10 rounded-3xl">
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">Tu Nivel: <span class="text-green-400">LV. 65</span></h3>
+                        <p class="text-xl">Joyas: 1.247 • Stamina: 850/850 • Monedas: 48.320</p>
+                        <p class="text-xl mt-4">Eventos completados: 12/15 • Semi-aniversario (Patch 1.4)</p>
+                    </div>
+                    <div class="bg-gray-950 p-6 rounded-2xl">
+                        <h4 class="font-bold text-xl mb-4">Recursos pendientes</h4>
+                        <ul class="space-y-3 text-lg">
+                            <li>✅ Monsterlings Legendarios farm: 3/5</li>
+                            <li>✅ Sets completos Equipamientos: 2/5</li>
+                            <li>✅ Códigos activos: 4 disponibles</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- EQUIPAMIENTOS -->
         <section id="equipamientos" class="mb-20 px-6">
-            <h2 class="text-4xl font-bold mb-8">Equipamientos (Equipment)</h2>
+            <h2 class="text-4xl font-bold mb-8">⚙️ Equipamientos</h2>
             <p class="text-2xl mb-8">Farm en Abyss Gear Dungeons + sets de 4 piezas</p>
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="bg-gray-900 p-8 rounded-3xl">
@@ -88,11 +101,12 @@
                     </ul>
                 </div>
                 <div class="bg-gray-900 p-8 rounded-3xl">
-                    <h3 class="text-2xl font-bold mb-4 text-amber-400">Tips</h3>
+                    <h3 class="text-2xl font-bold mb-4 text-amber-400">Tips para tu jugador actual</h3>
                     <ul class="list-disc pl-6 space-y-3 text-lg">
                         <li>Equipa % stats altos (ATK, Crit DMG, RES)</li>
                         <li>Alternativas de 2 piezas si no tienes 4</li>
                         <li>Sube primero los personajes antes de los equipos</li>
+                        <li>Tu nivel 65 es ideal para farmar ahora</li>
                     </ul>
                 </div>
             </div>
@@ -162,7 +176,7 @@
 
         <!-- ARTEFACTOS -->
         <section id="artefactos" class="mb-20 bg-gray-900 p-10 rounded-3xl px-6">
-            <h2 class="text-4xl font-bold mb-8">Artefactos (Artifacts)</h2>
+            <h2 class="text-4xl font-bold mb-8">🔮 Artefactos</h2>
             <div class="grid md:grid-cols-2 gap-10">
                 <div>
                     <h3 class="text-2xl font-bold mb-4 text-blue-400">Flare (Fire Destroyer)</h3>
@@ -183,7 +197,7 @@
 
         <!-- BUILDS -->
         <section id="builds" class="mb-20 px-6">
-            <h2 class="text-4xl font-bold mb-8">Builds Completos (Meta octubre 2026)</h2>
+            <h2 class="text-4xl font-bold mb-8">💪 Builds Completos (Meta octubre 2026)</h2>
             <div class="grid md:grid-cols-2 gap-10">
                 <div class="bg-gray-900 p-8 rounded-3xl">
                     <h3 class="text-3xl font-bold text-red-400 mb-6">Flare – Fire Destroyer (S+)</h3>
@@ -208,7 +222,7 @@
 
         <!-- CONSEJOS -->
         <section id="consejos" class="mb-20 px-6 text-center">
-            <h2 class="text-4xl font-bold mb-8">Consejos Finales</h2>
+            <h2 class="text-4xl font-bold mb-8">💡 Consejos Finales</h2>
             <div class="max-w-2xl mx-auto space-y-8 text-xl">
                 <p class="bg-gray-900 p-8 rounded-3xl">✅ Early game: Cappy Mama + personajes S tier</p>
                 <p class="bg-gray-900 p-8 rounded-3xl">✅ Farm Abyss para equipos y eventos semi-aniversario</p>
