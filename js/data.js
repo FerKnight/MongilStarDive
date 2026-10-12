@@ -1,18 +1,18 @@
 const charactersData = [
-    { name: "Isabella", rarity: "5★", element: "Hielo", role: "Vértice de Batalla", weapon: "Cañón Láser", desc: "Genial ingeniera de la Ver. 1.4. Dispara ráfagas heladas que ralentizan y congelan jefes.", icon: "fa-atom" },
-    { name: "Verna", rarity: "5★", element: "Fuego", role: "Vértice de Batalla", weapon: "Espada corta", desc: "Protagonista aventurera. Ejecuta potentes tajos ardientes con alta movilidad.", icon: "fa-fire" },
+    { name: "Isabella", rarity: "5★", element: "Hielo", role: "Luchador", weapon: "Cañón Láser", desc: "Genial ingeniera de la Ver. 1.4. Dispara ráfagas heladas que ralentizan y congelan jefes.", icon: "fa-atom" },
+    { name: "Verna", rarity: "5★", element: "Fuego", role: "Luchador", weapon: "Espada corta", desc: "Protagonista aventurera. Ejecuta potentes tajos ardientes con alta movilidad.", icon: "fa-fire" },
     { name: "Cloud", rarity: "5★", element: "Rayo", role: "Destructor", weapon: "Mandoble", desc: "Guerrero silencioso capaz de romper la barra Stagger de los enemigos rápidamente.", icon: "fa-bolt" },
     { name: "Esther", rarity: "5★", element: "Fuego", role: "Soporte", weapon: "Báculo", desc: "Especialista en potenciar el ataque del grupo y crear escudos protectores.", icon: "fa-wand-magic-sparkles" },
-    { name: "Jiwon", rarity: "5★", element: "Agua", role: "Ruptura", weapon: "Lanza", desc: "Aplica debilidades acuáticas e interrumpe ataques cargados.", icon: "fa-droplet" },
-    { name: "Mina", rarity: "5★", element: "Viento", role: "Vértice de Batalla", weapon: "Dagas", desc: "Agilidad extrema con golpes críticos en ráfaga.", icon: "fa-wind" },
-    { name: "Narae", rarity: "5★", element: "Tierra", role: "Tanque", weapon: "Escudo", desc: "Defensa impenetrable y mitigación de daño para todo el equipo.", icon: "fa-shield" },
-    { name: "Nagi", rarity: "5★", element: "Rayo", role: "Vértice de Batalla", weapon: "Lanza", desc: "Ataques relámpago de gran alcance y daño en área.", icon: "fa-bolt-lightning" },
-    { name: "Flare", rarity: "4★", element: "Fuego", role: "Vértice de Batalla", weapon: "Dagas", desc: "Ataques veloces que provocan quemaduras acumulativas.", icon: "fa-flame" },
+    { name: "Jiwon", rarity: "5★", element: "Hielo", role: "Asesino", weapon: "Lanza", desc: "Aplica embates veloces de hielo e interrumpe ataques cargados.", icon: "fa-snowflake" },
+    { name: "Mina", rarity: "5★", element: "Viento", role: "Asesino", weapon: "Dagas", desc: "Agilidad extrema con golpes críticos en ráfaga.", icon: "fa-wind" },
+    { name: "Narae", rarity: "5★", element: "Tierra", role: "Destructor", weapon: "Escudo", desc: "Gran mitigación de daño e impactos pesados de tierra.", icon: "fa-shield" },
+    { name: "Nagi", rarity: "5★", element: "Rayo", role: "Asesino", weapon: "Lanza", desc: "Ataques relámpago de gran alcance y daño en área.", icon: "fa-bolt-lightning" },
+    { name: "Flare", rarity: "4★", element: "Fuego", role: "Luchador", weapon: "Dagas", desc: "Ataques veloces que provocan quemaduras acumulativas.", icon: "fa-flame" },
     { name: "Gabi", rarity: "4★", element: "Viento", role: "Soporte", weapon: "Catalizador", desc: "Acelera la velocidad de movimiento y recarga el medidor de relevo.", icon: "fa-feather" },
-    { name: "Chloe", rarity: "4★", element: "Tierra", role: "Tanque", weapon: "Escudo", desc: "Especialista defensiva introducida en la región del Archipiélago de Gaba.", icon: "fa-shield-heart" },
-    { name: "Penny", rarity: "4★", element: "Agua", role: "Soporte", weapon: "Báculo", desc: "Regeneración constante de vida e incremento de resistencia elemental.", icon: "fa-hand-holding-droplet" },
+    { name: "Chloe", rarity: "4★", element: "Tierra", role: "Soporte", weapon: "Escudo", desc: "Especialista defensiva introducida en la región del Archipiélago de Gaba.", icon: "fa-shield-heart" },
+    { name: "Penny", rarity: "4★", element: "Hielo", role: "Soporte", weapon: "Báculo", desc: "Regeneración constante de vida e incremento de resistencia elemental.", icon: "fa-hand-holding-droplet" },
     { name: "Sangun", rarity: "4★", element: "Tierra", role: "Destructor", weapon: "Mandoble", desc: "Impactos pesados que rompen la postura enemiga.", icon: "fa-gavel" },
-    { name: "Yeonhwa", rarity: "4★", element: "Hielo", role: "Ruptura", weapon: "Catalizador", desc: "Control de masas mediante congelación de área.", icon: "fa-snowflake" }
+    { name: "Yeonhwa", rarity: "4★", element: "Hielo", role: "Luchador", weapon: "Catalizador", desc: "Control de masas mediante ráfagas de congelación.", icon: "fa-ice-cream" }
 ];
 
 const equipData = [
