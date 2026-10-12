@@ -1,6 +1,6 @@
 let deferredPrompt;
 
-// HELPER PARA COLORES Y BADGES ELEMENTALES EXACTOS
+// HELPER PARA COLORES Y BADGES ELEMENTALES
 function getElementBadge(element) {
     switch (element) {
         case 'Fuego':
@@ -18,7 +18,7 @@ function getElementBadge(element) {
     }
 }
 
-// LÓGICA DE FILTRADO COMBINABLE DE PERSONAJES
+// LÓGICA DE FILTRADO COMBINABLE
 function filterCharacters() {
     const searchInput = document.getElementById('charSearch');
     const sortSelect = document.getElementById('charSort');
@@ -40,7 +40,6 @@ function filterCharacters() {
         return matchName && matchRarity && matchRole && matchElement;
     });
 
-    // Ordenamiento
     if (sortVal === 'az') {
         filtered.sort((a, b) => a.name.localeCompare(b.name));
     } else if (sortVal === 'za') {
@@ -71,30 +70,33 @@ function renderCharacterGrid(list) {
         return;
     }
 
+    // GRILLA OPTIMIZADA: Permite mostrar entre 3 y 6 personajes en una línea horizontal
+    charGrid.className = "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5";
+
     charGrid.innerHTML = list.map(c => {
         const elemBadge = getElementBadge(c.element);
         return `
-            <div onclick="openCharacterModal('${c.id}')" class="bg-brand-card border border-white/10 rounded-xl p-3 hover:border-cyan-400 cursor-pointer active:scale-95 transition transform relative overflow-hidden group">
-                <div class="w-full h-32 rounded-lg bg-slate-900 overflow-hidden mb-2 relative flex items-center justify-center">
-                    <img src="${c.image}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\"text-2xl text-cyan-400\"><i class=\"fa-solid ${c.icon}\"></i></div>';">
-                    <span class="absolute top-1 right-1 bg-black/60 backdrop-blur-md text-yellow-400 font-bold text-[10px] px-1.5 py-0.5 rounded border border-yellow-500/30">${c.rarity}</span>
+            <div onclick="openCharacterModal('${c.id}')" class="bg-brand-card border border-white/10 rounded-xl p-2.5 hover:border-cyan-400 cursor-pointer active:scale-95 transition transform relative overflow-hidden group">
+                <div class="w-full h-24 rounded-lg bg-slate-900 overflow-hidden mb-1.5 relative flex items-center justify-center">
+                    <img src="${c.image}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\"text-xl text-cyan-400\"><i class=\"fa-solid ${c.icon}\"></i></div>';">
+                    <span class="absolute top-1 right-1 bg-black/70 backdrop-blur-md text-yellow-400 font-bold text-[9px] px-1 py-0.2 rounded border border-yellow-500/30">${c.rarity}</span>
                 </div>
-                <div class="flex items-center justify-between">
-                    <h3 class="font-title font-bold text-sm text-slate-100 truncate">${c.name}</h3>
+                <div class="truncate">
+                    <h3 class="font-title font-bold text-xs text-slate-100 truncate">${c.name}</h3>
                 </div>
-                <div class="flex items-center gap-1.5 mt-1 mb-1">
-                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
+                <div class="flex items-center gap-1 mt-1 mb-1">
+                    <span class="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[9px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
                         <i class="fa-solid ${elemBadge.icon}"></i> ${c.element}
                     </span>
-                    <span class="text-[10px] text-purple-300 font-medium">${c.role}</span>
+                    <span class="text-[9px] text-purple-300 font-medium truncate">${c.role}</span>
                 </div>
-                <p class="text-[11px] text-slate-400 line-clamp-2">${c.desc}</p>
+                <p class="text-[10px] text-slate-400 line-clamp-1">${c.desc}</p>
             </div>
         `;
     }).join('');
 }
 
-// MODAL ENLAZADO CON FOTO DEL PERSONAJE
+// MODAL DE DETALLES
 function openCharacterModal(charId) {
     const char = charactersData.find(c => c.id === charId);
     if (!char) return;
@@ -306,7 +308,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     const btn = document.getElementById('installPwaBtn');
-    if (btn) btn.classList.add('hidden');
+    if (btn) btn.classList.remove('hidden');
 });
 
 function installPWA() {
