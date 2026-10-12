@@ -33,12 +33,8 @@
         ☰
     </button>
 
-    <!-- BARRA LATERAL -->
+    <!-- BARRA LATERAL (solo menús) -->
     <div id="sidebar" class="sidebar fixed top-0 left-0 w-80 h-full bg-gray-900 p-8 overflow-y-auto shadow-2xl z-50 hidden lg:block">
-        <div class="flex justify-between items-center mb-10">
-            <h2 class="text-3xl font-bold text-white">Mongil: Star Dive</h2>
-            <button onclick="toggleSidebar()" class="text-4xl text-white">✕</button>
-        </div>
         <nav class="space-y-2">
             <a href="index.html" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">Inicio</a>
             <a href="equipamientos.html" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">Equipamientos</a>
@@ -47,28 +43,63 @@
         </nav>
     </div>
 
-    <!-- CONTENIDO -->
-    <div class="flex-1 lg:ml-80 px-6">
+    <!-- CONTENIDO - EQUIPAMIENTOS 5★ -->
+    <div class="flex-1 lg:ml-80 px-6 py-12">
 
-        <h2 class="text-4xl font-bold mb-8">Equipamientos</h2>
-        <p class="text-2xl mb-8">Farm en Abyss Gear Dungeons + sets de 4 piezas</p>
-        <div class="grid md:grid-cols-2 gap-8">
-            <div class="bg-gray-900 p-8 rounded-3xl">
-                <h3 class="text-2xl font-bold mb-4">Sets recomendados</h3>
-                <ul class="space-y-4 text-lg">
-                    <li class="flex justify-between"><span>Hahnul's Roar 5★</span><span class="text-green-400">Fire + Crit DMG</span></li>
-                    <li class="flex justify-between"><span>Mountain Peak Majesty 4★</span><span class="text-green-400">Fire RES -3%</span></li>
-                    <li class="flex justify-between"><span>Abyss 5★</span><span class="text-green-400">Wind + Crit</span></li>
-                </ul>
+        <h2 class="text-4xl font-bold mb-8">Equipamientos 5★</h2>
+        <p class="text-2xl mb-8">Farm en Abyss Gear Dungeons + sets de 4 piezas (solo 5★)</p>
+
+        <!-- SET 1 -->
+        <div class="bg-gray-900 p-10 rounded-3xl mb-12">
+            <h3 class="text-3xl font-bold text-green-400 mb-6">Hahnul's Roar 5★</h3>
+            <div class="grid md:grid-cols-2 gap-10">
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Bonos por piezas</h4>
+                    <ul class="space-y-4 text-lg">
+                        <li class="flex justify-between"><span>2 piezas Fire DMG</span><span class="text-green-400">+10% Ultimate</span></li>
+                        <li class="flex justify-between"><span>4 piezas Crit DMG vs Affliction</span><span class="text-green-400">+15%</span></li>
+                    </ul>
+                </div>
+                <div class="bg-gray-950 p-6 rounded-2xl">
+                    <h4 class="font-bold text-xl mb-3">Consejo</h4>
+                    <p class="text-lg">Ideal para Flare y equipos Fire. Farm diario en Abyss Gear Dungeons.</p>
+                </div>
             </div>
-            <div class="bg-gray-900 p-8 rounded-3xl">
-                <h3 class="text-2xl font-bold mb-4">Tips</h3>
-                <ul class="list-disc pl-6 space-y-3 text-lg">
-                    <li>Equipa % stats altos (ATK, Crit DMG, RES)</li>
-                    <li>Alternativas de 2 piezas si no tienes 4</li>
-                    <li>Sube primero los personajes antes de los equipos</li>
-                    <li>Tu nivel 65 es ideal para farmar ahora</li>
-                </ul>
+        </div>
+
+        <!-- SET 2 -->
+        <div class="bg-gray-900 p-10 rounded-3xl mb-12">
+            <h3 class="text-3xl font-bold text-green-400 mb-6">Mountain Peak Majesty 4★</h3>
+            <div class="grid md:grid-cols-2 gap-10">
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Bonos por piezas</h4>
+                    <ul class="space-y-4 text-lg">
+                        <li class="flex justify-between"><span>2 piezas Fire RES</span><span class="text-green-400">-3% Tag-out</span></li>
+                        <li class="flex justify-between"><span>4 piezas Fire DMG vs Affliction</span><span class="text-green-400">+12%</span></li>
+                    </ul>
+                </div>
+                <div class="bg-gray-950 p-6 rounded-2xl">
+                    <h4 class="font-bold text-xl mb-3">Consejo</h4>
+                    <p class="text-lg">Excelente para soporte. Sube primero los personajes antes.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SET 3 -->
+        <div class="bg-gray-900 p-10 rounded-3xl">
+            <h3 class="text-3xl font-bold text-green-400 mb-6">Abyss 5★</h3>
+            <div class="grid md:grid-cols-2 gap-10">
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Bonos por piezas</h4>
+                    <ul class="space-y-4 text-lg">
+                        <li class="flex justify-between"><span>2 piezas Wind DMG</span><span class="text-green-400">+10% Special</span></li>
+                        <li class="flex justify-between"><span>4 piezas Crit DMG</span><span class="text-green-400">+10% Crit</span></li>
+                    </ul>
+                </div>
+                <div class="bg-gray-950 p-6 rounded-2xl">
+                    <h4 class="font-bold text-xl mb-3">Consejo</h4>
+                    <p class="text-lg">Versátil para Wind y multi-elemento. Equipa % stats altos.</p>
+                </div>
             </div>
         </div>
 
@@ -85,16 +116,4 @@
             const sidebar = document.getElementById('sidebar');
             const btn = document.getElementById('menu-btn');
             sidebar.classList.toggle('hidden');
-            if (!sidebar.classList.contains('hidden')) {
-                btn.style.display = 'none';
-            } else {
-                btn.style.display = 'block';
-            }
-        }
-        function closeSidebar() {
-            document.getElementById('sidebar').classList.add('hidden');
-            document.getElementById('menu-btn').style.display = 'block';
-        }
-    </script>
-</body>
-</html>
+            if (!sidebar.classList.contains('hidden')) btn.style.display = 'none
