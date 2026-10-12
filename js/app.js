@@ -1,22 +1,69 @@
 let deferredPrompt;
 
-function renderAll() {
-    const charGrid = document.getElementById('charGrid');
-    if (charGrid) {
-        charGrid.innerHTML = charactersData.map(c => `
-            <div class="bg-brand-card border border-white/10 rounded-xl p-3 hover:border-cyan-400/50 transition">
-                <div class="w-10 h-10 rounded-lg bg-purple-900/50 text-cyan-400 flex items-center justify-center text-lg mb-2">
-                    <i class="fa-solid ${c.icon}"></i>
-                </div>
-                <div class="flex items-center justify-between">
-                    <h3 class="font-title font-bold text-sm text-slate-100">${c.name}</h3>
-                    <span class="text-[10px] text-yellow-400 font-bold">${c.rarity}</span>
-                </div>
-                <p class="text-[10px] text-cyan-400 font-semibold mb-1">${c.element} • ${c.role}</p>
-                <p class="text-[11px] text-slate-400 line-clamp-2">${c.desc}</p>
-            </div>
-        `).join('');
+// LÓGICA DE FILTRADO DE PERSONAJES (COMBINABLE)
+function filterCharacters() {
+    const searchVal = (document.getElementById('charSearch')?.value || '').toLowerCase();
+    const sortVal = document.getElementById('charSort')?.value || 'default';
+    const rarityVal = document.getElementById('charRarity')?.value || 'all';
+    const roleVal = document.getElementById('charRole')?.value || 'all';
+    const elementVal = document.getElementById('charElement')?.value || 'all';
+
+    let filtered = charactersData.filter(c => {
+        const matchName = c.name.toLowerCase().includes(searchVal);
+        const matchRarity = rarityVal === 'all' || c.rarity === rarityVal;
+        const matchRole = roleVal === 'all' || c.role === roleVal;
+        const matchElement = elementVal === 'all' || c.element === elementVal;
+        return matchName && matchRarity && matchRole && matchElement;
+    });
+
+    // Ordenamiento
+    if (sortVal === 'az') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortVal === 'za') {
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+    } else if (sortVal === 'rarity-desc') {
+        filtered.sort((a, b) => b.rarity.localeCompare(a.rarity));
+    } else if (sortVal === 'rarity-asc') {
+        filtered.sort((a, b) => a.rarity.localeCompare(b.rarity));
     }
+
+    renderCharacterGrid(filtered);
+}
+
+function renderCharacterGrid(list) {
+    const charGrid = document.getElementById('charGrid');
+    const charCount = document.getElementById('charCount');
+    
+    if (charCount) charCount.innerText = `Mostrando: ${list.length}`;
+    if (!charGrid) return;
+
+    if (list.length === 0) {
+        charGrid.innerHTML = `
+            <div class="col-span-full py-8 text-center text-slate-400 text-xs font-medium">
+                <i class="fa-solid fa-filter-circle-xmark text-2xl mb-2 text-slate-500 block"></i>
+                No se encontraron personajes con los filtros seleccionados.
+            </div>
+        `;
+        return;
+    }
+
+    charGrid.innerHTML = list.map(c => `
+        <div class="bg-brand-card border border-white/10 rounded-xl p-3 hover:border-cyan-400/50 transition">
+            <div class="w-10 h-10 rounded-lg bg-purple-900/50 text-cyan-400 flex items-center justify-center text-lg mb-2">
+                <i class="fa-solid ${c.icon}"></i>
+            </div>
+            <div class="flex items-center justify-between">
+                <h3 class="font-title font-bold text-sm text-slate-100">${c.name}</h3>
+                <span class="text-[10px] text-yellow-400 font-bold">${c.rarity}</span>
+            </div>
+            <p class="text-[10px] text-cyan-400 font-semibold mb-1">${c.element} • ${c.role}</p>
+            <p class="text-[11px] text-slate-400 line-clamp-2">${c.desc}</p>
+        </div>
+    `).join('');
+}
+
+function renderAll() {
+    filterCharacters(); // Inicializa la grilla de personajes con filtros
 
     const equipGrid = document.getElementById('equipGrid');
     if (equipGrid) {
@@ -158,7 +205,6 @@ function showToast(msg) {
     }
 }
 
-// Evento de instalación PWA
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
@@ -178,7 +224,6 @@ function installPWA() {
     }
 }
 
-// Registro del Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
@@ -191,3 +236,4 @@ window.onload = function() {
     renderAll();
     loadProfile();
 };
+                        
