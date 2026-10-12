@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mongil: Star Dive - Guía Completa</title>
+    <title>Mongil: Star Dive</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
@@ -24,7 +24,6 @@
     <header class="hero text-white py-16 text-center">
         <div class="max-w-6xl mx-auto px-6">
             <h1 class="text-6xl font-bold mb-2 tracking-tight">MongilStarDive</h1>
-            <p class="text-3xl mb-8">Guía Completa • Monsterlings • Equipamientos • Builds</p>
             <a href="#guia" class="bg-white text-blue-900 px-8 py-4 rounded-full font-bold text-xl hover:bg-yellow-400 transition">Ir a la guía</a>
         </div>
     </header>
@@ -41,31 +40,17 @@
             <button onclick="toggleSidebar()" class="lg:hidden text-4xl text-white">✕</button>
         </div>
         <nav class="space-y-2">
-            <a href="#inicio" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">🏠 Inicio (Datos del Jugador)</a>
+            <a href="#inicio" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">🏠 Inicio</a>
             <a href="#equipamientos" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">⚙️ Equipamientos</a>
-            
-            <!-- Monsterlings desplegable -->
-            <div class="mt-4">
-                <button onclick="toggleMonsterlings()" class="flex items-center justify-between w-full px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">
-                    🦁 Monsterlings
-                    <span id="arrow" class="text-2xl transition">▼</span>
-                </button>
-                <div id="submenu" class="hidden pl-8 mt-3 space-y-3">
-                    <a href="#tiers" onclick="closeSidebar()" class="block px-6 py-3 hover:bg-gray-800 rounded-2xl text-xl">Tiers</a>
-                    <a href="#legendarios" onclick="closeSidebar()" class="block px-6 py-3 hover:bg-gray-800 rounded-2xl text-xl">Legendarios</a>
-                </div>
-            </div>
-            
+            <a href="#monsterlings" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">🦁 Monsterlings</a>
             <a href="#artefactos" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">🔮 Artefactos</a>
-            <a href="#builds" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">💪 Builds</a>
-            <a href="#consejos" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">💡 Consejos</a>
         </nav>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL (páginas diferentes) -->
+    <!-- CONTENIDO PRINCIPAL (cada sección = página diferente) -->
     <div class="flex-1 lg:ml-80">
 
-        <!-- INICIO - Datos del Jugador -->
+        <!-- INICIO -->
         <section id="inicio" class="mb-20 px-6">
             <h2 class="text-4xl font-bold mb-8">📊 Datos del Jugador</h2>
             <div class="bg-gray-900 p-10 rounded-3xl">
@@ -195,42 +180,6 @@
             </div>
         </section>
 
-        <!-- BUILDS -->
-        <section id="builds" class="mb-20 px-6">
-            <h2 class="text-4xl font-bold mb-8">💪 Builds Completos (Meta octubre 2026)</h2>
-            <div class="grid md:grid-cols-2 gap-10">
-                <div class="bg-gray-900 p-8 rounded-3xl">
-                    <h3 class="text-3xl font-bold text-red-400 mb-6">Flare – Fire Destroyer (S+)</h3>
-                    <div class="space-y-6 text-lg">
-                        <div><strong>Monsterlings:</strong> Duoxini / Fiend (DMG) + Amon's Shadow</div>
-                        <div><strong>Artefactos:</strong> Exquisite Dragon Fire + Thunder-raising Tremors</div>
-                        <div><strong>Equipo:</strong> Hahnul's Roar + Mountain Peak Majesty</div>
-                        <div><strong>Equipo equipo:</strong> Mina (DPS) + Francis (Support)</div>
-                    </div>
-                </div>
-                <div class="bg-gray-900 p-8 rounded-3xl">
-                    <h3 class="text-3xl font-bold text-purple-400 mb-6">Esther – Wind Assassin (S+)</h3>
-                    <div class="space-y-6 text-lg">
-                        <div><strong>Monsterlings:</strong> Nokjung / Manwol (DMG) + El Dorado Guardian</div>
-                        <div><strong>Artefactos:</strong> Wind-Harboring Broom + Suffocating Darkness</div>
-                        <div><strong>Equipo:</strong> Devourer Stance</div>
-                        <div><strong>Equipo equipo:</strong> Flare + Jiwon (Support)</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CONSEJOS -->
-        <section id="consejos" class="mb-20 px-6 text-center">
-            <h2 class="text-4xl font-bold mb-8">💡 Consejos Finales</h2>
-            <div class="max-w-2xl mx-auto space-y-8 text-xl">
-                <p class="bg-gray-900 p-8 rounded-3xl">✅ Early game: Cappy Mama + personajes S tier</p>
-                <p class="bg-gray-900 p-8 rounded-3xl">✅ Farm Abyss para equipos y eventos semi-aniversario</p>
-                <p class="bg-gray-900 p-8 rounded-3xl">✅ Usa códigos oficiales (TheClick.gg o Netmarble)</p>
-                <p class="bg-gray-900 p-8 rounded-3xl">✅ PC: Netmarble Launcher + Proton</p>
-            </div>
-        </section>
-
     </div>
 
     <!-- FOOTER -->
@@ -243,13 +192,6 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('hidden');
-        }
-        
-        function toggleMonsterlings() {
-            const submenu = document.getElementById('submenu');
-            submenu.classList.toggle('hidden');
-            const arrow = document.getElementById('arrow');
-            arrow.textContent = submenu.classList.contains('hidden') ? '▼' : '▲';
         }
         
         function closeSidebar() {
