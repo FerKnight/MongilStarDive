@@ -43,39 +43,42 @@
         </nav>
     </div>
 
-    <!-- CONTENIDO - ÚNICO RECUADRO -->
-    <div class="flex-1 lg:ml-80 px-6 py-12">
+    <!-- ÚNICO RECUADRO - DATOS DEL JUGADOR -->
+    <div class="flex-1 lg:ml-80 px-6 py-12 flex justify-center">
+        <div class="bg-gray-900 p-12 rounded-3xl max-w-2xl w-full">
 
-        <div class="bg-gray-900 p-10 rounded-3xl max-w-2xl mx-auto">
-            <h2 class="text-4xl font-bold mb-8 text-center">Datos del Jugador</h2>
-            
-            <div class="grid md:grid-cols-2 gap-10">
-                <div>
-                    <h3 class="text-2xl font-bold mb-6">Tu Nivel: <span class="text-green-400">LV. 65</span></h3>
-                    <p class="text-xl">Joyas: 1.247 • Stamina: 850/850 • Monedas: 48.320</p>
-                    <p class="text-xl mt-4">Eventos completados: 12/15 • Semi-aniversario (Patch 1.4)</p>
-                </div>
-                
-                <!-- Selector de Icono -->
-                <div>
-                    <h4 class="text-xl font-bold mb-4">Selector de Icono</h4>
-                    <div class="flex gap-6 flex-wrap">
-                        <button onclick="selectCharacter(this)" class="character-btn active p-4 bg-gray-800 rounded-2xl text-4xl hover:scale-110 transition">Flare</button>
-                        <button onclick="selectCharacter(this)" class="character-btn p-4 bg-gray-800 rounded-2xl text-4xl hover:scale-110 transition">Esther</button>
-                        <button onclick="selectCharacter(this)" class="character-btn p-4 bg-gray-800 rounded-2xl text-4xl hover:scale-110 transition">Narae</button>
-                        <button onclick="selectCharacter(this)" class="character-btn p-4 bg-gray-800 rounded-2xl text-4xl hover:scale-110 transition">Mina</button>
-                    </div>
+            <!-- CÍRCULO -->
+            <div onclick="toggleCharacterMenu()" 
+                class="w-48 h-48 mx-auto rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-8xl cursor-pointer hover:scale-105 transition shadow-2xl">
+                👤
+            </div>
+
+            <!-- MENÚ DE PERSONAJES -->
+            <div id="character-menu" class="hidden mt-8 bg-gray-950 p-6 rounded-3xl">
+                <h3 class="text-xl font-bold mb-4 text-center">Selecciona tu personaje</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="selectCharacter(this)" class="character-btn p-6 bg-gray-800 rounded-2xl text-5xl hover:scale-110 transition">Flare</button>
+                    <button onclick="selectCharacter(this)" class="character-btn p-6 bg-gray-800 rounded-2xl text-5xl hover:scale-110 transition">Esther</button>
+                    <button onclick="selectCharacter(this)" class="character-btn p-6 bg-gray-800 rounded-2xl text-5xl hover:scale-110 transition">Narae</button>
+                    <button onclick="selectCharacter(this)" class="character-btn p-6 bg-gray-800 rounded-2xl text-5xl hover:scale-110 transition">Mina</button>
                 </div>
             </div>
 
-            <!-- Código de Amistad -->
-            <div class="mt-10">
-                <h4 class="text-xl font-bold mb-4">Código de Amistad</h4>
-                <div class="bg-gray-950 p-4 rounded-2xl text-xl font-mono">FRIENDCODE2026</div>
-                <p class="text-sm text-gray-400 mt-2">Copia y pega en el juego para reclutar amigos</p>
+            <!-- RECUADRO ID DEL JUGADOR -->
+            <div class="mt-8">
+                <label class="block text-xl font-bold mb-3">ID dentro del juego</label>
+                <input id="player-id" type="text" placeholder="Ingresa tu ID" 
+                    class="w-full bg-gray-950 p-6 rounded-2xl text-2xl focus:outline-none focus:ring-2 focus:ring-green-400">
             </div>
+
+            <!-- RECUADRO CÓDIGO DE AMISTAD -->
+            <div class="mt-8">
+                <label class="block text-xl font-bold mb-3">Código de amistad</label>
+                <input id="friend-code" type="text" placeholder="Ingresa tu código" 
+                    class="w-full bg-gray-950 p-6 rounded-2xl text-2xl focus:outline-none focus:ring-2 focus:ring-green-400">
+            </div>
+
         </div>
-
     </div>
 
     <!-- FOOTER -->
@@ -96,9 +99,14 @@
             document.getElementById('sidebar').classList.add('hidden');
             document.getElementById('menu-btn').style.display = 'block';
         }
+        function toggleCharacterMenu() {
+            const menu = document.getElementById('character-menu');
+            menu.classList.toggle('hidden');
+        }
         function selectCharacter(btn) {
             document.querySelectorAll('.character-btn').forEach(b => b.classList.remove('active', 'ring-2', 'ring-green-400'));
             btn.classList.add('active', 'ring-2', 'ring-green-400');
+            toggleCharacterMenu();
         }
     </script>
 </body>
