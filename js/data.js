@@ -1,18 +1,84 @@
 const charactersData = [
-    { name: "Isabella", rarity: "5★", element: "Hielo", role: "Luchador", weapon: "Cañón Láser", desc: "Genial ingeniera de la Ver. 1.4. Dispara ráfagas heladas que ralentizan y congelan jefes.", icon: "fa-atom" },
-    { name: "Verna", rarity: "5★", element: "Fuego", role: "Luchador", weapon: "Espada corta", desc: "Protagonista aventurera. Ejecuta potentes tajos ardientes con alta movilidad.", icon: "fa-fire" },
-    { name: "Cloud", rarity: "5★", element: "Rayo", role: "Destructor", weapon: "Mandoble", desc: "Guerrero silencioso capaz de romper la barra Stagger de los enemigos rápidamente.", icon: "fa-bolt" },
-    { name: "Esther", rarity: "5★", element: "Fuego", role: "Soporte", weapon: "Báculo", desc: "Especialista en potenciar el ataque del grupo y crear escudos protectores.", icon: "fa-wand-magic-sparkles" },
-    { name: "Jiwon", rarity: "5★", element: "Hielo", role: "Asesino", weapon: "Lanza", desc: "Aplica embates veloces de hielo e interrumpe ataques cargados.", icon: "fa-snowflake" },
-    { name: "Mina", rarity: "5★", element: "Viento", role: "Asesino", weapon: "Dagas", desc: "Agilidad extrema con golpes críticos en ráfaga.", icon: "fa-wind" },
-    { name: "Narae", rarity: "5★", element: "Tierra", role: "Destructor", weapon: "Escudo", desc: "Gran mitigación de daño e impactos pesados de tierra.", icon: "fa-shield" },
-    { name: "Nagi", rarity: "5★", element: "Rayo", role: "Asesino", weapon: "Lanza", desc: "Ataques relámpago de gran alcance y daño en área.", icon: "fa-bolt-lightning" },
-    { name: "Flare", rarity: "4★", element: "Fuego", role: "Luchador", weapon: "Dagas", desc: "Ataques veloces que provocan quemaduras acumulativas.", icon: "fa-flame" },
-    { name: "Gabi", rarity: "4★", element: "Viento", role: "Soporte", weapon: "Catalizador", desc: "Acelera la velocidad de movimiento y recarga el medidor de relevo.", icon: "fa-feather" },
-    { name: "Chloe", rarity: "4★", element: "Tierra", role: "Soporte", weapon: "Escudo", desc: "Especialista defensiva introducida en la región del Archipiélago de Gaba.", icon: "fa-shield-heart" },
-    { name: "Penny", rarity: "4★", element: "Hielo", role: "Soporte", weapon: "Báculo", desc: "Regeneración constante de vida e incremento de resistencia elemental.", icon: "fa-hand-holding-droplet" },
-    { name: "Sangun", rarity: "4★", element: "Tierra", role: "Destructor", weapon: "Mandoble", desc: "Impactos pesados que rompen la postura enemiga.", icon: "fa-gavel" },
-    { name: "Yeonhwa", rarity: "4★", element: "Hielo", role: "Luchador", weapon: "Catalizador", desc: "Control de masas mediante ráfagas de congelación.", icon: "fa-ice-cream" }
+    { 
+        id: "isabella", name: "Isabella", rarity: "5★", element: "Hielo", role: "Luchador", weapon: "Cañón Láser", 
+        desc: "Genial ingeniera de la Ver. 1.4. Dispara ráfagas heladas que ralentizan y congelan jefes.", icon: "fa-atom",
+        skillPassive: "Reacción Criogénica: Congela enemigos tras 5 ataques consecutivos.", skillActive: "Ráfaga Ártica: Lanza un cañonazo láser helado de gran alcance.", monsterlingCombo: "Gaba Turtle"
+    },
+    { 
+        id: "verna", name: "Verna", rarity: "5★", element: "Fuego", role: "Luchador", weapon: "Espada corta", 
+        desc: "Protagonista aventurera. Ejecuta potentes tajos ardientes con gran velocidad.", icon: "fa-fire",
+        skillPassive: "Furia Ígnea: Aumenta la velocidad de ataque al acumular golpes.", skillActive: "Tajo Devastador: Embate frontal envuelto en llamas.", monsterlingCombo: "Cappyberry"
+    },
+    { 
+        id: "cloud", name: "Cloud", rarity: "5★", element: "Rayo", role: "Destructor", weapon: "Mandoble", 
+        desc: "Guerrero silencioso enfocado en romper la barra Stagger de los enemigos rápidamente.", icon: "fa-bolt",
+        skillPassive: "Impacto Pesado: Genera un 25% más de daño de ruptura.", skillActive: "Corte Relámpago: Golpe descendente que aturde a jefes de raid.", monsterlingCombo: "King Slime"
+    },
+    { 
+        id: "esther", name: "Esther", rarity: "5★", element: "Fuego", role: "Soporte", weapon: "Báculo", 
+        desc: "Especialista en potenciar el ataque del grupo y crear escudos protectores.", icon: "fa-wand-magic-sparkles",
+        skillPassive: "Aura Bendita: Incrementa el ATK del equipo en un 15%.", skillActive: "Escudo Solar: Absorbe daño equivalente a la vida máxima de Esther.", monsterlingCombo: "Scarlet Queen"
+    },
+    { 
+        id: "jiwon", name: "Jiwon", rarity: "5★", element: "Hielo", role: "Asesino", weapon: "Lanza", 
+        desc: "Aplica embates veloces de hielo e interrumpe ataques cargados.", icon: "fa-snowflake",
+        skillPassive: "Filo Congelante: Los golpes críticos extienden la congelación.", skillActive: "Estocada Glacial: Penetración de defensa directa.", monsterlingCombo: "Cappy Mama"
+    },
+    { 
+        id: "mina", name: "Mina", rarity: "5★", element: "Viento", role: "Asesino", weapon: "Dagas", 
+        desc: "Agilidad extrema con golpes críticos en ráfaga.", icon: "fa-wind",
+        skillPassive: "Efecto Ráfaga: Aumenta el daño crítico con cada esquiva perfecta.", skillActive: "Danza del Viento: Serie de estocadas invisibles a hipervelocidad.", monsterlingCombo: "Cappyberry"
+    },
+    { 
+        id: "narae", name: "Narae", rarity: "5★", element: "Tierra", role: "Destructor", weapon: "Escudo", 
+        desc: "Gran mitigación de daño e impactos pesados de tierra.", icon: "fa-shield",
+        skillPassive: "Baluarde de Piedra: Reduce el daño recibido en un 20%.", skillActive: "Sismo Terrestre: Aplasta el suelo creando una onda expansiva.", monsterlingCombo: "King Slime"
+    },
+    { 
+        id: "nagi", name: "Nagi", rarity: "5★", element: "Rayo", role: "Asesino", weapon: "Lanza", 
+        desc: "Ataques relámpago de gran alcance y daño en área.", icon: "fa-bolt-lightning",
+        skillPassive: "Conductividad: Infunde electricidad en las habilidades del equipo.", skillActive: "Descarga Rayo: Atraviesa múltiples objetivos en línea recta.", monsterlingCombo: "King Slime"
+    },
+    { 
+        id: "flare", name: "Flare", rarity: "4★", element: "Fuego", role: "Luchador", weapon: "Dagas", 
+        desc: "Ataques veloces que provocan quemaduras acumulativas.", icon: "fa-flame",
+        skillPassive: "Combustión: Inflige daño continuo por quemadura.", skillActive: "Daga Incandescente: Lanza proyectiles de fuego veloz.", monsterlingCombo: "Scarlet Queen"
+    },
+    { 
+        id: "gabi", name: "Gabi", rarity: "4★", element: "Viento", role: "Soporte", weapon: "Catalizador", 
+        desc: "Acelera la velocidad de movimiento y recarga el medidor de relevo.", icon: "fa-feather",
+        skillPassive: "Viento Ligero: Incrementa la velocidad del equipo un 10%.", skillActive: "Torbellino de Curación: Regenera energía de Relevo (Tag).", monsterlingCombo: "Cappyberry"
+    },
+    { 
+        id: "chloe", name: "Chloe", rarity: "4★", element: "Tierra", role: "Soporte", weapon: "Escudo", 
+        desc: "Especialista defensiva introducida en la región del Archipiélago de Gaba.", icon: "fa-shield-heart",
+        skillPassive: "Barrera Robusta: Escudo pasivo al cambiar de héroe.", skillActive: "Fortaleza de Gaba: Otorga inmunidad a derribos temporales.", monsterlingCombo: "Gaba Turtle"
+    },
+    { 
+        id: "penny", name: "Penny", rarity: "4★", element: "Hielo", role: "Soporte", weapon: "Báculo", 
+        desc: "Regeneración constante de vida e incremento de resistencia elemental.", icon: "fa-hand-holding-droplet",
+        skillPassive: "Gota de Rocío: Cura gradualmente al héroe activo.", skillActive: "Marea Curativa: Manta de curación masiva para todo el grupo.", monsterlingCombo: "Cappy Mama"
+    },
+    { 
+        id: "sangun", name: "Sangun", rarity: "4★", element: "Tierra", role: "Destructor", weapon: "Mandoble", 
+        desc: "Impactos pesados que rompen la postura enemiga.", icon: "fa-gavel",
+        skillPassive: "Fuerza Bruta: Aumenta la potencia de aturdimiento.", skillActive: "Martillazo Titánico: Rompe defensas de escudos.", monsterlingCombo: "King Slime"
+    },
+    { 
+        id: "yeonhwa", name: "Yeonhwa", rarity: "4★", element: "Hielo", role: "Luchador", weapon: "Catalizador", 
+        desc: "Control de masas mediante ráfagas de congelación de área.", icon: "fa-snowflake",
+        skillPassive: "Escarcha: Ralentiza a los enemigos cercanos.", skillActive: "Explosión Helada: Ráfaga de hielo en forma de cono.", monsterlingCombo: "Gaba Turtle"
+    },
+    { 
+        id: "francis", name: "Francis", rarity: "4★", element: "Rayo", role: "Luchador", weapon: "Espada corta", 
+        desc: "Espadachín eléctrico experto en ataques en cadena.", icon: "fa-bolt",
+        skillPassive: "Sobrecarga: Genera chispas adicionales en golpes críticos.", skillActive: "Corte Voltio: Desplazamiento rápido entre enemigos.", monsterlingCombo: "King Slime"
+    },
+    { 
+        id: "ofelia", name: "Ofelia", rarity: "4★", element: "Viento", role: "Destructor", weapon: "Lanza", 
+        desc: "Ataques de empuje y ruptura impulsados por corrientes de aire.", icon: "fa-wind",
+        skillPassive: "Tornado: Aumenta el alcance de estocada.", skillActive: "Ráfaga Perforante: Empuja y rompe el equilibrio del objetivo.", monsterlingCombo: "Cappyberry"
+    }
 ];
 
 const equipData = [
