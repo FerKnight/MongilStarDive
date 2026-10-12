@@ -18,7 +18,7 @@ function getElementBadge(element) {
     }
 }
 
-// LÓGICA DE FILTRADO COMBINABLE
+// LÓGICA DE FILTRADO COMBINABLE DE PERSONAJES
 function filterCharacters() {
     const searchInput = document.getElementById('charSearch');
     const sortSelect = document.getElementById('charSort');
@@ -70,33 +70,32 @@ function renderCharacterGrid(list) {
         return;
     }
 
-    // GRILLA OPTIMIZADA: Permite mostrar entre 3 y 6 personajes en una línea horizontal
-    charGrid.className = "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5";
+    // Grilla adaptable para mostrar 2 a 4 elementos en pantalla móvil/escritorio
+    charGrid.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3";
 
     charGrid.innerHTML = list.map(c => {
         const elemBadge = getElementBadge(c.element);
         return `
             <div onclick="openCharacterModal('${c.id}')" class="bg-brand-card border border-white/10 rounded-xl p-2.5 hover:border-cyan-400 cursor-pointer active:scale-95 transition transform relative overflow-hidden group">
-                <div class="w-full h-24 rounded-lg bg-slate-900 overflow-hidden mb-1.5 relative flex items-center justify-center">
-                    <img src="${c.image}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\"text-xl text-cyan-400\"><i class=\"fa-solid ${c.icon}\"></i></div>';">
-                    <span class="absolute top-1 right-1 bg-black/70 backdrop-blur-md text-yellow-400 font-bold text-[9px] px-1 py-0.2 rounded border border-yellow-500/30">${c.rarity}</span>
+                <div class="w-full h-28 rounded-lg bg-slate-900 overflow-hidden mb-2 relative flex items-center justify-center">
+                    <img src="${c.image}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Verna_01.png';">
+                    <span class="absolute top-1 right-1 bg-black/70 backdrop-blur-md text-yellow-400 font-bold text-[10px] px-1.5 py-0.5 rounded border border-yellow-500/30">${c.rarity}</span>
                 </div>
-                <div class="truncate">
+                <div class="truncate mb-1">
                     <h3 class="font-title font-bold text-xs text-slate-100 truncate">${c.name}</h3>
                 </div>
-                <div class="flex items-center gap-1 mt-1 mb-1">
-                    <span class="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[9px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
+                <div class="flex items-center justify-between gap-1">
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
                         <i class="fa-solid ${elemBadge.icon}"></i> ${c.element}
                     </span>
-                    <span class="text-[9px] text-purple-300 font-medium truncate">${c.role}</span>
+                    <span class="text-[9px] text-purple-300 font-semibold truncate">${c.role}</span>
                 </div>
-                <p class="text-[10px] text-slate-400 line-clamp-1">${c.desc}</p>
             </div>
         `;
     }).join('');
 }
 
-// MODAL DE DETALLES
+// MODAL INTERACTIVO CON DETALLES COMPLETOS
 function openCharacterModal(charId) {
     const char = charactersData.find(c => c.id === charId);
     if (!char) return;
