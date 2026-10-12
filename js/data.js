@@ -1,6 +1,6 @@
 const charactersData = [
     // ==========================================
-    // --- 5 ESTRELLAS (16 PERSONAJES) ---
+    // --- 5 ESTRELLAS ---
     // ==========================================
     { 
         id: "isabella", name: "Isabella", rarity: "5★", element: "Hielo", role: "Luchador", weapon: "Cañón Láser", 
@@ -15,7 +15,7 @@ const charactersData = [
         skillPassive: "Aura de Escarcha: Incrementa la resistencia helada del equipo.", skillActive: "Prisma Glacial: Crea un campo de fuerza que absorbe impactos.", monsterlingCombo: "Cappy Mama"
     },
     { 
-        id: "brrishell", name: "Brrishell", rarity: "5★", element: "Viento", role: "Asesino", weapon: "Dagas", 
+        id: "brishell", name: "Brishell", rarity: "5★", element: "Viento", role: "Asesino", weapon: "Dagas", 
         desc: "Veloz combatiente de viento capaz de cortar a través de las defensas enemigas en segundos.", icon: "fa-wind",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Brrishell_01.png",
         skillPassive: "Corte Cero: Bonificación de probabilidad crítica contra objetivos aislados.", skillActive: "Vendaval Mortal: Serie de estocadas aéreas continuas.", monsterlingCombo: "Cappyberry"
@@ -45,10 +45,10 @@ const charactersData = [
         skillPassive: "Conductividad: Infunde electricidad en las habilidades del equipo.", skillActive: "Descarga Rayo: Atraviesa múltiples objetivos en línea recta.", monsterlingCombo: "King Slime"
     },
     { 
-        id: "narae", name: "Narae", rarity: "5★", element: "Tierra", role: "Destructor", weapon: "Escudo", 
-        desc: "Baluarde defensivo con mitigación de daño y potentes contrataques de tierra.", icon: "fa-shield",
+        id: "narae", name: "Narae", rarity: "5★", element: "Hielo", role: "Soporte", weapon: "Escudo", 
+        desc: "Baluarde defensivo con mitigación de daño y escudos protectores.", icon: "fa-shield",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Narae_01.png",
-        skillPassive: "Baluarde de Piedra: Reduce el daño recibido en un 20%.", skillActive: "Sismo Terrestre: Aplasta el suelo creando una onda expansiva.", monsterlingCombo: "King Slime"
+        skillPassive: "Baluarde de Hielo: Reduce el daño recibido en un 20%.", skillActive: "Sismo Glacial: Escudos masivos para el grupo.", monsterlingCombo: "King Slime"
     },
     { 
         id: "mina", name: "Mina", rarity: "5★", element: "Viento", role: "Asesino", weapon: "Dagas", 
@@ -57,125 +57,126 @@ const charactersData = [
         skillPassive: "Efecto Ráfaga: Aumenta el daño crítico con cada esquiva perfecta.", skillActive: "Danza del Viento: Serie de estocadas invisibles a hipervelocidad.", monsterlingCombo: "Cappyberry"
     },
     { 
-        id: "esther", name: "Esther", rarity: "5★", element: "Fuego", role: "Soporte", weapon: "Báculo", 
-        desc: "Especialista en potenciar el ataque del grupo y crear escudos protectores de fuego.", icon: "fa-wand-magic-sparkles",
+        id: "esther", name: "Esther", rarity: "5★", element: "Viento", role: "Asesino", weapon: "Báculo", 
+        desc: "Especialista en potenciar el ataque del grupo mediante estocadas de viento furtivas.", icon: "fa-wand-magic-sparkles",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Esther_01.png",
-        skillPassive: "Aura Bendita: Incrementa el ATK del equipo en un 15%.", skillActive: "Escudo Solar: Absorbe daño equivalente a la vida máxima de Esther.", monsterlingCombo: "Scarlet Queen"
+        skillPassive: "Aura de Caza: Multiplicadores altos en ataques por la espalda.", skillActive: "Emboscada Eólica: Ataque sorpresa de gran precisión.", monsterlingCombo: "Scarlet Queen"
     },
     { 
-        id: "ophelia_5", name: "Ophelia", rarity: "5★", element: "Viento", role: "Destructor", weapon: "Lanza", 
-        desc: "Maestra de la lanza de viento que destroza la postura enemiga a gran distancia.", icon: "fa-wind",
+        id: "ophelia_5", name: "Ophelia", rarity: "5★", element: "Hielo", role: "Luchador", weapon: "Lanza", 
+        desc: "Maestra de la lanza con control de hielo que destroza la postura enemiga.", icon: "fa-wind",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Ophelia_01.png",
-        skillPassive: "Presión de Viento: Incrementa el alcance de estocada.", skillActive: "Tornado Perforante: Empuja y rompe el equilibrio del objetivo.", monsterlingCombo: "Cappyberry"
+        skillPassive: "Presión Glacial: Incrementa el alcance de estocada.", skillActive: "Tornado Congelante: Empuja y rompe el equilibrio del objetivo.", monsterlingCombo: "Cappyberry"
     },
     { 
-        id: "flare_5", name: "Flare", rarity: "5★", element: "Fuego", role: "Luchador", weapon: "Dagas", 
-        desc: "Versión de elite con potentes ráfagas de fuego y velocidad de ataque superior.", icon: "fa-flame",
+        id: "flare_5", name: "Flare", rarity: "5★", element: "Fuego", role: "Destructor", weapon: "Dagas", 
+        desc: "Versión de elite con potentes ráfagas de fuego y capacidad de romper escudos.", icon: "fa-flame",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Flare_01.png",
-        skillPassive: "Combustión Avanzada: Quemaduras en cadena a enemigos cercanos.", skillActive: "Daga Incandescente: Lanza proyectiles de fuego veloz.", monsterlingCombo: "Scarlet Queen"
+        skillPassive: "Combustión Avanzada: Quemaduras en cadena a enemigos cercanos.", skillActive: "Daga Incandescente: Rompe defensas de fuego.", monsterlingCombo: "Scarlet Queen"
     },
     { 
-        id: "sangun_5", name: "Sangun", rarity: "5★", element: "Tierra", role: "Destructor", weapon: "Mandoble", 
-        desc: "Fuerza titánica capaz de destruir los escudos de jefes de Conquest.", icon: "fa-gavel",
+        id: "sangun_5", name: "Sangun", rarity: "5★", element: "Viento", role: "Luchador", weapon: "Mandoble", 
+        desc: "Fuerza imponente de viento con mecánicas de atracción y combos constantes.", icon: "fa-gavel",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Sangun_01.png",
-        skillPassive: "Fuerza Bruta: Aumenta la potencia de aturdimiento.", skillActive: "Martillazo Titánico: Rompe defensas de escudos.", monsterlingCombo: "King Slime"
+        skillPassive: "Presión Continua: Aumenta la velocidad de ataque en combate.", skillActive: "Huracán de Mandoble: Golpes sucesivos en área.", monsterlingCombo: "King Slime"
     },
     { 
-        id: "gabi_5", name: "Gabi", rarity: "5★", element: "Viento", role: "Soporte", weapon: "Catalizador", 
-        desc: "Potenciadora experta que acelera las rotaciones de equipo y la recarga de energía.", icon: "fa-feather",
+        id: "gabi_5", name: "Gabi", rarity: "5★", element: "Tierra", role: "Luchador", weapon: "Catalizador", 
+        desc: "Potenciadora experta de tierra que aplica control de masas y petrificación.", icon: "fa-feather",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Gabi_01.png",
-        skillPassive: "Viento Ligero: Incrementa la velocidad del equipo un 10%.", skillActive: "Torbellino de Curación: Regenera energía de Relevo (Tag).", monsterlingCombo: "Cappyberry"
+        skillPassive: "Petrificación: Inmoviliza objetivos con ataques terrestres.", skillActive: "Golpe Telúrico: Daño masivo de área.", monsterlingCombo: "Cappyberry"
     },
     { 
-        id: "penny_5", name: "Penny", rarity: "5★", element: "Hielo", role: "Soporte", weapon: "Báculo", 
-        desc: "Soporte curativo estelar con capacidad de purificar estados alterados.", icon: "fa-hand-holding-droplet",
+        id: "penny_5", name: "Penny", rarity: "5★", element: "Rayo", role: "Luchador", weapon: "Báculo", 
+        desc: "Especialista a distancia con alta frecuencia de ataques y control de energía.", icon: "fa-hand-holding-droplet",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Penny_01.png",
-        skillPassive: "Gota de Rocío: Cura gradualmente al héroe activo.", skillActive: "Marea Curativa: Manta de curación masiva para todo el grupo.", monsterlingCombo: "Cappy Mama"
+        skillPassive: "Moneda de Oro: Sustenta la stamina y ataques rápidos.", skillActive: "Rayo Eléctrico: Descarga de energía continua.", monsterlingCombo: "Cappy Mama"
     },
     { 
-        id: "jiwon", name: "Jiwon", rarity: "5★", element: "Hielo", role: "Asesino", weapon: "Lanza", 
-        desc: "Aplica embates veloces de hielo e interrumpe ataques cargados.", icon: "fa-snowflake",
+        id: "jiwon", name: "Jiwon", rarity: "5★", element: "Viento", role: "Soporte", weapon: "Lanza", 
+        desc: "Soporte especializado en potenciar el daño de Viento y reducir el consumo de stamina.", icon: "fa-snowflake",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Jiwon_01.png",
-        skillPassive: "Filo Congelante: Los golpes críticos extienden la congelación.", skillActive: "Estocada Glacial: Penetración de defensa directa.", monsterlingCombo: "Cappy Mama"
+        skillPassive: "Melodía Divina: Otorga bonificaciones al equipo de Viento.", skillActive: "Agrupación Eólica: Reúne a los enemigos en un punto.", monsterlingCombo: "Cappy Mama"
     },
 
     // ==========================================
-    // --- 4 ESTRELLAS (12 PERSONAJES) ---
+    // --- 4 ESTRELLAS ---
     // ==========================================
     { 
-        id: "leeho", name: "Leeho", rarity: "4★", element: "Fuego", role: "Luchador", weapon: "Espada corta", 
-        desc: "Luchador felino de fuego de gran agilidad. Desata ráfagas de arañazos ígneos y ataques veloces.", icon: "fa-cat",
+        id: "leeho", name: "Leeho", rarity: "4★", element: "Fuego", role: "Asesino", weapon: "Espada corta", 
+        desc: "Luchador felino de fuego con marca de cazador y reducción de resistencia elemental.", icon: "fa-cat",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Leeho_01.png",
-        skillPassive: "Garra Incandescente: Los golpes críticos aplican acumulaciones de quemadura.", skillActive: "Danza del Tigre Ígneo: Embate acrobático envolvente con garras de fuego.", monsterlingCombo: "Scarlet Queen"
+        skillPassive: "Marca del Cazador: Estabilidad de daño continuo y quemadura.", skillActive: "Zarpazo Ígneo: Cortes veloces en cadena.", monsterlingCombo: "Scarlet Queen"
     },
     { 
-        id: "cloud_4", name: "Cloud", rarity: "4★", element: "Rayo", role: "Destructor", weapon: "Mandoble", 
-        desc: "Guerrero silencioso enfocado en misiones de ruptura y aturdimiento básico.", icon: "fa-bolt",
+        id: "cloud_4", name: "Cloud", rarity: "4★", element: "Hielo", role: "Destructor", weapon: "Mandoble", 
+        desc: "Guerrero de hielo experto en disparos y ataques perforantes de gran alcance.", icon: "fa-bolt",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Cloud_01.png",
-        skillPassive: "Corte Veloz: Incrementa el daño físico básico.", skillActive: "Impacto Relámpago: Tajo descendente con carga eléctrica.", monsterlingCombo: "King Slime"
+        skillPassive: "Generación de Cristales: Escala según los enemigos golpeados.", skillActive: "Flecha Glacial: Disparo perforante de alta eficacia.", monsterlingCombo: "King Slime"
     },
     { 
         id: "verna_4", name: "Verna", rarity: "4★", element: "Fuego", role: "Luchador", weapon: "Espada corta", 
-        desc: "Versión base de la aventurera Verna con equilibrado daño de fuego.", icon: "fa-fire",
+        desc: "Versión base de la aventurera Verna con daño de fuego equilibrado.", icon: "fa-fire",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Verna_01.png",
-        skillPassive: "Chispa: Otorga pequeña probabilidad de quemadura.", skillActive: "Corte Ígneo: Ataque básico envuelto en llamas.", monsterlingCombo: "Cappyberry"
+        skillPassive: "Chispa: Otorga probabilidad de quemadura al golpear.", skillActive: "Corte Ígneo: Tajo frontal envuelto en llamas.", monsterlingCombo: "Cappyberry"
     },
     { 
-        id: "reina", name: "Reina", rarity: "4★", element: "Fuego", role: "Asesino", weapon: "Dagas", 
-        desc: "Ágil combatiente que ataca desde los flancos con cuchillas ardientes.", icon: "fa-fire-burner",
+        id: "reina", name: "Reina", rarity: "4★", element: "Rayo", role: "Destructor", weapon: "Dagas", 
+        desc: "Especialista en romper la barra Stagger acumulando energía eléctrica.", icon: "fa-fire-burner",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Reina_01.png",
-        skillPassive: "Emboscada: Incrementa el daño por la espalda.", skillActive: "Danza Flamígera: Ráfaga rápida de cortes de fuego.", monsterlingCombo: "Scarlet Queen"
+        skillPassive: "Acumulación de Voltio: Potencia el golpe final de ruptura.", skillActive: "Estocada Eléctrica: Corte fulminante.", monsterlingCombo: "Scarlet Queen"
     },
     { 
-        id: "francis_4", name: "Francis", rarity: "4★", element: "Rayo", role: "Luchador", weapon: "Espada corta", 
-        desc: "Espadachín eléctrico experto en combos de ataques rápidos.", icon: "fa-bolt",
+        id: "francis_4", name: "Francis", rarity: "4★", element: "Tierra", role: "Soporte", weapon: "Espada corta", 
+        desc: "Hechicera de apoyo que convierte defensa en curación y aplica veneno protector.", icon: "fa-bolt",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Francis_01.png",
-        skillPassive: "Sobrecarga: Genera chispas adicionales en golpes críticos.", skillActive: "Corte Voltio: Desplazamiento rápido entre enemigos.", monsterlingCombo: "King Slime"
+        skillPassive: "Bruma Curativa: Otorga regeneración y buffs de daño crítico.", skillActive: "Niebla de Tierra: Debilita la armadura rival.", monsterlingCombo: "King Slime"
     },
     { 
         id: "bonnie", name: "Bonnie", rarity: "4★", element: "Viento", role: "Soporte", weapon: "Catalizador", 
-        desc: "Soporte táctico que impulsa la movilidad y esquiva de sus aliados.", icon: "fa-wind",
+        desc: "Soporte táctico de viento que destaca en la resonancia contra hordas de enemigos.", icon: "fa-wind",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Bonnie_01.png",
-        skillPassive: "Brisa Suave: Aumenta la regeneración de aguante.", skillActive: "Escudo de Viento: Otorga inmunidad a ralentizaciones.", monsterlingCombo: "Cappyberry"
+        skillPassive: "Resonancia Eólica: Aumenta la sinergia de equipo.", skillActive: "Pulso de Viento: Barrido defensivo.", monsterlingCombo: "Cappyberry"
     },
     { 
-        id: "ellie", name: "Ellie", rarity: "4★", element: "Hielo", role: "Luchador", weapon: "Espada corta", 
-        desc: "Espadachín glacial que congela enemigos pequeños en combate cercano.", icon: "fa-snowflake",
+        id: "ellie", name: "Ellie", rarity: "4★", element: "Tierra", role: "Destructor", weapon: "Espada corta", 
+        desc: "Especialista en daño de neutralización y ruptura con atributos terrestres.", icon: "fa-snowflake",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Ellie_01.png",
-        skillPassive: "Escarcha Cortante: Ralentiza al enemigo golpeado.", skillActive: "Tajo Helado: Golpe frontal con probabilidad de congelación.", monsterlingCombo: "Gaba Turtle"
+        skillPassive: "Impacto Telúrico: Rompe la guardia enemiga.", skillActive: "Tajo de Roca: Golpe frontal contundente.", monsterlingCombo: "Gaba Turtle"
     },
     { 
         id: "daisy", name: "Daisy", rarity: "4★", element: "Tierra", role: "Soporte", weapon: "Báculo", 
-        desc: "Soporte defensivo que genera barreras de piedra para proteger al grupo.", icon: "fa-shield-halved",
+        desc: "Soporte de apoyo basado en la sabiduría de las reinas elfas y barreras de piedra.", icon: "fa-shield-halved",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Daisy_01.png",
-        skillPassive: "Piel de Piedra: Aumenta la defensa base del equipo.", skillActive: "Barrera Rocosa: Absorbe un porcentaje de daño entrante.", monsterlingCombo: "King Slime"
+        skillPassive: "Escudo Ancestral: Absorbe daño físico.", skillActive: "Protección de Gaia: Cura y defiende al grupo.", monsterlingCombo: "King Slime"
     },
     { 
-        id: "sera", name: "Sera", rarity: "4★", element: "Rayo", role: "Asesino", weapon: "Lanza", 
-        desc: "Lancera veloz que ataca con descargas eléctricas precisas.", icon: "fa-bolt",
+        id: "sera", name: "Sera", rarity: "4★", element: "Hielo", role: "Luchador", weapon: "Lanza", 
+        desc: "Lancera híbrida Viento-Hielo capaz de congelar de forma permanente a los jefes.", icon: "fa-bolt",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Sera_01.png",
-        skillPassive: "Punta de Voltio: Incrementa el daño crítico de perforación.", skillActive: "Estocada Eléctrica: Estocada frontal de alta velocidad.", monsterlingCombo: "King Slime"
+        skillPassive: "Control Glacial: Extiende la duración de los estados de hielo.", skillActive: "Estocada Polar: Congelación instantánea.", monsterlingCombo: "King Slime"
     },
     { 
-        id: "benjamin", name: "Benjamin", rarity: "4★", element: "Tierra", role: "Destructor", weapon: "Mandoble", 
-        desc: "Luchador de pesada armadura especializado en romper posturas enemigas.", icon: "fa-shield-heart",
+        id: "benjamin", name: "Benjamin", rarity: "4★", element: "Rayo", role: "Asesino", weapon: "Mandoble", 
+        desc: "Soporte eléctrico de alta asistencia que despliega clones y fuentes de aflicción.", icon: "fa-shield-heart",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Benjamin_01.png",
-        skillPassive: "Contrapeso: Reduce la probabilidad de ser interrumpido.", skillActive: "Golpe Demoledor: Gran impacto de ruptura física.", monsterlingCombo: "King Slime"
+        skillPassive: "Eco Eléctrico: Activa ataques de asistencia al usar habilidades.", skillActive: "Clon Voltio: Descarga secundaria automática.", monsterlingCombo: "King Slime"
     },
     { 
-        id: "angel", name: "Angel", rarity: "4★", element: "Fuego", role: "Soporte", weapon: "Báculo", 
-        desc: "Sanadora de fuego que convierte el daño en curación para los aliados.", icon: "fa-heart",
+        id: "angel", name: "Angel", rarity: "4★", element: "Fuego", role: "Asesino", weapon: "Báculo", 
+        desc: "Sub-DPS de fuego con asistencia fuera de campo para limpiar oleadas rápidamente.", icon: "fa-heart",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Angel_01.png",
-        skillPassive: "Llama Curativa: Restaura vida al detonar reacciones.", skillActive: "Bendición Calida: Curación de área para todo el equipo.", monsterlingCombo: "Cappy Mama"
+        skillPassive: "Cooperación de Fuego: Daño automático al cambiar de personaje.", skillActive: "Lluvia Incandescente: Daño masivo en área.", monsterlingCombo: "Cappy Mama"
     },
     { 
-        id: "yeonhwa", name: "Yeonhwa", rarity: "4★", element: "Hielo", role: "Luchador", weapon: "Catalizador", 
-        desc: "Control de masas mediante ráfagas de congelación de área.", icon: "fa-ice-cream",
+        id: "yeonhwa", name: "Yeonhwa", rarity: "4★", element: "Rayo", role: "Asesino", weapon: "Catalizador", 
+        desc: "Asesina centrada en críticos con ataques fantasma coordinados de rayo.", icon: "fa-ice-cream",
         image: "https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Yeonhwa_01.png",
-        skillPassive: "Escarcha: Ralentiza a los enemigos cercanos.", skillActive: "Explosión Helada: Ráfaga de hielo en forma de cono.", monsterlingCombo: "Gaba Turtle"
+        skillPassive: "Ejecución Eléctrica: Alta bonificación de daño crítico.", skillActive: "Ráfaga Voltio: Golpes fantasma múltiples.", monsterlingCombo: "Gaba Turtle"
     }
 ];
 
+// OTROS DATOS GLOBALES
 const equipData = [
     { name: "Cañón Criogénico Gaba", rarity: "5★", type: "Cañón", stat: "+22% Daño Hielo", desc: "Arma insignia de Isabella. Aumenta la tasa crítica en enemigos congelados." },
     { name: "Sable de Viento de Belana", rarity: "5★", type: "Espada Ligera", stat: "+18% Prob. CRIT", desc: "Incrementa el daño de ataque normal tras cambiar de personaje." },
