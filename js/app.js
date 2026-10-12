@@ -46,9 +46,9 @@ function filterCharacters() {
     } else if (sortVal === 'za') {
         filtered.sort((a, b) => b.name.localeCompare(a.name));
     } else if (sortVal === 'rarity-desc') {
-        filtered.sort((a, b) => b.rarity.localeCompare(a.rarity));
-    } else if (sortVal === 'rarity-asc') {
         filtered.sort((a, b) => a.rarity.localeCompare(b.rarity));
+    } else if (sortVal === 'rarity-asc') {
+        filtered.sort((a, b) => b.rarity.localeCompare(a.rarity));
     }
 
     renderCharacterGrid(filtered);
@@ -306,7 +306,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     const btn = document.getElementById('installPwaBtn');
-    if (btn) btn.classList.remove('hidden');
+    if (btn) btn.classList.add('hidden');
 });
 
 function installPWA() {
@@ -333,4 +333,3 @@ window.onload = function() {
     renderAll();
     loadProfile();
 };
-        
