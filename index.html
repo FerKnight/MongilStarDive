@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mongil: Star Dive - Guía Completa (Octubre 2026)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        .hero { background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
+        .section { scroll-margin-top: 80px; }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-200">
+
+    <!-- HERO -->
+    <header class="hero text-white py-20">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <h1 class="text-6xl font-bold mb-4">Mongil: Star Dive</h1>
+            <p class="text-3xl mb-8">Guía Completa • Monsterlings • Equipamientos • Builds</p>
+            <a href="#guia" class="bg-white text-blue-900 px-8 py-4 rounded-full font-bold text-xl hover:bg-yellow-400 transition">Ir a la guía</a>
+        </div>
+    </header>
+
+    <!-- NAVEGACIÓN -->
+    <nav class="bg-gray-900 py-4 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 flex gap-8 text-lg">
+            <a href="#monsterlings" class="hover:text-yellow-400 transition">Monsterlings</a>
+            <a href="#equipamientos" class="hover:text-yellow-400 transition">Equipamientos</a>
+            <a href="#artefactos" class="hover:text-yellow-400 transition">Artefactos</a>
+            <a href="#builds" class="hover:text-yellow-400 transition">Builds</a>
+            <a href="#consejos" class="hover:text-yellow-400 transition">Consejos</a>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto px-6 py-12">
+
+        <!-- INTRO -->
+        <section class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-center">¿Qué es Mongil: Star Dive?</h2>
+            <p class="text-xl leading-relaxed text-center max-w-3xl mx-auto">
+                RPG de acción de captura de monstruos. Captura Monsterlings adorables, equipa con accesorios y domina el combate tag-team. 
+                ¡Perfecto para principiantes y jugadores hardcore!
+            </p>
+            <p class="text-center mt-6 text-lg">Patch 1.4 • Actualizado octubre 2026</p>
+        </section>
+
+        <!-- MONSTERLINGS -->
+        <section id="monsterlings" class="section mb-20 bg-gray-900 p-10 rounded-3xl">
+            <h2 class="text-4xl font-bold mb-8 flex items-center gap-4"><i class="fas fa-skull text-red-500"></i> Monsterlings</h2>
+            
+            <div class="grid md:grid-cols-2 gap-10">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-4">Tiers (S/A/B/C)</h3>
+                    <!-- S Tier -->
+                    <div class="mb-8">
+                        <h4 class="text-green-400 text-xl font-bold">S Tier (Imprescindibles)</h4>
+                        <ul class="list-disc pl-6 space-y-2">
+                            <li><strong>Cappy Mama</strong> – Recuperación de HP (2.4-2.52%)</li>
+                            <li><strong>Forkmugger</strong> – Reduce DEF física enemiga</li>
+                            <li><strong>Big Bro Goblin</strong> – HP del equipo tras 10 ataques básicos</li>
+                            <li><strong>El Dorado Guardian</strong> – ATK +5.78% vs bosses (10s)</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- A Tier -->
+                    <div>
+                        <h4 class="text-yellow-400 text-xl font-bold">A Tier (Muy recomendados)</h4>
+                        <ul class="list-disc pl-6 space-y-2">
+                            <li><strong>Teal Cappy</strong> – Crit DMG y ATK en habilidades especiales</li>
+                            <li><strong>King Slime</strong> – DEF del equipo vs Agua</li>
+                            <li><strong>Moon Shadow Lupe</strong> – Crit Rate elemental</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-2xl font-semibold mb-4">Cómo equipar</h3>
+                    <ul class="space-y-6 text-lg">
+                        <li class="flex gap-4"><i class="fas fa-check text-green-400 mt-1"></i> 3-4 Monsterlings flexibles (Link Chain)</li>
+                        <li class="flex gap-4"><i class="fas fa-check text-green-400 mt-1"></i> Prioriza uptime alto (no buffs de ventana corta)</li>
+                        <li class="flex gap-4"><i class="fas fa-check text-green-400 mt-1"></i> Rerolla traits hasta que coincidan con tu elemento</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- EQUIPAMIENTOS -->
+        <section id="equipamientos" class="section mb-20">
+            <h2 class="text-4xl font-bold mb-8">Equipamientos (Equipment)</h2>
+            <p class="text-2xl mb-8">Farm en Abyss Gear Dungeons + sets de 4 piezas</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-gray-900 p-8 rounded-3xl">
+                    <h3 class="text-2xl font-bold mb-4 text-green-400">Sets recomendados</h3>
+                    <ul class="space-y-4 text-lg">
+                        <li class="flex justify-between"><span>Hahnul's Roar 5★</span><span class="text-green-400">Fire + Crit DMG</span></li>
+                        <li class="flex justify-between"><span>Mountain Peak Majesty 4★</span><span class="text-green-400">Fire RES -3%</span></li>
+                        <li class="flex justify-between"><span>Abyss 5★</span><span class="text-green-400">Wind + Crit</span></li>
+                    </ul>
+                </div>
+                <div class="bg-gray-900 p-8 rounded-3xl">
+                    <h3 class="text-2xl font-bold mb-4 text-amber-400">Tips</h3>
+                    <ul class="list-disc pl-6 space-y-3 text-lg">
+                        <li>Equipa % stats altos (ATK, Crit DMG, RES)</li>
+                        <li>Alternativas de 2 piezas si no tienes 4</li>
+                        <li>Sube primero los personajes antes de los equipos</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ARTEFACTOS -->
+        <section id="artefactos" class="section mb-20 bg-gray-900 p-10 rounded-3xl">
+            <h2 class="text-4xl font-bold mb-8">Artefactos (Artifacts)</h2>
+            
+            <div class="grid md:grid-cols-2 gap-10">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 text-blue-400">Flare (Fire Destroyer)</h3>
+                    <ul class="space-y-3">
+                        <li>• Exquisite Dragon Fire 5★ – ATK + Fire DMG</li>
+                        <li>• Thunder-raising Tremors 5★ – Neutralization + ATK</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 text-purple-400">Esther (Wind Assassin)</h3>
+                    <ul class="space-y-3">
+                        <li>• Wind-Harboring Broom 5★ – ATK + Crit DMG 45%</li>
+                        <li>• Suffocating Darkness 5★ – Crit DMG Support</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- BUILDS -->
+        <section id="builds" class="section mb-20">
+            <h2 class="text-4xl font-bold mb-8">Builds Completos (Meta octubre 2026)</h2>
+            
+            <div class="grid md:grid-cols-2 gap-10">
+                <!-- Flare -->
+                <div class="bg-gray-900 p-8 rounded-3xl">
+                    <h3 class="text-3xl font-bold text-red-400 mb-6">Flare – Fire Destroyer (S+)</h3>
+                    <div class="space-y-6">
+                        <div><strong>Monsterlings:</strong> Duoxini / Fiend (DMG) + Amon's Shadow (equipo)</div>
+                        <div><strong>Artefactos:</strong> Exquisite Dragon Fire + Thunder-raising Tremors</div>
+                        <div><strong>Equipo:</strong> Hahnul's Roar + Mountain Peak Majesty</div>
+                        <div><strong>Equipo equipo:</strong> Mina (DPS) + Francis (Support)</div>
+                    </div>
+                </div>
+                
+                <!-- Esther -->
+                <div class="bg-gray-900 p-8 rounded-3xl">
+                    <h3 class="text-3xl font-bold text-purple-400 mb-6">Esther – Wind Assassin (S+)</h3>
+                    <div class="space-y-6">
+                        <div><strong>Monsterlings:</strong> Nokjung / Manwol (DMG) + El Dorado Guardian</div>
+                        <div><strong>Artefactos:</strong> Wind-Harboring Broom + Suffocating Darkness</div>
+                        <div><strong>Equipo:</strong> Devourer Stance</div>
+                        <div><strong>Equipo equipo:</strong> Flare + Jiwon (Support)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONSEJOS -->
+        <section id="consejos" class="section mb-20 text-center">
+            <h2 class="text-4xl font-bold mb-8">Consejos Finales</h2>
+            <div class="max-w-2xl mx-auto space-y-8 text-xl">
+                <p class="bg-gray-900 p-8 rounded-3xl">✅ Early game: Cappy Mama + personajes S tier</p>
+                <p class="bg-gray-900 p-8 rounded-3xl">✅ Farm Abyss para equipos y eventos semi-aniversario</p>
+                <p class="bg-gray-900 p-8 rounded-3xl">✅ Usa códigos oficiales (TheClick.gg o página de Netmarble)</p>
+                <p class="bg-gray-900 p-8 rounded-3xl">✅ PC: Netmarble Launcher + Proton</p>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="bg-black py-12 text-center text-gray-500">
+        <p>Guía 100% original y exclusiva • Octubre 2026 • Creada para ti 🔥</p>
+        <p class="mt-4">¡Comparte y dale estrellas a tu repositorio!</p>
+    </footer>
+
+</body>
+                                                                                                </html>
