@@ -1,5 +1,23 @@
 let deferredPrompt;
 
+// HELPER PARA COLORES Y BADGES ELEMENTALES EXACTOS
+function getElementBadge(element) {
+    switch (element) {
+        case 'Fuego':
+            return { bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/40', icon: 'fa-fire' };
+        case 'Hielo':
+            return { bg: 'bg-cyan-500/20', text: 'text-cyan-300', border: 'border-cyan-500/40', icon: 'fa-snowflake' };
+        case 'Rayo':
+            return { bg: 'bg-yellow-500/20', text: 'text-yellow-400', border: 'border-yellow-500/40', icon: 'fa-bolt' };
+        case 'Viento':
+            return { bg: 'bg-emerald-500/20', text: 'text-emerald-400', border: 'border-emerald-500/40', icon: 'fa-wind' };
+        case 'Tierra':
+            return { bg: 'bg-amber-600/20', text: 'text-amber-400', border: 'border-amber-600/40', icon: 'fa-mountain' };
+        default:
+            return { bg: 'bg-slate-500/20', text: 'text-slate-300', border: 'border-slate-500/40', icon: 'fa-circle' };
+    }
+}
+
 // LÓGICA DE FILTRADO COMBINABLE DE PERSONAJES
 function filterCharacters() {
     const searchInput = document.getElementById('charSearch');
@@ -53,39 +71,51 @@ function renderCharacterGrid(list) {
         return;
     }
 
-    charGrid.innerHTML = list.map(c => `
-        <div onclick="openCharacterModal('${c.id}')" class="bg-brand-card border border-white/10 rounded-xl p-3 hover:border-cyan-400 cursor-pointer active:scale-95 transition transform">
-            <div class="w-10 h-10 rounded-lg bg-purple-900/50 text-cyan-400 flex items-center justify-center text-lg mb-2">
-                <i class="fa-solid ${c.icon}"></i>
+    charGrid.innerHTML = list.map(c => {
+        const elemBadge = getElementBadge(c.element);
+        return `
+            <div onclick="openCharacterModal('${c.id}')" class="bg-brand-card border border-white/10 rounded-xl p-3 hover:border-cyan-400 cursor-pointer active:scale-95 transition transform relative overflow-hidden group">
+                <div class="w-full h-28 rounded-lg bg-slate-900 overflow-hidden mb-2 relative flex items-center justify-center">
+                    <img src="${c.image}" alt="${c.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src='https://sgimage.netmarble.com/common/gamemediahub/uploads/1bf60dc6-fde1-43ea-9599-d4fb8b224f8d.png';">
+                    <span class="absolute top-1 right-1 bg-black/60 backdrop-blur-md text-yellow-400 font-bold text-[10px] px-1.5 py-0.5 rounded border border-yellow-500/30">${c.rarity}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <h3 class="font-title font-bold text-sm text-slate-100 truncate">${c.name}</h3>
+                </div>
+                <div class="flex items-center gap-1.5 mt-1 mb-1">
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
+                        <i class="fa-solid ${elemBadge.icon}"></i> ${c.element}
+                    </span>
+                    <span class="text-[10px] text-purple-300 font-medium">${c.role}</span>
+                </div>
+                <p class="text-[11px] text-slate-400 line-clamp-2">${c.desc}</p>
             </div>
-            <div class="flex items-center justify-between">
-                <h3 class="font-title font-bold text-sm text-slate-100">${c.name}</h3>
-                <span class="text-[10px] text-yellow-400 font-bold">${c.rarity}</span>
-            </div>
-            <p class="text-[10px] text-cyan-400 font-semibold mb-1">${c.element} • ${c.role}</p>
-            <p class="text-[11px] text-slate-400 line-clamp-2">${c.desc}</p>
-            <span class="inline-block mt-2 text-[9px] text-purple-400 font-bold"><i class="fa-solid fa-circle-info"></i> Ver Detalles</span>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
-// SUBMENÚ / MODAL DETALLADO
+// MODAL ENLAZADO CON FOTO DEL PERSONAJE
 function openCharacterModal(charId) {
     const char = charactersData.find(c => c.id === charId);
     if (!char) return;
 
     const modal = document.getElementById('charModal');
     const modalContent = document.getElementById('charModalContent');
+    const elemBadge = getElementBadge(char.element);
 
     modalContent.innerHTML = `
-        <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+        <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-purple-900/60 text-cyan-400 flex items-center justify-center text-2xl">
-                    <i class="fa-solid ${char.icon}"></i>
-                </div>
+                <img src="${char.image}" alt="${char.name}" class="w-14 h-14 rounded-xl object-cover border border-purple-500/40 shadow-lg" onerror="this.onerror=null; this.src='https://sgimage.netmarble.com/common/gamemediahub/uploads/1bf60dc6-fde1-43ea-9599-d4fb8b224f8d.png';">
                 <div>
                     <h3 class="font-title font-black text-lg text-slate-100">${char.name}</h3>
-                    <p class="text-xs text-yellow-400 font-bold">${char.rarity} | <span class="text-cyan-400">${char.element}</span> | <span class="text-purple-300">${char.role}</span></p>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <span class="text-xs text-yellow-400 font-bold">${char.rarity}</span>
+                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
+                            <i class="fa-solid ${elemBadge.icon}"></i> ${char.element}
+                        </span>
+                        <span class="text-xs text-purple-300 font-semibold">${char.role}</span>
+                    </div>
                 </div>
             </div>
             <button onclick="closeCharacterModal()" class="w-8 h-8 rounded-lg bg-brand-card hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm">
@@ -303,3 +333,4 @@ window.onload = function() {
     renderAll();
     loadProfile();
 };
+    
