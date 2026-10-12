@@ -19,8 +19,112 @@
     </style>
 </head>
 <body class="bg-gray-950 text-gray-200">
-    <!-- HEADER, BOTÓN Y BARRA LATERAL IGUALES (copia del equipamientos.html) -->
-    <!-- ... (copia exactamente el header + botón + sidebar del equipamientos.html) ... -->
-    <!-- (para no hacerte largo, usa el mismo código del segundo archivo y solo cambia el <title> y el contenido de la sección) -->
+
+    <!-- HEADER -->
+    <header class="hero text-white py-16 text-center">
+        <div class="max-w-6xl mx-auto px-6">
+            <h1 class="text-6xl font-bold mb-2 tracking-tight">MongilStarDive</h1>
+        </div>
+    </header>
+
+    <!-- BOTÓN DE MENÚ FLOTANTE (ESQUINA SUPERIOR IZQUIERDA) -->
+    <button onclick="toggleSidebar()" class="lg:hidden fixed top-4 left-4 bg-gray-900 text-white p-5 rounded-full shadow-2xl z-50 text-4xl hover:scale-110 transition">
+        ☰
+    </button>
+
+    <!-- BARRA LATERAL -->
+    <div id="sidebar" class="sidebar fixed top-0 left-0 w-80 h-full bg-gray-900 p-8 overflow-y-auto shadow-2xl z-50 hidden lg:block">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="text-3xl font-bold text-white">Mongil: Star Dive</h2>
+            <button onclick="toggleSidebar()" class="lg:hidden text-4xl text-white">✕</button>
+        </div>
+        <nav class="space-y-2">
+            <a href="index.html" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">🏠 Inicio</a>
+            <a href="equipamientos.html" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">⚙️ Equipamientos</a>
+            <a href="monsterlings.html" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">🦁 Monsterlings</a>
+            <a href="artefactos.html" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">🔮 Artefactos</a>
+        </nav>
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="flex-1 lg:ml-80 px-6">
+
+        <h2 class="text-4xl font-bold mb-8 flex items-center gap-4">🦁 Monsterlings</h2>
+        
+        <!-- Tiers -->
+        <div id="tiers" class="mb-16">
+            <h3 class="text-3xl font-bold mb-6">Tiers (S/A/B/C)</h3>
+            <div class="grid md:grid-cols-2 gap-10">
+                <div>
+                    <h4 class="text-green-400 text-xl font-bold mb-4">S Tier (Imprescindibles)</h4>
+                    <ul class="list-disc pl-6 space-y-2 text-lg">
+                        <li><strong>Cappy Mama</strong> – Recuperación de HP (2.4-2.52%)</li>
+                        <li><strong>Forkmugger</strong> – Reduce DEF física enemiga</li>
+                        <li><strong>Big Bro Goblin</strong> – HP equipo tras 10 ataques básicos</li>
+                        <li><strong>El Dorado Guardian</strong> – ATK +5.78% vs bosses (10s)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-yellow-400 text-xl font-bold mb-4">A Tier (Muy recomendados)</h4>
+                    <ul class="list-disc pl-6 space-y-2 text-lg">
+                        <li><strong>Teal Cappy</strong> – Crit DMG y ATK en habilidades especiales</li>
+                        <li><strong>King Slime</strong> – DEF equipo vs Agua</li>
+                        <li><strong>Moon Shadow Lupe</strong> – Crit Rate elemental</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legendarios -->
+        <div id="legendarios" class="mb-20">
+            <h3 class="text-3xl font-bold mb-6 text-purple-400">Monsterlings Legendarios</h3>
+            <p class="text-xl mb-6">Los más poderosos (raro y endgame). Prioriza estos para alto nivel.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-gray-900 p-8 rounded-3xl">
+                    <h4 class="text-xl font-bold mb-4">Fiend / Duoxini</h4>
+                    <p class="text-lg">DMG personal brutal + Link Chain flexible</p>
+                </div>
+                <div class="bg-gray-900 p-8 rounded-3xl">
+                    <h4 class="text-xl font-bold mb-4">Amon's Shadow / Ice Fist Dude</h4>
+                    <p class="text-lg">Buff equipo + elemental control</p>
+                </div>
+                <div class="bg-gray-900 p-8 rounded-3xl">
+                    <h4 class="text-xl font-bold mb-4">Nokjung / Manwol</h4>
+                    <p class="text-lg">Burst AoE + Crit alto</p>
+                </div>
+                <div class="bg-gray-900 p-8 rounded-3xl">
+                    <h4 class="text-xl font-bold mb-4">El Dorado Guardian</h4>
+                    <p class="text-lg">ATK masivo vs bosses (ya en S)</p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-2xl font-semibold mb-4">Cómo equipar</h3>
+            <ul class="space-y-6 text-lg">
+                <li class="flex gap-4"><i class="fas fa-check text-green-400 mt-1"></i> 3-4 Monsterlings flexibles (Link Chain)</li>
+                <li class="flex gap-4"><i class="fas fa-check text-green-400 mt-1"></i> Prioriza uptime alto</li>
+                <li class="flex gap-4"><i class="fas fa-check text-green-400 mt-1"></i> Rerolla traits según tu elemento</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-black py-12 text-center text-gray-500">
+        <p>Guía 100% original y exclusiva • Octubre 2026 • Creada para ti 🔥</p>
+        <p class="mt-4">¡Comparte y dale estrellas a tu repositorio!</p>
+    </footer>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('hidden');
+        }
+        function closeSidebar() {
+            if (window.innerWidth < 1024) {
+                document.getElementById('sidebar').classList.add('hidden');
+            }
+        }
+    </script>
 </body>
 </html>
