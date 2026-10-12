@@ -1,19 +1,20 @@
 {
-  "name": "Guía Mongil Star Dive",
-  "short_name": "Mongil Guide",
-  "description": "Guía completa de Monsterlings, equipamientos y builds en Mongil: Star Dive",
-  "start_url": ".",
+  "name": "Mongil: Star Dive - PWA Oficial",
+  "short_name": "Mongil Dive",
+  "description": "Base de datos, códice y perfil para Mongil: Star Dive en español",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#1e3a8a",
-  "theme_color": "#1e3a8a",
+  "background_color": "#0a0d14",
+  "theme_color": "#0a0d14",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
