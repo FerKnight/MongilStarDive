@@ -11,10 +11,10 @@
     <style>
         body { font-family: system-ui, sans-serif; }
         .hero { background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
-        .sidebar { transition: transform 0.3s; }
+        .sidebar { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .sidebar.open { transform: translateX(0); }
         @media (max-width: 1024px) {
-            .sidebar { position: fixed; top: 0; left: -100%; width: 80%; height: 100vh; background: #111827; z-index: 50; box-shadow: 2px 0 10px rgba(0,0,0,0.5); }
+            .sidebar { position: fixed; top: 0; left: -100%; width: 85%; height: 100vh; background: #111827; z-index: 60; box-shadow: 4px 0 20px rgba(0,0,0,0.6); }
         }
     </style>
 </head>
@@ -29,44 +29,44 @@
         </div>
     </header>
 
-    <!-- BOTÓN DE MENÚ EN MÓVIL -->
-    <button onclick="toggleSidebar()" class="lg:hidden fixed top-4 right-4 bg-gray-900 text-white p-4 rounded-full shadow-2xl z-50 text-3xl">
+    <!-- BOTÓN DE MENÚ FLOTANTE (ESQUINA SUPERIOR IZQUIERDA) -->
+    <button onclick="toggleSidebar()" class="lg:hidden fixed top-4 left-4 bg-gray-900 text-white p-5 rounded-full shadow-2xl z-50 text-4xl hover:scale-110 transition">
         ☰
     </button>
 
     <!-- BARRA LATERAL -->
-    <div id="sidebar" class="sidebar fixed top-0 left-0 w-72 h-full bg-gray-900 p-6 overflow-y-auto shadow-2xl z-50 hidden lg:block">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl font-bold text-white">Mongil: Star Dive</h2>
-            <button onclick="toggleSidebar()" class="lg:hidden text-3xl text-white">✕</button>
+    <div id="sidebar" class="sidebar fixed top-0 left-0 w-80 h-full bg-gray-900 p-8 overflow-y-auto shadow-2xl z-50 hidden lg:block">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="text-3xl font-bold text-white">Mongil: Star Dive</h2>
+            <button onclick="toggleSidebar()" class="lg:hidden text-4xl text-white">✕</button>
         </div>
-        <nav>
-            <a href="#inicio" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-800 rounded-xl text-lg mb-1">🏠 Inicio</a>
-            <a href="#equipamientos" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-800 rounded-xl text-lg mb-1">⚙️ Equipamientos</a>
+        <nav class="space-y-2">
+            <a href="#inicio" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">🏠 Inicio</a>
+            <a href="#equipamientos" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">⚙️ Equipamientos</a>
             
             <!-- Monsterlings desplegable -->
             <div class="mt-4">
-                <button onclick="toggleMonsterlings()" class="flex items-center justify-between w-full px-4 py-3 hover:bg-gray-800 rounded-xl text-lg mb-1">
+                <button onclick="toggleMonsterlings()" class="flex items-center justify-between w-full px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">
                     🦁 Monsterlings
-                    <span id="arrow" class="text-xl transition">▼</span>
+                    <span id="arrow" class="text-2xl transition">▼</span>
                 </button>
-                <div id="submenu" class="hidden pl-6 mt-2 space-y-2">
-                    <a href="#tiers" class="block px-4 py-2 hover:bg-gray-800 rounded-xl text-lg">Tiers</a>
-                    <a href="#legendarios" class="block px-4 py-2 hover:bg-gray-800 rounded-xl text-lg">Legendarios</a>
+                <div id="submenu" class="hidden pl-8 mt-3 space-y-3">
+                    <a href="#tiers" onclick="closeSidebar()" class="block px-6 py-3 hover:bg-gray-800 rounded-2xl text-xl">Tiers</a>
+                    <a href="#legendarios" onclick="closeSidebar()" class="block px-6 py-3 hover:bg-gray-800 rounded-2xl text-xl">Legendarios</a>
                 </div>
             </div>
             
-            <a href="#artefactos" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-800 rounded-xl text-lg mb-1">🔮 Artefactos</a>
-            <a href="#builds" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-800 rounded-xl text-lg mb-1">💪 Builds</a>
-            <a href="#consejos" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-800 rounded-xl text-lg">💡 Consejos</a>
+            <a href="#artefactos" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">🔮 Artefactos</a>
+            <a href="#builds" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">💪 Builds</a>
+            <a href="#consejos" onclick="closeSidebar()" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-800 rounded-2xl text-xl">💡 Consejos</a>
         </nav>
     </div>
 
     <!-- CONTENIDO PRINCIPAL -->
-    <div class="flex-1 lg:ml-72">
+    <div class="flex-1 lg:ml-80">
 
         <!-- INTRO -->
-        <section id="inicio" class="mb-20">
+        <section id="inicio" class="mb-20 px-6">
             <h2 class="text-4xl font-bold mb-6 text-center">¿Qué es Mongil: Star Dive?</h2>
             <p class="text-xl text-center max-w-3xl mx-auto">
                 RPG de acción con captura de Monsterlings adorables. Equipa accesorios, domina el combate tag-team y sube de nivel tu equipo.
@@ -75,7 +75,7 @@
         </section>
 
         <!-- EQUIPAMIENTOS -->
-        <section id="equipamientos" class="mb-20">
+        <section id="equipamientos" class="mb-20 px-6">
             <h2 class="text-4xl font-bold mb-8">Equipamientos (Equipment)</h2>
             <p class="text-2xl mb-8">Farm en Abyss Gear Dungeons + sets de 4 piezas</p>
             <div class="grid md:grid-cols-2 gap-8">
@@ -99,7 +99,7 @@
         </section>
 
         <!-- MONSTERLINGS -->
-        <section id="monsterlings" class="mb-20">
+        <section id="monsterlings" class="mb-20 px-6">
             <h2 class="text-4xl font-bold mb-8 flex items-center gap-4">🦁 Monsterlings</h2>
             
             <!-- Tiers -->
@@ -161,7 +161,7 @@
         </section>
 
         <!-- ARTEFACTOS -->
-        <section id="artefactos" class="mb-20 bg-gray-900 p-10 rounded-3xl">
+        <section id="artefactos" class="mb-20 bg-gray-900 p-10 rounded-3xl px-6">
             <h2 class="text-4xl font-bold mb-8">Artefactos (Artifacts)</h2>
             <div class="grid md:grid-cols-2 gap-10">
                 <div>
@@ -182,7 +182,7 @@
         </section>
 
         <!-- BUILDS -->
-        <section id="builds" class="mb-20">
+        <section id="builds" class="mb-20 px-6">
             <h2 class="text-4xl font-bold mb-8">Builds Completos (Meta octubre 2026)</h2>
             <div class="grid md:grid-cols-2 gap-10">
                 <div class="bg-gray-900 p-8 rounded-3xl">
@@ -207,7 +207,7 @@
         </section>
 
         <!-- CONSEJOS -->
-        <section id="consejos" class="mb-20 text-center">
+        <section id="consejos" class="mb-20 px-6 text-center">
             <h2 class="text-4xl font-bold mb-8">Consejos Finales</h2>
             <div class="max-w-2xl mx-auto space-y-8 text-xl">
                 <p class="bg-gray-900 p-8 rounded-3xl">✅ Early game: Cappy Mama + personajes S tier</p>
@@ -227,8 +227,10 @@
 
     <script>
         function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('hidden');
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
         }
+        
         function toggleMonsterlings() {
             const submenu = document.getElementById('submenu');
             submenu.classList.toggle('hidden');
@@ -236,93 +238,11 @@
             arrow.textContent = submenu.classList.contains('hidden') ? '▼' : '▲';
         }
         
-        // Cerrar sidebar en móvil al hacer clic en enlace
-        document.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth < 1024) {
-                    document.getElementById('sidebar').classList.add('hidden');
-                }
-            });
-        });
-    </script>
-</body>
-</html>         <li>• Thunder-raising Tremors 5★ – Neutralization + ATK</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-bold mb-4 text-purple-400">Esther (Wind Assassin)</h3>
-                        <ul class="space-y-3">
-                            <li>• Wind-Harboring Broom 5★ – ATK + Crit DMG 45%</li>
-                            <li>• Suffocating Darkness 5★ – Crit DMG Support</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- BUILDS -->
-            <section id="builds" class="mb-20">
-                <h2 class="text-4xl font-bold mb-8">Builds Completos (Meta octubre 2026)</h2>
-                <div class="grid md:grid-cols-2 gap-10">
-                    <div class="bg-gray-900 p-8 rounded-3xl">
-                        <h3 class="text-3xl font-bold text-red-400 mb-6">Flare – Fire Destroyer (S+)</h3>
-                        <div class="space-y-6 text-lg">
-                            <div><strong>Monsterlings:</strong> Duoxini / Fiend (DMG) + Amon's Shadow</div>
-                            <div><strong>Artefactos:</strong> Exquisite Dragon Fire + Thunder-raising Tremors</div>
-                            <div><strong>Equipo:</strong> Hahnul's Roar + Mountain Peak Majesty</div>
-                            <div><strong>Equipo equipo:</strong> Mina (DPS) + Francis (Support)</div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-900 p-8 rounded-3xl">
-                        <h3 class="text-3xl font-bold text-purple-400 mb-6">Esther – Wind Assassin (S+)</h3>
-                        <div class="space-y-6 text-lg">
-                            <div><strong>Monsterlings:</strong> Nokjung / Manwol (DMG) + El Dorado Guardian</div>
-                            <div><strong>Artefactos:</strong> Wind-Harboring Broom + Suffocating Darkness</div>
-                            <div><strong>Equipo:</strong> Devourer Stance</div>
-                            <div><strong>Equipo equipo:</strong> Flare + Jiwon (Support)</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CONSEJOS -->
-            <section id="consejos" class="mb-20 text-center">
-                <h2 class="text-4xl font-bold mb-8">Consejos Finales</h2>
-                <div class="max-w-2xl mx-auto space-y-8 text-xl">
-                    <p class="bg-gray-900 p-8 rounded-3xl">✅ Early game: Cappy Mama + personajes S tier</p>
-                    <p class="bg-gray-900 p-8 rounded-3xl">✅ Farm Abyss para equipos y eventos semi-aniversario</p>
-                    <p class="bg-gray-900 p-8 rounded-3xl">✅ Usa códigos oficiales (TheClick.gg o Netmarble)</p>
-                    <p class="bg-gray-900 p-8 rounded-3xl">✅ PC: Netmarble Launcher + Proton</p>
-                </div>
-            </section>
-
-        </div>
-    </div>
-
-    <!-- FOOTER -->
-    <footer class="bg-black py-12 text-center text-gray-500">
-        <p>Guía 100% original y exclusiva • Octubre 2026 • Creada para ti 🔥</p>
-        <p class="mt-4">¡Comparte y dale estrellas a tu repositorio!</p>
-    </footer>
-
-    <script>
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('hidden');
+        function closeSidebar() {
+            if (window.innerWidth < 1024) {
+                document.getElementById('sidebar').classList.add('hidden');
+            }
         }
-        function toggleMonsterlings() {
-            const submenu = document.getElementById('submenu');
-            submenu.classList.toggle('hidden');
-            const arrow = document.getElementById('arrow');
-            arrow.textContent = submenu.classList.contains('hidden') ? '▼' : '▲';
-        }
-        
-        // Cerrar sidebar en móvil al hacer clic en enlace
-        document.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth < 1024) {
-                    document.getElementById('sidebar').classList.add('hidden');
-                }
-            });
-        });
     </script>
 </body>
 </html>
