@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mongil: Star Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <style>
+        body { font-family: system-ui, sans-serif; }
+        .hero { background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
+        .sidebar { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .sidebar.open { transform: translateX(0); }
+        @media (max-width: 1024px) {
+            .sidebar { position: fixed; top: 0; left: -100%; width: 85%; height: 100vh; background: #111827; z-index: 60; box-shadow: 4px 0 20px rgba(0,0,0,0.6); }
+        }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-200">
+    <!-- HEADER, BOTÓN Y BARRA LATERAL IGUALES (copia del equipamientos.html) -->
+    <!-- ... (copia exactamente el header + botón + sidebar del equipamientos.html) ... -->
+    <!-- (para no hacerte largo, usa el mismo código del segundo archivo y solo cambia el <title> y el contenido de la sección) -->
+</body>
+</html>
