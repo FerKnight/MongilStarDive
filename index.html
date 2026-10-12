@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MONGIL: STAR DIVE - PWA Oficial en Español</title>
+    
+    <!-- Enlace al Manifest PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0a0d14">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <!-- Google Fonts & FontAwesome -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -45,9 +51,6 @@
         }
         .neon-glow {
             box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
-        }
-        .neon-cyan-glow {
-            box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);
         }
         .bottom-nav-fixed {
             position: fixed;
@@ -107,13 +110,8 @@
             from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .scroll-hide::-webkit-scrollbar {
-            display: none;
-        }
-        .scroll-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        .scroll-hide::-webkit-scrollbar { display: none; }
+        .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-brand-bg text-slate-100 min-h-screen">
@@ -135,71 +133,53 @@
             <span id="pwaStatus" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> ONLINE
             </span>
-            <button id="installPwaBtn" class="hidden px-2.5 py-1 rounded-md bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-title text-[10px] font-bold shadow-lg">
+            <button id="installPwaBtn" onclick="installPWA()" class="hidden px-2.5 py-1 rounded-md bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-title text-[10px] font-bold shadow-lg">
                 INSTALAR
             </button>
         </div>
     </header>
 
-    <!-- Contenedor Principal de Vistas -->
+    <!-- Contenedor Principal -->
     <main class="max-w-4xl mx-auto px-4 pt-4">
 
         <!-- 1. PERSONAJES -->
         <section id="tab-personajes" class="content-section">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h2 class="font-title font-extrabold text-xl text-cyan-400">ROSTER DE PERSONAJES</h2>
-                    <p class="text-xs text-slate-400">Héroes y luchadores oficiales de Belana</p>
-                </div>
-                <span class="text-xs px-2 py-1 bg-brand-card rounded border border-white/10 text-slate-300">Total: 12</span>
-            </div>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" id="charGrid">
-                <!-- Se llena mediante JS -->
-            </div>
+            <h2 class="font-title font-extrabold text-xl text-cyan-400 mb-1">ROSTER DE PERSONAJES</h2>
+            <p class="text-xs text-slate-400 mb-4">Héroes y luchadores oficiales de Belana</p>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" id="charGrid"></div>
         </section>
 
         <!-- 2. EQUIPAMIENTOS -->
         <section id="tab-equipamientos" class="content-section">
             <h2 class="font-title font-extrabold text-xl text-cyan-400 mb-1">EQUIPAMIENTOS Y ARMAS</h2>
             <p class="text-xs text-slate-400 mb-4">Arsenal para maximizar el poder de combate</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="equipGrid">
-                <!-- Se llena mediante JS -->
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="equipGrid"></div>
         </section>
 
         <!-- 3. MONSTERLINGS -->
         <section id="tab-monsterlings" class="content-section">
             <h2 class="font-title font-extrabold text-xl text-cyan-400 mb-1">CÓDICE DE MONSTERLINGS</h2>
             <p class="text-xs text-slate-400 mb-4">Criaturas capturables del Archipiélago de Gaba y Belana</p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="monsterGrid">
-                <!-- Se llena mediante JS -->
-            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="monsterGrid"></div>
         </section>
 
         <!-- 4. ARTEFACTOS -->
         <section id="tab-artefactos" class="content-section">
             <h2 class="font-title font-extrabold text-xl text-cyan-400 mb-1">SETS DE ARTEFACTOS</h2>
             <p class="text-xs text-slate-400 mb-4">Bonificaciones de 2 y 4 piezas para cada rol</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="artifactGrid">
-                <!-- Se llena mediante JS -->
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="artifactGrid"></div>
         </section>
 
-        <!-- 5. INICIO (CENTRAL Y SIMPLIFICADO) -->
+        <!-- 5. INICIO (INICIO CENTRAL Y PERFIL) -->
         <section id="tab-inicio" class="content-section active">
             <div class="bg-brand-surface border border-purple-500/30 rounded-2xl p-5 mb-5 relative overflow-hidden neon-glow">
-                <div class="absolute -right-8 -top-8 w-32 h-32 bg-purple-600/10 rounded-full blur-2xl"></div>
-                
                 <h2 class="font-title font-black text-lg text-slate-100 mb-4 flex items-center gap-2">
                     <i class="fa-solid fa-address-card text-purple-400"></i> PERFIL DE JUGADOR
                 </h2>
 
-                <!-- Selector de Avatar -->
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="relative">
-                        <div id="avatarPreview" class="w-20 h-20 rounded-full bg-gradient-to-tr from-purple-600 to-cyan-500 p-1 flex items-center justify-center text-3xl text-white shadow-lg">
-                            <i id="avatarIcon" class="fa-solid fa-user-ninja"></i>
-                        </div>
+                    <div id="avatarPreview" class="w-20 h-20 rounded-full bg-gradient-to-tr from-purple-600 to-cyan-500 p-1 flex items-center justify-center text-3xl text-white shadow-lg">
+                        <i id="avatarIcon" class="fa-solid fa-user-ninja"></i>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 mb-1">Icono del perfil</label>
@@ -212,7 +192,6 @@
                     </div>
                 </div>
 
-                <!-- Formulario Perfil Directo -->
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs text-slate-400 font-semibold mb-1">Nombre / Nickname</label>
@@ -238,11 +217,11 @@
                     </div>
                     <div>
                         <label class="block text-xs text-slate-400 font-semibold mb-1">Mensaje personalizado</label>
-                        <textarea id="pMessage" rows="2" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-100 focus:border-cyan-400 focus:outline-none" placeholder="¡Busco compañeros para Conquest Raids!">¡Explorando Belana y capturando todos los Monsterlings!</textarea>
+                        <textarea id="pMessage" rows="2" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-100 focus:border-cyan-400 focus:outline-none" placeholder="¡Escribe tu mensaje!">¡Explorando Belana y capturando todos los Monsterlings!</textarea>
                     </div>
 
-                    <button onclick="saveProfile()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-cyan-500 rounded-xl font-title font-bold text-sm text-white shadow-lg shadow-purple-900/40">
-                        GUARDAR DATOS EN EL DISPOSITIVO
+                    <button onclick="saveProfile()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-cyan-500 rounded-xl font-title font-bold text-sm text-white shadow-lg">
+                        GUARDAR DATOS
                     </button>
                 </div>
             </div>
@@ -252,329 +231,84 @@
         <section id="tab-builds" class="content-section">
             <h2 class="font-title font-extrabold text-xl text-cyan-400 mb-1">BUILDS RECOMENDADAS</h2>
             <p class="text-xs text-slate-400 mb-4">Composiciones Meta de la Versión 1.4</p>
-            <div class="space-y-4" id="buildsList">
-                <!-- Se llena mediante JS -->
-            </div>
+            <div class="space-y-4" id="buildsList"></div>
         </section>
 
         <!-- 7. MAPA INTERACTIVO -->
         <section id="tab-mapa" class="content-section">
             <h2 class="font-title font-extrabold text-xl text-cyan-400 mb-1">MAPA DE BELANA</h2>
             <p class="text-xs text-slate-400 mb-4">Zonas de exploración y recursos</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="mapGrid">
-                <!-- Se llena mediante JS -->
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="mapGrid"></div>
         </section>
 
         <!-- 8. EVENTOS -->
         <section id="tab-eventos" class="content-section">
             <h2 class="font-title font-extrabold text-xl text-cyan-400 mb-1">EVENTOS ACTIVOS</h2>
             <p class="text-xs text-slate-400 mb-4">Campaña de Medio Aniversario y Recompensas</p>
-            <div class="space-y-3" id="eventsList">
-                <!-- Se llena mediante JS -->
-            </div>
+            <div class="space-y-3" id="eventsList"></div>
         </section>
 
         <!-- 9. NOVEDADES -->
         <section id="tab-novedades" class="content-section">
             <h2 class="font-title font-extrabold text-xl text-cyan-400 mb-1">NOVEDADES OFICIALES</h2>
             <p class="text-xs text-slate-400 mb-4">Notas de parches, anuncios y actualizaciones de Netmarble</p>
-            <div class="space-y-4" id="newsList">
-                <!-- Se llena mediante JS -->
-            </div>
+            <div class="space-y-4" id="newsList"></div>
         </section>
 
     </main>
 
-    <!-- BARRA DE NAVEGACIÓN FIJA INFERIOR (REDISTRIBUCIÓN DE 9 BOTONES CON INICIO AL CENTRO EN LA POSICIÓN 5) -->
+    <!-- Navegación Fija Inferior -->
     <nav class="bottom-nav-fixed px-1">
         <div class="max-w-4xl mx-auto flex items-center justify-between overflow-x-auto scroll-hide py-1">
-            
-            <!-- 1. Personajes -->
             <button onclick="switchTab('personajes')" class="nav-item min-w-[58px]" id="nav-personajes">
                 <i class="fa-solid fa-users text-base mb-0.5"></i>
                 <span>Personajes</span>
             </button>
-
-            <!-- 2. Equipamientos -->
             <button onclick="switchTab('equipamientos')" class="nav-item min-w-[62px]" id="nav-equipamientos">
                 <i class="fa-solid fa-shield-halved text-base mb-0.5"></i>
                 <span>Equipos</span>
             </button>
-
-            <!-- 3. Monsterlings -->
             <button onclick="switchTab('monsterlings')" class="nav-item min-w-[62px]" id="nav-monsterlings">
                 <i class="fa-solid fa-paw text-base mb-0.5"></i>
                 <span>Monsterlings</span>
             </button>
-
-            <!-- 4. Artefactos -->
             <button onclick="switchTab('artefactos')" class="nav-item min-w-[58px]" id="nav-artefactos">
                 <i class="fa-solid fa-gem text-base mb-0.5"></i>
                 <span>Artefactos</span>
             </button>
-
-            <!-- 5. INICIO (BOTÓN CENTRAL DESTACADO) -->
+            <!-- Botón Central Inicio -->
             <button onclick="switchTab('inicio')" class="flex flex-col items-center min-w-[64px]" id="nav-inicio">
                 <div class="home-center-btn">
                     <i class="fa-solid fa-house text-xl"></i>
                 </div>
                 <span class="text-[10px] font-bold text-cyan-400 -mt-3">Inicio</span>
             </button>
-
-            <!-- 6. Builds -->
             <button onclick="switchTab('builds')" class="nav-item min-w-[54px]" id="nav-builds">
                 <i class="fa-solid fa-fire text-base mb-0.5"></i>
                 <span>Builds</span>
             </button>
-
-            <!-- 7. Mapa -->
             <button onclick="switchTab('mapa')" class="nav-item min-w-[54px]" id="nav-mapa">
                 <i class="fa-solid fa-map-location-dot text-base mb-0.5"></i>
                 <span>Mapa</span>
             </button>
-
-            <!-- 8. Eventos -->
             <button onclick="switchTab('eventos')" class="nav-item min-w-[54px]" id="nav-eventos">
                 <i class="fa-solid fa-calendar-star text-base mb-0.5"></i>
                 <span>Eventos</span>
             </button>
-
-            <!-- 9. Novedades -->
             <button onclick="switchTab('novedades')" class="nav-item min-w-[58px]" id="nav-novedades">
                 <i class="fa-solid fa-newspaper text-base mb-0.5"></i>
                 <span>Novedades</span>
             </button>
-
         </div>
     </nav>
 
-    <!-- NOTIFICACIÓN TOAST -->
+    <!-- Toast Notification -->
     <div id="toast" class="fixed top-16 right-4 bg-purple-600 text-white px-4 py-2 rounded-lg shadow-xl text-xs font-semibold translate-x-full transition-transform duration-300 z-50 flex items-center gap-2">
-        <i class="fa-solid fa-circle-check"></i> <span id="toastMsg">Guardado con éxito</span>
+        <i class="fa-solid fa-circle-check"></i> <span id="toastMsg">Guardado</span>
     </div>
 
-    <!-- SCRIPT PRINCIPAL DE DATOS Y LÓGICA -->
-    <script>
-        // DATOS OFICIALES DE LA VERSIÓN 1.4 DE MONGIL: STAR DIVE
-        const charactersData = [
-            { name: "Isabella", rarity: "5★", element: "Hielo", role: "Vértice de Batalla", weapon: "Cañón Láser", desc: "Genial ingeniera de la Ver. 1.4. Dispara ráfagas heladas que ralentizan y congelan jefes.", icon: "fa-atom" },
-            { name: "Verna", rarity: "5★", element: "Fuego", role: "Vértice de Batalla", weapon: "Espada corta", desc: "Protagonista aventurera. Ejecuta potentes tajos ardientes con alta movilidad.", icon: "fa-fire" },
-            { name: "Cloud", rarity: "5★", element: "Rayo", role: "Destructor", weapon: "Mandoble", desc: "Guerrero silencioso capaz de romper la barra Stagger de los enemigos rápidamente.", icon: "fa-bolt" },
-            { name: "Esther", rarity: "5★", element: "Fuego", role: "Soporte", weapon: "Báculo", desc: "Especialista en potenciar el ataque del grupo y crear escudos protectores.", icon: "fa-wand-magic-sparkles" },
-            { name: "Jiwon", rarity: "5★", element: "Agua", role: "Ruptura", weapon: "Lanza", desc: "Aplica debilidades acuáticas e interrumpe ataques cargados.", icon: "fa-droplet" },
-            { name: "Flare", rarity: "4★", element: "Fuego", role: "Vértice de Batalla", weapon: "Dagas", desc: "Ataques veloces que provocan quemaduras acumulativas.", icon: "fa-flame" },
-            { name: "Gabi", rarity: "4★", element: "Viento", role: "Soporte", weapon: "Catalizador", desc: "Acelera la velocidad de movimiento y recarga el medidor de relevo.", icon: "fa-wind" },
-            { name: "Chloe", rarity: "4★", element: "Tierra", role: "Tanque", weapon: "Escudo", desc: "Especialista defensiva introducida en la región del Archipiélago de Gaba.", icon: "fa-shield" }
-        ];
-
-        const equipData = [
-            { name: "Cañón Criogénico Gaba", rarity: "5★", type: "Cañón", stat: "+22% Daño Hielo", desc: "Arma insignia de Isabella. Aumenta la tasa crítica en enemigos congelados." },
-            { name: "Sable de Viento de Belana", rarity: "5★", type: "Espada Ligera", stat: "+18% Prob. CRIT", desc: "Incrementa el daño de ataque normal tras cambiar de personaje." },
-            { name: "Maza de Titán del Vacío", rarity: "5★", type: "Mandoble", stat: "+25% Ruptura", desc: "Destruye la defensa de los jefes de Conquest Raids." },
-            { name: "Grimorio Celestial", rarity: "4★", type: "Báculo", stat: "+15% Recarga Energía", desc: "Aumenta la curación efectuada a los miembros del equipo." }
-        ];
-
-        const monsterData = [
-            { name: "Cappyberry", habitat: "Praderas Centralia", rarity: "Raro", skill: "Incrementa la probabilidad crítica del equipo en un 8%." },
-            { name: "Cappy Mama", habitat: "Bosque Encantado", rarity: "Épico", skill: "Activa una cura de emergencia al bajar del 30% de vida." },
-            { name: "King Slime", habitat: "Cueva Cristalina", rarity: "Épico", skill: "Derriba a los enemigos pequeños con impacto terrestre." },
-            { name: "Gaba Turtle", habitat: "Archipiélago Gaba (1.4)", rarity: "Leyenda", skill: "Otorga un escudo equivalente al 15% de la salud máxima." },
-            { name: "Scarlet Queen", habitat: "Tierras Áridas", rarity: "Leyenda", skill: "Aumenta el daño de Fuego en un 20% durante 10s." }
-        ];
-
-        const artifactData = [
-            { name: "Eco del Vacío", set2: "ATK +12%", set4: "+25% Daño al romper la barra Stagger del jefe." },
-            { name: "Guardián de Belana", set2: "DEF +15%", set4: "Genera un escudo del 20% de la vida al hacer cambio de personaje (Tag)." },
-            { name: "Congelación Profunda", set2: "Daño Hielo +10%", set4: "+20% Prob. CRIT contra enemigos afectados por estado Hielo." },
-            { name: "Frenesí Elemental", set2: "Recarga +15%", set4: "Reduce el tiempo de recarga de habilidades tras detonar una reacción." }
-        ];
-
-        const buildsData = [
-            { name: "Composición Congelación 1.4", chars: "Isabella + Jiwon + Gabi", desc: "Utiliza el control helado de Isabella potenciado por el soporte de velocidad de Gabi." },
-            { name: "Hypercarry Fuego Meta", chars: "Verna + Esther + Flare", desc: "Maximiza el daño de Fuego mediante quemaduras en cadena y escudos de Esther." },
-            { name: "Ruptura de Jefes (Boss Stagger)", chars: "Cloud + Chloe + Cappy Mama", desc: "Diseñado para derribar jefes de raid como Sorin en pocos segundos." }
-        ];
-
-        const mapData = [
-            { region: "Archipiélago de Gaba (NUEVO 1.4)", desc: "Región insular del Episodio 7. Hábitat de 29 nuevos Monsterlings y materiales de ascensión." },
-            { region: "Centralia", desc: "Praderas iniciales llenas de cofres, misiones de historia y campamentos de entrenamiento." },
-            { region: "Deadlands", desc: "Zona de alto riesgo habitada por el jefe legendario Sorin y recursos de alto nivel." }
-        ];
-
-        const eventsData = [
-            { title: "Medio Aniversario: 150 Tiradas Gratis", date: "En curso", desc: "Inicia sesión diariamente para reclamar hasta 150 boletos de invocación." },
-            { title: "Misiones Especiales de Isabella", date: "Hasta fin de versión", desc: "Completa los desafíos en el Archipiélago Gaba para desbloquear recompensas exclusivas." },
-            { title: "Santuario Elemental", date: "Permanente", desc: "Nuevo modo de juego para desbloquear y subir de nivel habilidades pasivas." }
-        ];
-
-        const newsData = [
-            { tag: "VER. 1.4", title: "Lanzamiento de la Versión 1.4: Half Anniversary", desc: "Añadida la nueva heroína 5★ Isabella, la región Archipiélago Gaba, el Episodio 7 de la historia y el jefe Sorin." },
-            { tag: "MANTENIMIENTO", title: "Notas del Parche 1.4.1", desc: "Ajustes de equilibrio para habilidades de ruptura y optimizaciones en la versión de PC y móvil." },
-            { tag: "ANUNCIO", title: "Modo AR Móvil ya disponible", desc: "Tómate fotos en el mundo real con tus personajes y Monsterlings preferidos." }
-        ];
-
-        // FUNCIONES DE RENDERIZADO
-        function renderAll() {
-            // Personajes
-            document.getElementById('charGrid').innerHTML = charactersData.map(c => `
-                <div class="bg-brand-card border border-white/10 rounded-xl p-3 hover:border-cyan-400/50 transition">
-                    <div class="w-10 h-10 rounded-lg bg-purple-900/50 text-cyan-400 flex items-center justify-center text-lg mb-2">
-                        <i class="fa-solid ${c.icon}"></i>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <h3 class="font-title font-bold text-sm text-slate-100">${c.name}</h3>
-                        <span class="text-[10px] text-yellow-400 font-bold">${c.rarity}</span>
-                    </div>
-                    <p class="text-[10px] text-cyan-400 font-semibold mb-1">${c.element} • ${c.role}</p>
-                    <p class="text-[11px] text-slate-400 line-clamp-2">${c.desc}</p>
-                </div>
-            `).join('');
-
-            // Equipamientos
-            document.getElementById('equipGrid').innerHTML = equipData.map(e => `
-                <div class="bg-brand-card border border-white/10 rounded-xl p-3">
-                    <div class="flex justify-between items-start mb-1">
-                        <h3 class="font-title font-bold text-sm text-purple-300">${e.name}</h3>
-                        <span class="text-xs text-yellow-400 font-bold">${e.rarity}</span>
-                    </div>
-                    <p class="text-xs text-cyan-400 font-semibold mb-2">${e.type} | ${e.stat}</p>
-                    <p class="text-xs text-slate-400">${e.desc}</p>
-                </div>
-            `).join('');
-
-            // Monsterlings
-            document.getElementById('monsterGrid').innerHTML = monsterData.map(m => `
-                <div class="bg-brand-card border border-white/10 rounded-xl p-3">
-                    <h3 class="font-title font-bold text-sm text-slate-100">${m.name}</h3>
-                    <p class="text-[10px] text-purple-400 mb-1">${m.habitat} • <span class="text-slate-300">${m.rarity}</span></p>
-                    <p class="text-xs text-slate-400"><strong class="text-slate-200">Habilidad:</strong> ${m.skill}</p>
-                </div>
-            `).join('');
-
-            // Artefactos
-            document.getElementById('artifactGrid').innerHTML = artifactData.map(a => `
-                <div class="bg-brand-card border border-white/10 rounded-xl p-3">
-                    <h3 class="font-title font-bold text-sm text-cyan-300 mb-1">${a.name}</h3>
-                    <p class="text-xs text-slate-300 mb-1"><strong>(2 Pcs):</strong> ${a.set2}</p>
-                    <p class="text-xs text-slate-400"><strong>(4 Pcs):</strong> ${a.set4}</p>
-                </div>
-            `).join('');
-
-            // Builds
-            document.getElementById('buildsList').innerHTML = buildsData.map(b => `
-                <div class="bg-brand-card border border-white/10 rounded-xl p-4">
-                    <h3 class="font-title font-bold text-base text-purple-300 mb-1">${b.name}</h3>
-                    <p class="text-xs text-cyan-400 font-semibold mb-2">Equipo: ${b.chars}</p>
-                    <p class="text-xs text-slate-300">${b.desc}</p>
-                </div>
-            `).join('');
-
-            // Mapa
-            document.getElementById('mapGrid').innerHTML = mapData.map(m => `
-                <div class="bg-brand-card border border-white/10 rounded-xl p-3">
-                    <h3 class="font-title font-bold text-sm text-cyan-400 mb-1"><i class="fa-solid fa-location-dot"></i> ${m.region}</h3>
-                    <p class="text-xs text-slate-300">${m.desc}</p>
-                </div>
-            `).join('');
-
-            // Eventos
-            document.getElementById('eventsList').innerHTML = eventsData.map(ev => `
-                <div class="bg-brand-card border border-white/10 rounded-xl p-3 flex justify-between items-center">
-                    <div>
-                        <h3 class="font-title font-bold text-sm text-slate-100">${ev.title}</h3>
-                        <p class="text-xs text-slate-400">${ev.desc}</p>
-                    </div>
-                    <span class="text-[10px] px-2 py-1 bg-purple-900/60 text-purple-300 rounded font-semibold whitespace-nowrap">${ev.date}</span>
-                </div>
-            `).join('');
-
-            // Novedades
-            document.getElementById('newsList').innerHTML = newsData.map(n => `
-                <div class="bg-brand-card border border-white/10 rounded-xl p-4">
-                    <span class="text-[10px] px-2 py-0.5 bg-cyan-900/60 text-cyan-300 rounded font-bold tracking-wider">${n.tag}</span>
-                    <h3 class="font-title font-bold text-base text-slate-100 mt-2 mb-1">${n.title}</h3>
-                    <p class="text-xs text-slate-300 leading-relaxed">${n.desc}</p>
-                </div>
-            `).join('');
-        }
-
-        // CAMBIO DE PESTAÑAS
-        function switchTab(tabId) {
-            document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-
-            const targetSection = document.getElementById(`tab-${tabId}`);
-            if (targetSection) targetSection.classList.add('active');
-
-            const targetNav = document.getElementById(`nav-${tabId}`);
-            if (targetNav) targetNav.classList.add('active');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // LÓGICA DEL PERFIL DE JUGADOR (LOCALSTORAGE)
-        function saveProfile() {
-            const profile = {
-                name: document.getElementById('pName').value,
-                uid: document.getElementById('pUID').value,
-                friendCode: document.getElementById('pFriendCode').value,
-                message: document.getElementById('pMessage').value,
-                icon: document.getElementById('avatarIcon').className
-            };
-            localStorage.setItem('mongil_player_profile', JSON.stringify(profile));
-            showToast('Perfil guardado correctamente');
-        }
-
-        function loadProfile() {
-            const saved = localStorage.getItem('mongil_player_profile');
-            if (saved) {
-                const profile = JSON.parse(saved);
-                if (profile.name) document.getElementById('pName').value = profile.name;
-                if (profile.uid) document.getElementById('pUID').value = profile.uid;
-                if (profile.friendCode) document.getElementById('pFriendCode').value = profile.friendCode;
-                if (profile.message) document.getElementById('pMessage').value = profile.message;
-                if (profile.icon) document.getElementById('avatarIcon').className = profile.icon;
-            }
-        }
-
-        function setAvatar(iconClass) {
-            document.getElementById('avatarIcon').className = `fa-solid ${iconClass}`;
-            saveProfile();
-        }
-
-        function copyField(elementId) {
-            const input = document.getElementById(elementId);
-            input.select();
-            navigator.clipboard.writeText(input.value);
-            showToast('¡Copiado al portapapeles!');
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').innerText = msg;
-            toast.classList.remove('translate-x-full');
-            setTimeout(() => toast.classList.add('translate-x-full'), 2500);
-        }
-
-        // SERVICE WORKER & REGISTRO PWA DENTRO DEL HTML
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                const swCode = `
-                    self.addEventListener('install', e => self.skipWaiting());
-                    self.addEventListener('activate', e => e.waitUntil(clients.claim()));
-                    self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
-                `;
-                const blob = new Blob([swCode], { type: 'text/javascript' });
-                navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
-            });
-        }
-
-        // INICIALIZACIÓN
-        window.onload = function() {
-            renderAll();
-            loadProfile();
-        };
-    </script>
+    <!-- Scripts de la aplicación -->
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
