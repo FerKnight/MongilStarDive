@@ -1,6 +1,6 @@
 const charactersData = [
     // ==========================================
-    // --- 5 ESTRELLAS ---
+    // --- 5 ESTRELLAS (16 PERSONAJES) ---
     // ==========================================
     { 
         id: "isabella", name: "Isabella", rarity: "5★", element: "Hielo", role: "Luchador", weapon: "Cañón Láser", 
@@ -100,7 +100,7 @@ const charactersData = [
     },
 
     // ==========================================
-    // --- 4 ESTRELLAS ---
+    // --- 4 ESTRELLAS (12 PERSONAJES) ---
     // ==========================================
     { 
         id: "leeho", name: "Leeho", rarity: "4★", element: "Fuego", role: "Asesino", weapon: "Espada corta", 
@@ -176,7 +176,6 @@ const charactersData = [
     }
 ];
 
-// OTROS DATOS GLOBALES
 const equipData = [
     { name: "Cañón Criogénico Gaba", rarity: "5★", type: "Cañón", stat: "+22% Daño Hielo", desc: "Arma insignia de Isabella. Aumenta la tasa crítica en enemigos congelados." },
     { name: "Sable de Viento de Belana", rarity: "5★", type: "Espada Ligera", stat: "+18% Prob. CRIT", desc: "Incrementa el daño de ataque normal tras cambiar de personaje." },
