@@ -171,7 +171,7 @@
             </div>
         </div>
 
-        <!-- Filtros de Categorías -->
+        <!-- Filtros de Categorías (Roles y Elementos Oficiales) -->
         <div class="grid grid-cols-3 gap-2">
             <div>
                 <label class="block text-[10px] text-slate-400 mb-0.5">Rareza</label>
@@ -185,11 +185,10 @@
                 <label class="block text-[10px] text-slate-400 mb-0.5">Rol</label>
                 <select id="charRole" onchange="filterCharacters()" class="w-full bg-brand-card border border-white/10 rounded-lg px-2 py-1 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
                     <option value="all">Todos los Roles</option>
-                    <option value="Vértice de Batalla">Vértice de Batalla</option>
+                    <option value="Luchador">Luchador</option>
                     <option value="Destructor">Destructor</option>
+                    <option value="Asesino">Asesino</option>
                     <option value="Soporte">Soporte</option>
-                    <option value="Ruptura">Ruptura</option>
-                    <option value="Tanque">Tanque</option>
                 </select>
             </div>
             <div>
@@ -199,7 +198,6 @@
                     <option value="Fuego">Fuego</option>
                     <option value="Hielo">Hielo</option>
                     <option value="Rayo">Rayo</option>
-                    <option value="Agua">Agua</option>
                     <option value="Viento">Viento</option>
                     <option value="Tierra">Tierra</option>
                 </select>
@@ -210,7 +208,6 @@
     <!-- Grilla de Personajes -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" id="charGrid"></div>
 </section>
-
 
         <!-- 2. EQUIPAMIENTOS -->
         <section id="tab-equipamientos" class="content-section">
