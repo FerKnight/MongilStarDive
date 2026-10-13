@@ -1,284 +1,117 @@
 const charactersData = [
+    // --- 5 ESTRELLAS ---
     { 
         id: "isabella", name: "Isabella", rarity: "5★", element: "Hielo", role: "Luchador", weapon: "Cañón Láser", 
-        image: "assets/images/Character_Portrait/portrait_Isabella_01.png",
-        skills: {
-            basic: "Lanza 3 proyectiles de energía helada consecutivos que infligen daño de Hielo a media distancia.",
-            relay: "Entra al campo disparando una ráfaga criogénica que frena la velocidad de movimiento enemiga un 30%.",
-            special: "Despliega un cañón láser estático que dispara automáticamente congelando al objetivo tras 5 impactos.",
-            charged: "Carga energía térmica durante 1.5s para liberar un rayo concentrado que rompe la guardia enemiga."
-        }
+        image: "assets/images/Character_Portrait/portrait_Isabella_01.png"
     },
     { 
         id: "vivian", name: "Vivian", rarity: "5★", element: "Hielo", role: "Soporte", weapon: "Báculo", 
-        image: "assets/images/Character_Portrait/portrait_Vivian_01.png",
-        skills: {
-            basic: "Ataque continuo con báculo que genera pequeñas esquirlas heladas alrededor del rival.",
-            relay: "Otorga inmediatamente un escudo helado al personaje entrante equivalente al 15% de su Vida Máx.",
-            special: "Invoca un prisma glacial que absorbe proyectiles enemigos y regenera energía de todo el equipo.",
-            charged: "Crea una onda expansiva helada en área que repele a los atacantes cercanos."
-        }
+        image: "assets/images/Character_Portrait/portrait_Vivian_01.png"
     },
     { 
         id: "brishell", name: "Brishell", rarity: "5★", element: "Viento", role: "Asesino", weapon: "Dagas", 
-        image: "assets/images/Character_Portrait/portrait_Brishell_01.png",
-        skills: {
-            basic: "Combo de 5 estocadas hiperveloces con dalias dobles centradas en daño crítico directo.",
-            relay: "Aparece tras la espalda del enemigo asestando un golpe crítico garantizado de elemento Viento.",
-            special: "Ejecuta un vendaval de cortes aéreos continuos manteniendo colgado al objetivo en el aire.",
-            charged: "Desplazamiento sombrío hacia adelante cortando defensas e inflando daño de sangrado."
-        }
+        image: "assets/images/Character_Portrait/portrait_Brishell_01.png"
     },
     { 
         id: "mabel", name: "Mabel", rarity: "5★", element: "Tierra", role: "Destructor", weapon: "Mandoble", 
-        image: "assets/images/Character_Portrait/portrait_Mabel_01.png",
-        skills: {
-            basic: "Secuencia de 3 mandoblazos pesados con elevado multiplicador de ruptura de postura (Stagger).",
-            relay: "Cae con fuerza telúrica sobre el área provocando sacudida y derribo en enemigos pequeños.",
-            special: "Desencadena un sismo masivo en columna que destruye escudos y armaduras pesadas.",
-            charged: "Giro continuo de mandoble que barre enemigos a su paso mientras reduce el daño recibido."
-        }
+        image: "assets/images/Character_Portrait/portrait_Mabel_01.png"
     },
     { 
         id: "francis_summer", name: "Francis: Summer Dive!", rarity: "5★", element: "Viento", role: "Luchador", weapon: "Espada corta", 
-        image: "assets/images/Character_Portrait/portrait_Francis_01.png",
-        skills: {
-            basic: "Estocadas ágiles con florete de brisa veraniega que elevan la probabilidad crítica por impacto.",
-            relay: "Entra creando una corriente acuática que recupera 10 puntos de Stamina para el equipo.",
-            special: "Invoca una ola eólica que arrastra a los enemigos frontales e inflige daño continuo.",
-            charged: "Impulso veloz hacia el frente finalizado con un corte en espiral que dispersa a los rivales."
-        }
+        image: "assets/images/Character_Portrait/portrait_Francis_01.png"
     },
     { 
         id: "verna_summer", name: "Verna: Summer Dive!", rarity: "5★", element: "Fuego", role: "Luchador", weapon: "Espada corta", 
-        image: "assets/images/Character_Portrait/portrait_Verna_01.png",
-        skills: {
-            basic: "Cortes envueltos en fuego solar que aplican marcas de quemadura acumulables hasta 3 veces.",
-            relay: "Detona las marcas de quemadura existentes en los enemigos cercanos al cambiar de héroe.",
-            special: "Tajo solar circular en área que incinera el suelo causando daño elemental por segundo.",
-            charged: "Carga de estocada ígnea perforante que atraviesa las líneas enemigas."
-        }
+        image: "assets/images/Character_Portrait/portrait_Verna_01.png"
     },
     { 
         id: "nagi", name: "Nagi", rarity: "5★", element: "Rayo", role: "Asesino", weapon: "Lanza", 
-        image: "assets/images/Character_Portrait/portrait_Nagi_01.png",
-        skills: {
-            basic: "Barrido continuo de lanza electrificada con largo alcance horizontal y vertical.",
-            relay: "Lanza una chispa voltaica que electrocuta y paraliza momentáneamente al objetivo.",
-            special: "Descarga de rayo en línea recta que transmite electricidad entre objetivos contiguos.",
-            charged: "Salto aéreo con embestida descendente que crea un campo electrificado de alto voltaje."
-        }
+        image: "assets/images/Character_Portrait/portrait_Nagi_01.png"
     },
     { 
         id: "narae", name: "Narae", rarity: "5★", element: "Hielo", role: "Soporte", weapon: "Escudo", 
-        image: "assets/images/Character_Portrait/portrait_Narae_01.png",
-        skills: {
-            basic: "Golpes defensivos con broquel helado que aumentan su propia resistencia física.",
-            relay: "Coloca una pared helada en el frente que bloquea proyectiles y absorbe impactos.",
-            special: "Sismo glacial defensivo que reduce el daño que sufre el grupo entero un 25%.",
-            charged: "Carga de escudo frontal que empuja a los enemigos y reduce sus barra de equilibrio."
-        }
+        image: "assets/images/Character_Portrait/portrait_Narae_01.png"
     },
     { 
         id: "mina", name: "Mina", rarity: "5★", element: "Viento", role: "Asesino", weapon: "Dagas", 
-        image: "assets/images/Character_Portrait/portrait_Mina_01.png",
-        skills: {
-            basic: "Ráfaga de cortes sigilosos con dagas gemelas de alta frecuencia de disparo.",
-            relay: "Vuelve invisible al personaje entrante durante 2 segundos y aumenta su velocidad.",
-            special: "Danza del viento a hipervelocidad atacando aleatoriamente entre los objetivos en pantalla.",
-            charged: "Tajo ejecutador por la espalda que causa daño masivo a objetivos con menos de 30% de Vida."
-        }
+        image: "assets/images/Character_Portrait/portrait_Mina_01.png"
     },
     { 
         id: "esther", name: "Esther", rarity: "5★", element: "Viento", role: "Asesino", weapon: "Báculo", 
-        image: "assets/images/Character_Portrait/portrait_Esther_01.png",
-        skills: {
-            basic: "Ataques mágicos a distancia que lanzan hojas eólicas afiladas.",
-            relay: "Potencia el Ataque de todos los miembros del grupo un 15% durante 10 segundos.",
-            special: "Emboscada eólica de precisión que concentra todos los ataques en el punto débil del jefe.",
-            charged: "Crea una esfera de succión de viento que reúne a los enemigos pequeños en un punto."
-        }
+        image: "assets/images/Character_Portrait/portrait_Esther_01.png"
     },
     { 
         id: "ophelia_5", name: "Ophelia", rarity: "5★", element: "Hielo", role: "Luchador", weapon: "Lanza", 
-        image: "assets/images/Character_Portrait/portrait_Ophelia_01.png",
-        skills: {
-            basic: "Combo directo de penetración con lanza glacial de máxima estabilidad.",
-            relay: "Aplica congelación directa de 1.5s al jefe o enemigo con mayor salud.",
-            special: "Tornado congelante que destruye la postura enemiga provocando estado de vulnerabilidad.",
-            charged: "Estocada de largo alcance que lanza proyectiles de hielo hacia adelante."
-        }
+        image: "assets/images/Character_Portrait/portrait_Ophelia_01.png"
     },
     { 
         id: "flare_5", name: "Flare", rarity: "5★", element: "Fuego", role: "Destructor", weapon: "Dagas", 
-        image: "assets/images/Character_Portrait/portrait_Flare_01.png",
-        skills: {
-            basic: "Ataques veloces de fuego fátuo que derriten la armadura enemiga.",
-            relay: "Aumenta la penetración de armadura del equipo un 20% al ingresar.",
-            special: "Daga incandescente que detona explosiones térmicas en cadena sobre el objetivo.",
-            charged: "Lanzamiento de dalias llameantes que giran en círculo alrededor del usuario."
-        }
+        image: "assets/images/Character_Portrait/portrait_Flare_01.png"
     },
     { 
         id: "sangun_5", name: "Sangun", rarity: "5★", element: "Viento", role: "Luchador", weapon: "Mandoble", 
-        image: "assets/images/Character_Portrait/portrait_Sangun_01.png",
-        skills: {
-            basic: "Cortes pesados continuos propulsados por corrientes de aire.",
-            relay: "Atrae a los enemigos hacia el centro con una onda de depresión de aire.",
-            special: "Huracán de mandoble que gira continuamente destruyendo todo a su paso.",
-            charged: "Corte vertical cargado que proyecta una ráfaga de viento cortante a distancia."
-        }
+        image: "assets/images/Character_Portrait/portrait_Sangun_01.png"
     },
     { 
         id: "gabi_5", name: "Gabi", rarity: "5★", element: "Tierra", role: "Luchador", weapon: "Catalizador", 
-        image: "assets/images/Character_Portrait/portrait_Gabi_01.png",
-        skills: {
-            basic: "Proyección de rocas mágicas que colisionan y rompen guardia.",
-            relay: "Petrifica a los enemigos menores en el área de impacto durante 2 segundos.",
-            special: "Golpe telúrico masivo que levanta pilares de piedra del suelo.",
-            charged: "Genera una muralla rocosa que aturde a los rivales que colisionen contra ella."
-        }
+        image: "assets/images/Character_Portrait/portrait_Gabi_01.png"
     },
     { 
         id: "penny_5", name: "Penny", rarity: "5★", element: "Rayo", role: "Luchador", weapon: "Báculo", 
-        image: "assets/images/Character_Portrait/portrait_Penny_01.png",
-        skills: {
-            basic: "Disparos de centellas eléctricas a media y larga distancia.",
-            relay: "Restaura instantáneamente 15 puntos de energía de habilidad activa.",
-            special: "Rayo eléctrico continuo que mantiene electrocutado al objetivo principal.",
-            charged: "Orbe de energía voltio que orbita al personaje dañando al contacto."
-        }
+        image: "assets/images/Character_Portrait/portrait_Penny_01.png"
     },
     { 
         id: "jiwon", name: "Jiwon", rarity: "5★", element: "Viento", role: "Soporte", weapon: "Lanza", 
-        image: "assets/images/Character_Portrait/portrait_Jiwon_01.png",
-        skills: {
-            basic: "Estocadas rítmicas que regeneran stamina para sí misma.",
-            relay: "Aumenta la velocidad de ataque del equipo en un 20% durante 8 segundos.",
-            special: "Vórtice de agrupación eólica que succiona a todos los rivales del mapa.",
-            charged: "Impulso aéreo que lanza plumas de viento aFiladas hacia abajo."
-        }
+        image: "assets/images/Character_Portrait/portrait_Jiwon_01.png"
     },
     // --- 4 ESTRELLAS ---
     { 
         id: "leeho", name: "Leeho", rarity: "4★", element: "Fuego", role: "Asesino", weapon: "Espada corta", 
-        image: "assets/images/Character_Portrait/portrait_Leeho_01.png",
-        skills: {
-            basic: "Zarpazos felinos de fuego rápidos con alta probabilidad de golpe crítico.",
-            relay: "Aplica la Marca del Cazador, aumentando el daño infligido contra ese objetivo.",
-            special: "Combo acrobático ígneo de 7 golpes que finaliza con una quemadura profunda.",
-            charged: "Salto frontal con tajo doble envuelto en llamas."
-        }
+        image: "assets/images/Character_Portrait/portrait_Leeho_01.png"
     },
     { 
         id: "cloud_4", name: "Cloud", rarity: "4★", element: "Hielo", role: "Destructor", weapon: "Mandoble", 
-        image: "assets/images/Character_Portrait/portrait_Cloud_01.png",
-        skills: {
-            basic: "Impactos lentos con mandoble de hielo de gran alcance.",
-            relay: "Dispara un proyectil glacial que congela al primer enemigo impactado.",
-            special: "Flecha glacial perforante que atraviesa y rompe la postura de múltiples rivales.",
-            charged: "Carga terrestre que genera espinas de hielo al avanzar."
-        }
+        image: "assets/images/Character_Portrait/portrait_Cloud_01.png"
     },
     { 
         id: "verna_4", name: "Verna", rarity: "4★", element: "Fuego", role: "Luchador", weapon: "Espada corta", 
-        image: "assets/images/Character_Portrait/portrait_Verna_01.png",
-        skills: {
-            basic: "Secuencia clásica de espada corta con remate de fuego.",
-            relay: "Entra asestando un tajo ígneo ascendente.",
-            special: "Corte circular envolvente en llamas de alcance medio.",
-            charged: "Estocada recta que prende fuego al objetivo."
-        }
+        image: "assets/images/Character_Portrait/portrait_Verna_01.png"
     },
     { 
         id: "reina", name: "Reina", rarity: "4★", element: "Rayo", role: "Destructor", weapon: "Dagas", 
-        image: "assets/images/Character_Portrait/portrait_Reina_01.png",
-        skills: {
-            basic: "Cortes con dalias que acumulan carga estática en el oponente.",
-            relay: "Descarga la electricidad acumulada en el objetivo causando gran ruptura.",
-            special: "Estocada eléctrica fulminante con desplazamiento rápido.",
-            charged: "Chispazo giratorio que repele a los enemigos agrupados."
-        }
+        image: "assets/images/Character_Portrait/portrait_Reina_01.png"
     },
     { 
         id: "francis_4", name: "Francis", rarity: "4★", element: "Tierra", role: "Soporte", weapon: "Espada corta", 
-        image: "assets/images/Character_Portrait/portrait_Francis_01.png",
-        skills: {
-            basic: "Cortes ligeros que combinan veneno protector.",
-            relay: "Despliega una bruma curativa que regenera salud por segundo.",
-            special: "Niebla de tierra que debilita la armadura y defensa del rival.",
-            charged: "Golpe de escudo terrestre que reduce la agresividad del enemigo."
-        }
+        image: "assets/images/Character_Portrait/portrait_Francis_01.png"
     },
     { 
         id: "bonnie", name: "Bonnie", rarity: "4★", element: "Viento", role: "Soporte", weapon: "Catalizador", 
-        image: "assets/images/Character_Portrait/portrait_Bonnie_01.png",
-        skills: {
-            basic: "Proyectiles eólicos suaves a distancia.",
-            relay: "Otorga resonancia eólica acelerando la recarga de energía del equipo.",
-            special: "Pulso de viento defensivo que repele hordas de enemigos.",
-            charged: "Esfera eólica que permanece flotando y dañando a los rivales."
-        }
+        image: "assets/images/Character_Portrait/portrait_Bonnie_01.png"
     },
     { 
         id: "ellie", name: "Ellie", rarity: "4★", element: "Tierra", role: "Destructor", weapon: "Espada corta", 
-        image: "assets/images/Character_Portrait/portrait_Ellie_01.png",
-        skills: {
-            basic: "Ataques terrestres enfocados en romper posturas defensivas.",
-            relay: "Impacto telúrico que desequilibra a los jefes.",
-            special: "Tajo de roca contundente frontal.",
-            charged: "Ráfaga de golpes pesados cargados sobre el suelo."
-        }
+        image: "assets/images/Character_Portrait/portrait_Ellie_01.png"
     },
     { 
         id: "daisy", name: "Daisy", rarity: "4★", element: "Tierra", role: "Soporte", weapon: "Báculo", 
-        image: "assets/images/Character_Portrait/portrait_Daisy_01.png",
-        skills: {
-            basic: "Disparos de luz telúrica curativa.",
-            relay: "Genera una barrera de piedra protectora alrededor del grupo.",
-            special: "Protección de Gaia que cura salud y aumenta la defensa temporalmente.",
-            charged: "Onda de choque mágica que aturde a enemigos de menor tamaño."
-        }
+        image: "assets/images/Character_Portrait/portrait_Daisy_01.png"
     },
     { 
         id: "sera", name: "Sera", rarity: "4★", element: "Hielo", role: "Luchador", weapon: "Lanza", 
-        image: "assets/images/Character_Portrait/portrait_Sera_01.png",
-        skills: {
-            basic: "Estocadas de lanza helada fluidas.",
-            relay: "Prolonga el estado de congelación activo en los enemigos un 50%.",
-            special: "Estocada polar con helada instantánea.",
-            charged: "Giro de lanza que proyecta ráfagas de escarcha."
-        }
+        image: "assets/images/Character_Portrait/portrait_Sera_01.png"
     },
     { 
         id: "benjamin", name: "Benjamin", rarity: "4★", element: "Rayo", role: "Asesino", weapon: "Mandoble", 
-        image: "assets/images/Character_Portrait/portrait_Benjamin_01.png",
-        skills: {
-            basic: "Trazos pesados con mandoble envuelto en electricidad.",
-            relay: "Invoca un clon de voltio que asiste con ataques automáticos.",
-            special: "Descarga secundaria coordinada entre el usuario y su clon.",
-            charged: "Carga frontal con barrido eléctrico."
-        }
+        image: "assets/images/Character_Portrait/portrait_Benjamin_01.png"
     },
     { 
         id: "angel", name: "Angel", rarity: "4★", element: "Fuego", role: "Asesino", weapon: "Báculo", 
-        image: "assets/images/Character_Portrait/portrait_Angel_00.png",
-        skills: {
-            basic: "Lanzamiento de orbes ardientes.",
-            relay: "Inicia asistencia de fuego fuera de campo al cambiar de personaje.",
-            special: "Lluvia incandescente masiva sobre el área seleccionada.",
-            charged: "Explosión ígnea concéntrica."
-        }
+        image: "assets/images/Character_Portrait/portrait_Angel_00.png"
     },
     { 
         id: "yeonhwa", name: "Yeonhwa", rarity: "4★", element: "Rayo", role: "Asesino", weapon: "Catalizador", 
-        image: "assets/images/Character_Portrait/portrait_Yeonhwa_01.png",
-        skills: {
-            basic: "Ataques mágicos de voltio de alta velocidad.",
-            relay: "Aumenta el Daño Crítico del personaje entrante un 25%.",
-            special: "Ráfaga de golpes fantasma múltiples de electricidad.",
-            charged: "Chispa concentrada de penetración."
-        }
+        image: "assets/images/Character_Portrait/portrait_Yeonhwa_01.png"
     }
 ];
 
@@ -294,7 +127,8 @@ const monsterData = [
     { name: "Cappy Mama", habitat: "Bosque Encantado", rarity: "Épico", skill: "Activa una cura de emergencia al bajar del 30% de vida.", image: "assets/images/Monsterling_Icons/icon_monster_cappymama.png" },
     { name: "King Slime", habitat: "Cueva Cristalina", rarity: "Épico", skill: "Derriba a los enemigos pequeños con impacto terrestre.", image: "assets/images/Monsterling_Icons/icon_monster_kingslime.png" },
     { name: "Gaba Turtle", habitat: "Archipiélago Gaba (1.4)", rarity: "Leyenda", skill: "Otorga un escudo equivalente al 15% de la salud máxima.", image: "assets/images/Monsterling_Icons/icon_monster_gabaturtle.png" },
-    { name: "Scarlet Queen", habitat: "Tierras Áridas", rarity: "Leyenda", skill: "Aumenta el daño de Fuego en un 20% durante 10s.", image: "assets/images/Monsterling_Icons/icon_monster_scarletqueen.png" }
+    { name: "Reginula", habitat: "Nido Real", rarity: "Legendario", skill: "Crea una zona de daño masivo y aumenta el ataque del grupo.", image: "assets/images/Monsterling_Icons/icon_monster_reginula.png" },
+    { name: "Sorin", habitat: "Deadlands", rarity: "Legendario", skill: "Invoca meteoros que reducen la resistencia del jefe.", image: "assets/images/Monsterling_Icons/icon_monster_sorin.png" }
 ];
 
 const artifactData = [
