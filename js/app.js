@@ -55,7 +55,6 @@ function toggleCharOwned(event, id) {
     saveUserCollection();
     filterCharacters();
     
-    // Si la ventana modal del personaje está abierta, actualizarla dinámicamente
     const modal = document.getElementById('charModal');
     if (modal && !modal.classList.contains('hidden')) {
         openCharacterModal(id);
@@ -64,7 +63,7 @@ function toggleCharOwned(event, id) {
 
 function changeAwakening(id, delta) {
     const data = getCharData(id);
-    if (!data.owned) return; // Solo si lo posee
+    if (!data.owned) return;
 
     let newVal = (data.awakening || 0) + delta;
     if (newVal < 0) newVal = 0;
@@ -85,7 +84,7 @@ function changeAwakening(id, delta) {
 
 function changeSkillLevel(id, skillType, delta) {
     const data = getCharData(id);
-    if (!data.owned) return; // Solo si lo posee
+    if (!data.owned) return;
 
     const maxSkill = getMaxSkillLevel(data.awakening || 0);
     let current = data.skills[skillType] || 1;
@@ -97,23 +96,21 @@ function changeSkillLevel(id, skillType, delta) {
     data.skills[skillType] = newVal;
     saveUserCollection();
     openCharacterModal(id);
+    filterCharacters();
 }
 
-function getElementBadge(element) {
+// ICONOS DE ELEMENTOS DESDE assets/images/elements/icons/
+function getElementIconHTML(element) {
+    let iconFile = 'fire.png';
     switch (element) {
-        case 'Fuego':
-            return { bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/40', icon: 'fa-fire' };
-        case 'Hielo':
-            return { bg: 'bg-cyan-500/20', text: 'text-cyan-300', border: 'border-cyan-500/40', icon: 'fa-snowflake' };
-        case 'Rayo':
-            return { bg: 'bg-yellow-500/20', text: 'text-yellow-400', border: 'border-yellow-500/40', icon: 'fa-bolt' };
-        case 'Viento':
-            return { bg: 'bg-emerald-500/20', text: 'text-emerald-400', border: 'border-emerald-500/40', icon: 'fa-wind' };
-        case 'Tierra':
-            return { bg: 'bg-amber-600/20', text: 'text-amber-400', border: 'border-amber-600/40', icon: 'fa-mountain' };
-        default:
-            return { bg: 'bg-slate-500/20', text: 'text-slate-300', border: 'border-slate-500/40', icon: 'fa-circle' };
+        case 'Fuego': iconFile = 'fire.png'; break;
+        case 'Hielo': iconFile = 'ice.png'; break;
+        case 'Rayo': iconFile = 'lightning.png'; break;
+        case 'Viento': iconFile = 'wind.png'; break;
+        case 'Tierra': iconFile = 'earth.png'; break;
     }
+    const path = `assets/images/elements/icons/${iconFile}`;
+    return `<img src="${path}" alt="${element}" class="w-3.5 h-3.5 object-contain inline-block" onerror="this.onerror=null; this.style.display='none';">`;
 }
 
 // FUNCIONES DE SELECCIÓN DE AVATAR PARA EL PERFIL
@@ -291,13 +288,13 @@ function filterCharacters() {
     } else if (sortVal === 'rarity-desc') {
         filtered.sort((a, b) => b.rarity.localeCompare(a.rarity));
     } else if (sortVal === 'rarity-asc') {
-        filtered.sort((a, b) => a.rarity.localeCompare(b.rarity));
+        filtered.sort((a, b) => a.rarity.ancestorScore ? 0 : a.rarity.localeCompare(b.rarity));
     }
 
     renderCharacterGrid(filtered);
 }
 
-// RENDERIZADO COMPACTO (4 COLUMNAS EN CELULARES)
+// RENDERIZADO CON NIVELES DE HABILIDAD EN LA TARJETA E ICONOS DE ELEMENTO
 function renderCharacterGrid(list) {
     const charGrid = document.getElementById('charGrid');
     const charCount = document.getElementById('charCount');
@@ -318,9 +315,9 @@ function renderCharacterGrid(list) {
     charGrid.className = "grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-1.5 sm:gap-3";
 
     charGrid.innerHTML = list.map(c => {
-        const elemBadge = getElementBadge(c.element);
         const uData = getCharData(c.id);
         const isOwned = uData.owned;
+        const elementIcon = getElementIconHTML(c.element);
 
         return `
             <div onclick="openCharacterModal('${c.id}')" class="bg-brand-card border ${isOwned ? 'border-cyan-400/80 shadow-md shadow-cyan-950/50' : 'border-white/10 opacity-70'} rounded-lg p-1 sm:p-2 hover:border-cyan-400 cursor-pointer transition transform relative overflow-hidden group">
@@ -343,10 +340,20 @@ function renderCharacterGrid(list) {
                 <div class="truncate mb-0.5 text-center sm:text-left">
                     <h3 class="font-title font-bold text-[10px] sm:text-xs text-slate-100 truncate">${c.name}</h3>
                 </div>
+
+                <!-- MOSTRAR NIVELES DE HABILIDADES SI ESTÁ OBTENIDO -->
+                ${isOwned ? `
+                    <div class="grid grid-cols-4 gap-0.5 bg-slate-900/80 rounded p-0.5 mb-1 text-[7px] text-center font-mono">
+                        <span class="text-cyan-400" title="Básico">B:${uData.skills.basic}</span>
+                        <span class="text-purple-400" title="Relevo">R:${uData.skills.relay}</span>
+                        <span class="text-yellow-400" title="Especial">E:${uData.skills.special}</span>
+                        <span class="text-pink-400" title="Cargado">C:${uData.skills.charged}</span>
+                    </div>
+                ` : ''}
                 
                 <div class="flex items-center justify-between gap-0.5">
-                    <span class="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8px] sm:text-[9px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
-                        <i class="fa-solid ${elemBadge.icon}"></i> <span class="hidden sm:inline">${c.element}</span>
+                    <span class="inline-flex items-center gap-1 px-1 py-0.2 rounded text-[8px] sm:text-[9px] font-bold bg-slate-800 text-slate-300 border border-white/10">
+                        ${elementIcon} <span class="hidden sm:inline">${c.element}</span>
                     </span>
                     <span class="text-[8px] sm:text-[9px] text-purple-300 font-semibold truncate">${c.role}</span>
                 </div>
@@ -355,26 +362,24 @@ function renderCharacterGrid(list) {
     }).join('');
 }
 
-// MODAL DE DETALLES DEL PERSONAJE CON BLOQUEO SI NO SE POSEE
+// MODAL DE DETALLES DEL PERSONAJE
 function openCharacterModal(charId) {
     const char = charactersData.find(c => c.id === charId);
     if (!char) return;
 
     const modal = document.getElementById('charModal');
     const modalContent = document.getElementById('charModalContent');
-    const elemBadge = getElementBadge(char.element);
     const uData = getCharData(char.id);
     const isOwned = uData.owned;
+    const elementIcon = getElementIconHTML(char.element);
 
     modalContent.innerHTML = `
-        <!-- ENCABEZADO CON INFO, BOTÓN POSEÍDO Y DESPERTARES INTEGRADOS -->
         <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
             <div class="flex items-center gap-3">
                 <img src="${char.image}" alt="${char.name}" class="w-14 h-14 rounded-xl object-cover object-top border border-purple-500/40 shadow-lg bg-slate-900 ${isOwned ? '' : 'grayscale'}" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
                 <div>
                     <div class="flex items-center gap-2">
                         <h3 class="font-title font-black text-base text-slate-100">${char.name}</h3>
-                        <!-- DESPERTARES INTEGRADOS -->
                         <div class="flex items-center gap-1 bg-brand-card/90 px-2 py-0.5 rounded-lg border border-purple-500/30 ${isOwned ? '' : 'opacity-40 pointer-events-none'}">
                             <button onclick="changeAwakening('${char.id}', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-xs flex items-center justify-center border border-white/10 cursor-pointer">-</button>
                             <span class="font-title font-black text-xs text-purple-300 w-5 text-center">D${uData.awakening}</span>
@@ -383,8 +388,8 @@ function openCharacterModal(charId) {
                     </div>
                     <div class="flex items-center gap-2 mt-1">
                         <span class="text-xs text-yellow-400 font-bold">${char.rarity}</span>
-                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
-                            <i class="fa-solid ${elemBadge.icon}"></i> ${char.element}
+                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-white/10">
+                            ${elementIcon} ${char.element}
                         </span>
                         <span class="text-xs text-purple-300 font-semibold">${char.role}</span>
                     </div>
@@ -395,7 +400,6 @@ function openCharacterModal(charId) {
             </button>
         </div>
 
-        <!-- INDICADOR / CHECKBOX DE OBTENIDO -->
         <div class="mb-3 p-2 rounded-xl bg-brand-card/90 border border-white/10 flex items-center justify-between">
             <span class="text-xs font-semibold text-slate-200">¿Tienes a este personaje?</span>
             <button onclick="toggleCharOwned(null, '${char.id}')" class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${isOwned ? 'bg-cyan-500 text-white shadow-md' : 'bg-slate-800 text-slate-400 border border-white/10'}">
@@ -407,7 +411,6 @@ function openCharacterModal(charId) {
         <div class="space-y-4 text-xs max-h-[65vh] overflow-y-auto pr-1 relative">
             
             ${!isOwned ? `
-                <!-- CAPA DE AVISO SI NO SE POSEE -->
                 <div class="p-2.5 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-300 text-[11px] text-center font-medium flex items-center justify-center gap-2">
                     <i class="fa-solid fa-lock text-purple-400"></i> Marca este personaje como <strong>Obtenido</strong> para modificar sus estadísticas.
                 </div>
