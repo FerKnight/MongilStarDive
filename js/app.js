@@ -96,9 +96,9 @@ function filterCharacters() {
     } else if (sortVal === 'za') {
         filtered.sort((a, b) => b.name.localeCompare(a.name));
     } else if (sortVal === 'rarity-desc') {
-        filtered.sort((a, b) => b.rarity.localeCompare(a.rarity));
+        filtered.sort((a, b) => a.rarity.localeCompare(b.rarity));
     } else if (sortVal === 'rarity-asc') {
-        filtered.sort((a, b) => b.rarity.localeCompare(b.rarity));
+        filtered.sort((a, b) => a.rarity.localeCompare(b.rarity));
     }
 
     renderCharacterGrid(filtered);
@@ -128,7 +128,7 @@ function renderCharacterGrid(list) {
         return `
             <div onclick="openCharacterModal('${c.id}')" class="bg-brand-card border border-white/10 rounded-xl p-2.5 hover:border-cyan-400 cursor-pointer active:scale-95 transition transform relative overflow-hidden group">
                 <div class="w-full h-28 rounded-lg bg-slate-900 overflow-hidden mb-2 relative flex items-center justify-center">
-                    <img src="${c.image}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Verna_01.png';">
+                    <img src="${c.image}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
                     <span class="absolute top-1 right-1 bg-black/70 backdrop-blur-md text-yellow-400 font-bold text-[10px] px-1.5 py-0.5 rounded border border-yellow-500/30">${c.rarity}</span>
                 </div>
                 <div class="truncate mb-1">
@@ -157,7 +157,7 @@ function openCharacterModal(charId) {
     modalContent.innerHTML = `
         <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
             <div class="flex items-center gap-3">
-                <img src="${char.image}" alt="${char.name}" class="w-16 h-16 rounded-xl object-cover object-top border border-purple-500/40 shadow-lg bg-slate-900" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/iamdevlinph/msd-tracker/main/assets/images-source/Character_Portrait/portrait_Verna_01.png';">
+                <img src="${char.image}" alt="${char.name}" class="w-16 h-16 rounded-xl object-cover object-top border border-purple-500/40 shadow-lg bg-slate-900" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
                 <div>
                     <h3 class="font-title font-black text-lg text-slate-100">${char.name}</h3>
                     <div class="flex items-center gap-2 mt-0.5">
@@ -257,10 +257,6 @@ function renderAll() {
             </div>
         `).join('');
     }
-
-    // Resto de renders (builds, mapas, eventos, novedades)...
-    // ...
-}
 
     const buildsList = document.getElementById('buildsList');
     if (buildsList) {
