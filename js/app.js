@@ -1,6 +1,6 @@
 let deferredPrompt;
 
-// ESTADO DE COLECCIÓN Y PROGRESIÓN (PERSISTIDO EN LOCALSTORAGE)
+// ESTADO DE COLECCIÓN Y PROGRESIÓN
 let userCollection = JSON.parse(localStorage.getItem('mongil_user_collection')) || {};
 
 function saveUserCollection() {
@@ -12,46 +12,76 @@ function getCharData(id) {
         userCollection[id] = {
             owned: false,
             awakening: 0,
-            skills: { basic: 1, relay: 1, special: 1, charged: 1 }
+            skills: { basic: 1, relay: 1, special: 1, charged: 1 },
+            equip: [null, null, null, null], // 4 espacios de equipamiento
+            artifact: null,                  // 1 espacio de artefacto
+            monsterlings: {
+                link: null,                  // 1 Monsterling Link (Dorado)
+                normal1: null,               // 1 Monsterling Normal
+                normal2: null,               // 1 Monsterling Normal
+                legendary: null              // 1 Monsterling Legendario (Reginula / Sorin)
+            }
         };
+    }
+    // Asegurar estructura
+    if (!userCollection[id].equip) userCollection[id].equip = [null, null, null, null];
+    if (!userCollection[id].monsterlings) {
+        userCollection[id].monsterlings = { link: null, normal1: null, normal2: null, legendary: null };
     }
     return userCollection[id];
 }
 
-// TOGGLE OBTENIDO/NO OBTENIDO
+// CÁLCULO DE MÁXIMO NIVEL DE HABILIDAD SEGÚN DESPERTARES
+function getMaxSkillLevel(awakening) {
+    if (awakening >= 5) return 16;
+    if (awakening >= 3) return 14;
+    return 12; // 0, 1 o 2 despertares
+}
+
 function toggleCharOwned(event, id) {
-    event.stopPropagation(); // Evitar abrir el modal al hacer clic en el check
+    event.stopPropagation();
     const data = getCharData(id);
     data.owned = !data.owned;
     saveUserCollection();
-    filterCharacters(); // Recargar grilla
+    filterCharacters();
 }
 
-// CAMBIAR DESPERTARES
+// CAMBIAR DESPERTARES Y CAPAR HABILIDADES SI EXCEDEN EL NUEVO MÁXIMO
 function changeAwakening(id, delta) {
     const data = getCharData(id);
     let newVal = (data.awakening || 0) + delta;
     if (newVal < 0) newVal = 0;
-    if (newVal > 6) newVal = 6; // Máximo 6 despertares
+    if (newVal > 6) newVal = 6;
     data.awakening = newVal;
+
+    const maxSkill = getMaxSkillLevel(newVal);
+    ['basic', 'relay', 'special', 'charged'].forEach(s => {
+        if (data.skills[s] > maxSkill) {
+            data.skills[s] = maxSkill;
+        }
+    });
+
     saveUserCollection();
-    openCharacterModal(id); // Refrescar modal
-    filterCharacters(); // Refrescar tarjeta
+    openCharacterModal(id);
+    filterCharacters();
 }
 
-// CAMBIAR NIVEL DE HABILIDAD
+// CAMBIAR NIVEL DE HABILIDAD SEGÚN LÍMITE
 function changeSkillLevel(id, skillType, delta) {
     const data = getCharData(id);
+    const maxSkill = getMaxSkillLevel(data.awakening || 0);
     let current = data.skills[skillType] || 1;
     let newVal = current + delta;
+
     if (newVal < 1) newVal = 1;
-    if (newVal > 10) newVal = 10; // Máximo Nivel 10
+    if (newVal > maxSkill) newVal = maxSkill;
+
     data.skills[skillType] = newVal;
     saveUserCollection();
-    openCharacterModal(id); // Refrescar modal
+    openCharacterModal(id);
 }
 
-// HELPER PARA COLORES Y BADGES ELEMENTALES
+// HELPER DE COLORES
 function getElementBadge(element) {
     switch (element) {
         case 'Fuego':
@@ -69,7 +99,7 @@ function getElementBadge(element) {
     }
 }
 
-// CAMBIO DE PESTAÑAS
+// PESTAÑAS
 function switchTab(tabId) {
     const sections = document.querySelectorAll('.content-section');
     sections.forEach(el => {
@@ -94,7 +124,7 @@ function switchTab(tabId) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// LÓGICA DE CONFIGURACIÓN Y MODO DE MENÚ
+// CONFIGURACIÓN MENÚ
 function applyMenuMode(mode) {
     const bottomNav = document.getElementById('bottomNav');
     const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
@@ -145,7 +175,7 @@ function toggleSidebar() {
     }
 }
 
-// FILTRADO Y RENDER DE PERSONAJES
+// FILTRADO DE PERSONAJES
 function filterCharacters() {
     const searchInput = document.getElementById('charSearch');
     const sortSelect = document.getElementById('charSort');
@@ -207,12 +237,10 @@ function renderCharacterGrid(list) {
         return `
             <div onclick="openCharacterModal('${c.id}')" class="bg-brand-card border ${isOwned ? 'border-cyan-400/80 shadow-md shadow-cyan-950/50' : 'border-white/10 opacity-70'} rounded-xl p-2.5 hover:border-cyan-400 cursor-pointer transition transform relative overflow-hidden group">
                 
-                <!-- Botón de Check (Poseído) -->
                 <button onclick="toggleCharOwned(event, '${c.id}')" class="absolute top-2 left-2 z-10 w-6 h-6 rounded-md ${isOwned ? 'bg-cyan-500 text-white' : 'bg-slate-900/80 text-slate-500 border border-white/20'} flex items-center justify-center text-xs shadow-md transition active:scale-90">
                     <i class="fa-solid fa-check"></i>
                 </button>
 
-                <!-- Despertares Badge si tiene -->
                 ${isOwned && uData.awakening > 0 ? `
                     <span class="absolute bottom-11 right-2 z-10 bg-purple-600/90 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded border border-purple-400">
                         D${uData.awakening}
@@ -239,7 +267,7 @@ function renderCharacterGrid(list) {
     }).join('');
 }
 
-// MODAL NUEVO CON DESPERTARES Y ATAQUES CON NIVELES +/-
+// MODAL DE DETALLES DEL PERSONAJE
 function openCharacterModal(charId) {
     const char = charactersData.find(c => c.id === charId);
     if (!char) return;
@@ -248,6 +276,7 @@ function openCharacterModal(charId) {
     const modalContent = document.getElementById('charModalContent');
     const elemBadge = getElementBadge(char.element);
     const uData = getCharData(char.id);
+    const maxSkill = getMaxSkillLevel(uData.awakening || 0);
 
     modalContent.innerHTML = `
         <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
@@ -269,13 +298,13 @@ function openCharacterModal(charId) {
             </button>
         </div>
 
-        <div class="space-y-3 text-xs max-h-[75vh] overflow-y-auto pr-1">
+        <div class="space-y-4 text-xs max-h-[75vh] overflow-y-auto pr-1">
             
             <!-- CONTROL DE DESPERTARES -->
             <div class="bg-brand-card p-3 rounded-xl border border-purple-500/30 flex items-center justify-between">
                 <div>
-                    <span class="block font-title font-bold text-slate-100 text-xs">Despertares (Trascendencia)</span>
-                    <span class="text-[10px] text-slate-400">Nivel actual de duplicados</span>
+                    <span class="block font-title font-bold text-slate-100 text-xs">Despertares</span>
+                    <span class="text-[10px] text-slate-400">Nivel Máx. de Habilidad: <strong class="text-cyan-400">${maxSkill}</strong></span>
                 </div>
                 <div class="flex items-center gap-2">
                     <button onclick="changeAwakening('${char.id}', -1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-sm flex items-center justify-center border border-white/10 cursor-pointer">-</button>
@@ -284,56 +313,104 @@ function openCharacterModal(charId) {
                 </div>
             </div>
 
-            <!-- ATAQUE BÁSICO -->
-            <div class="bg-brand-card/60 p-2.5 rounded-lg border border-white/5 space-y-1">
-                <div class="flex items-center justify-between">
-                    <span class="font-bold text-cyan-400 text-[11px]">Ataque Básico</span>
-                    <div class="flex items-center gap-1.5">
-                        <button onclick="changeSkillLevel('${char.id}', 'basic', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">-</button>
-                        <span class="text-[10px] font-mono font-bold text-slate-200">Niv. ${uData.skills.basic}</span>
-                        <button onclick="changeSkillLevel('${char.id}', 'basic', 1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">+</button>
+            <!-- NIVELES DE ATAQUES (SIN TEXTOS DE DESCRIPCIÓN) -->
+            <div class="bg-brand-card/60 p-3 rounded-xl border border-white/5 space-y-2">
+                <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider mb-1">Nivel de Ataques</span>
+                
+                <!-- BÁSICO -->
+                <div class="flex items-center justify-between py-1 border-b border-white/5">
+                    <span class="font-bold text-cyan-400 text-xs">Básico</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="changeSkillLevel('${char.id}', 'basic', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">-</button>
+                        <span class="text-xs font-mono font-bold text-slate-100 w-8 text-center">${uData.skills.basic} / ${maxSkill}</span>
+                        <button onclick="changeSkillLevel('${char.id}', 'basic', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">+</button>
                     </div>
                 </div>
-                <p class="text-slate-300 text-[11px] leading-relaxed">${char.skills.basic}</p>
+
+                <!-- RELEVO -->
+                <div class="flex items-center justify-between py-1 border-b border-white/5">
+                    <span class="font-bold text-purple-400 text-xs">Relevo</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="changeSkillLevel('${char.id}', 'relay', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">-</button>
+                        <span class="text-xs font-mono font-bold text-slate-100 w-8 text-center">${uData.skills.relay} / ${maxSkill}</span>
+                        <button onclick="changeSkillLevel('${char.id}', 'relay', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">+</button>
+                    </div>
+                </div>
+
+                <!-- ESPECIAL -->
+                <div class="flex items-center justify-between py-1 border-b border-white/5">
+                    <span class="font-bold text-yellow-400 text-xs">Especial</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="changeSkillLevel('${char.id}', 'special', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">-</button>
+                        <span class="text-xs font-mono font-bold text-slate-100 w-8 text-center">${uData.skills.special} / ${maxSkill}</span>
+                        <button onclick="changeSkillLevel('${char.id}', 'special', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">+</button>
+                    </div>
+                </div>
+
+                <!-- CARGADO -->
+                <div class="flex items-center justify-between py-1">
+                    <span class="font-bold text-pink-400 text-xs">Cargado</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="changeSkillLevel('${char.id}', 'charged', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">-</button>
+                        <span class="text-xs font-mono font-bold text-slate-100 w-8 text-center">${uData.skills.charged} / ${maxSkill}</span>
+                        <button onclick="changeSkillLevel('${char.id}', 'charged', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">+</button>
+                    </div>
+                </div>
             </div>
 
-            <!-- HABILIDAD DE RELEVO -->
-            <div class="bg-brand-card/60 p-2.5 rounded-lg border border-white/5 space-y-1">
-                <div class="flex items-center justify-between">
-                    <span class="font-bold text-purple-400 text-[11px]">Habilidad de Relevo</span>
-                    <div class="flex items-center gap-1.5">
-                        <button onclick="changeSkillLevel('${char.id}', 'relay', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">-</button>
-                        <span class="text-[10px] font-mono font-bold text-slate-200">Niv. ${uData.skills.relay}</span>
-                        <button onclick="changeSkillLevel('${char.id}', 'relay', 1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">+</button>
+            <!-- SECCIÓN 5 RECUADROS: EQUIPAMIENTO (4) Y ARTEFACTO (1) -->
+            <div class="space-y-1.5">
+                <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Equipamientos y Artefacto</span>
+                <div class="grid grid-cols-5 gap-2">
+                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer">
+                        <i class="fa-solid fa-shield-halved text-cyan-400 text-sm mb-1"></i>
+                        <span class="text-[9px] text-slate-400 font-semibold">Arma 1</span>
+                    </div>
+                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer">
+                        <i class="fa-solid fa-shield-halved text-cyan-400 text-sm mb-1"></i>
+                        <span class="text-[9px] text-slate-400 font-semibold">Arma 2</span>
+                    </div>
+                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer">
+                        <i class="fa-solid fa-shield-halved text-cyan-400 text-sm mb-1"></i>
+                        <span class="text-[9px] text-slate-400 font-semibold">Arma 3</span>
+                    </div>
+                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer">
+                        <i class="fa-solid fa-shield-halved text-cyan-400 text-sm mb-1"></i>
+                        <span class="text-[9px] text-slate-400 font-semibold">Arma 4</span>
+                    </div>
+                    <!-- RECUADRO ARTEFACTO -->
+                    <div class="aspect-square bg-purple-950/40 border border-purple-500/50 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-purple-400 transition cursor-pointer">
+                        <i class="fa-solid fa-gem text-purple-400 text-sm mb-1"></i>
+                        <span class="text-[9px] text-purple-300 font-bold">Artefacto</span>
                     </div>
                 </div>
-                <p class="text-slate-300 text-[11px] leading-relaxed">${char.skills.relay}</p>
             </div>
 
-            <!-- ATAQUE ESPECIAL -->
-            <div class="bg-brand-card/60 p-2.5 rounded-lg border border-white/5 space-y-1">
-                <div class="flex items-center justify-between">
-                    <span class="font-bold text-yellow-400 text-[11px]">Ataque Especial</span>
-                    <div class="flex items-center gap-1.5">
-                        <button onclick="changeSkillLevel('${char.id}', 'special', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">-</button>
-                        <span class="text-[10px] font-mono font-bold text-slate-200">Niv. ${uData.skills.special}</span>
-                        <button onclick="changeSkillLevel('${char.id}', 'special', 1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">+</button>
+            <!-- SECCIÓN 4 RECUADROS: MONSTERLINGS (1 LINK GOLD + 2 NORMALES + 1 LEGENDARIO) -->
+            <div class="space-y-1.5">
+                <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Monsterlings</span>
+                <div class="grid grid-cols-4 gap-2">
+                    <!-- LINK (DORADO) -->
+                    <div class="aspect-square bg-amber-950/30 border-2 border-yellow-500 rounded-xl flex flex-col items-center justify-center p-1 text-center shadow-lg shadow-yellow-950/40 hover:scale-105 transition cursor-pointer">
+                        <i class="fa-solid fa-link text-yellow-400 text-sm mb-1"></i>
+                        <span class="text-[9px] text-yellow-300 font-extrabold">Link</span>
+                    </div>
+                    <!-- NORMAL 1 -->
+                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer">
+                        <i class="fa-solid fa-paw text-slate-400 text-sm mb-1"></i>
+                        <span class="text-[9px] text-slate-400 font-semibold">Normal 1</span>
+                    </div>
+                    <!-- NORMAL 2 -->
+                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer">
+                        <i class="fa-solid fa-paw text-slate-400 text-sm mb-1"></i>
+                        <span class="text-[9px] text-slate-400 font-semibold">Normal 2</span>
+                    </div>
+                    <!-- LEGENDARIO (REGINULA / SORIN) -->
+                    <div class="aspect-square bg-red-950/40 border border-red-500/60 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-red-400 transition cursor-pointer">
+                        <i class="fa-solid fa-dragon text-red-400 text-sm mb-1"></i>
+                        <span class="text-[8px] text-red-300 font-bold leading-tight">Legendario</span>
                     </div>
                 </div>
-                <p class="text-slate-300 text-[11px] leading-relaxed">${char.skills.special}</p>
-            </div>
-
-            <!-- ATAQUE CARGADO -->
-            <div class="bg-brand-card/60 p-2.5 rounded-lg border border-white/5 space-y-1">
-                <div class="flex items-center justify-between">
-                    <span class="font-bold text-pink-400 text-[11px]">Ataque Cargado</span>
-                    <div class="flex items-center gap-1.5">
-                        <button onclick="changeSkillLevel('${char.id}', 'charged', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">-</button>
-                        <span class="text-[10px] font-mono font-bold text-slate-200">Niv. ${uData.skills.charged}</span>
-                        <button onclick="changeSkillLevel('${char.id}', 'charged', 1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">+</button>
-                    </div>
-                </div>
-                <p class="text-slate-300 text-[11px] leading-relaxed">${char.skills.charged}</p>
             </div>
 
         </div>
