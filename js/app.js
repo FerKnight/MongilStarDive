@@ -5,6 +5,23 @@ let userCollection = JSON.parse(localStorage.getItem('mongil_user_collection')) 
 
 function saveUserCollection() {
     localStorage.setItem('mongil_user_collection', JSON.stringify(userCollection));
+    updateOwnedCounter();
+}
+
+function updateOwnedCounter() {
+    const totalChars = charactersData.length;
+    let ownedChars = 0;
+    
+    charactersData.forEach(c => {
+        if (userCollection[c.id] && userCollection[c.id].owned) {
+            ownedChars++;
+        }
+    });
+
+    const ownedBadge = document.getElementById('ownedCount');
+    if (ownedBadge) {
+        ownedBadge.innerText = `${ownedChars}/${totalChars}`;
+    }
 }
 
 function getCharData(id) {
@@ -32,15 +49,23 @@ function getMaxSkillLevel(awakening) {
 }
 
 function toggleCharOwned(event, id) {
-    event.stopPropagation();
+    if (event) event.stopPropagation();
     const data = getCharData(id);
     data.owned = !data.owned;
     saveUserCollection();
     filterCharacters();
+    
+    // Si la ventana modal del personaje está abierta, actualizarla dinámicamente
+    const modal = document.getElementById('charModal');
+    if (modal && !modal.classList.contains('hidden')) {
+        openCharacterModal(id);
+    }
 }
 
 function changeAwakening(id, delta) {
     const data = getCharData(id);
+    if (!data.owned) return; // Solo si lo posee
+
     let newVal = (data.awakening || 0) + delta;
     if (newVal < 0) newVal = 0;
     if (newVal > 6) newVal = 6;
@@ -60,6 +85,8 @@ function changeAwakening(id, delta) {
 
 function changeSkillLevel(id, skillType, delta) {
     const data = getCharData(id);
+    if (!data.owned) return; // Solo si lo posee
+
     const maxSkill = getMaxSkillLevel(data.awakening || 0);
     let current = data.skills[skillType] || 1;
     let newVal = current + delta;
@@ -328,7 +355,7 @@ function renderCharacterGrid(list) {
     }).join('');
 }
 
-// MODAL DE DETALLES DEL PERSONAJE
+// MODAL DE DETALLES DEL PERSONAJE CON BLOQUEO SI NO SE POSEE
 function openCharacterModal(charId) {
     const char = charactersData.find(c => c.id === charId);
     if (!char) return;
@@ -337,17 +364,18 @@ function openCharacterModal(charId) {
     const modalContent = document.getElementById('charModalContent');
     const elemBadge = getElementBadge(char.element);
     const uData = getCharData(char.id);
+    const isOwned = uData.owned;
 
     modalContent.innerHTML = `
-        <!-- ENCABEZADO CON INFO Y BOTONES DE DESPERTARES INTEGRADOS -->
+        <!-- ENCABEZADO CON INFO, BOTÓN POSEÍDO Y DESPERTARES INTEGRADOS -->
         <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
             <div class="flex items-center gap-3">
-                <img src="${char.image}" alt="${char.name}" class="w-14 h-14 rounded-xl object-cover object-top border border-purple-500/40 shadow-lg bg-slate-900" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
+                <img src="${char.image}" alt="${char.name}" class="w-14 h-14 rounded-xl object-cover object-top border border-purple-500/40 shadow-lg bg-slate-900 ${isOwned ? '' : 'grayscale'}" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
                 <div>
                     <div class="flex items-center gap-2">
                         <h3 class="font-title font-black text-base text-slate-100">${char.name}</h3>
                         <!-- DESPERTARES INTEGRADOS -->
-                        <div class="flex items-center gap-1 bg-brand-card/90 px-2 py-0.5 rounded-lg border border-purple-500/30">
+                        <div class="flex items-center gap-1 bg-brand-card/90 px-2 py-0.5 rounded-lg border border-purple-500/30 ${isOwned ? '' : 'opacity-40 pointer-events-none'}">
                             <button onclick="changeAwakening('${char.id}', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-xs flex items-center justify-center border border-white/10 cursor-pointer">-</button>
                             <span class="font-title font-black text-xs text-purple-300 w-5 text-center">D${uData.awakening}</span>
                             <button onclick="changeAwakening('${char.id}', 1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-xs flex items-center justify-center border border-white/10 cursor-pointer">+</button>
@@ -367,10 +395,26 @@ function openCharacterModal(charId) {
             </button>
         </div>
 
-        <div class="space-y-4 text-xs max-h-[75vh] overflow-y-auto pr-1">
+        <!-- INDICADOR / CHECKBOX DE OBTENIDO -->
+        <div class="mb-3 p-2 rounded-xl bg-brand-card/90 border border-white/10 flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-200">¿Tienes a este personaje?</span>
+            <button onclick="toggleCharOwned(null, '${char.id}')" class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${isOwned ? 'bg-cyan-500 text-white shadow-md' : 'bg-slate-800 text-slate-400 border border-white/10'}">
+                <i class="fa-solid ${isOwned ? 'fa-check' : 'fa-plus'}"></i>
+                <span>${isOwned ? 'Obtenido' : 'No obtenido'}</span>
+            </button>
+        </div>
+
+        <div class="space-y-4 text-xs max-h-[65vh] overflow-y-auto pr-1 relative">
             
+            ${!isOwned ? `
+                <!-- CAPA DE AVISO SI NO SE POSEE -->
+                <div class="p-2.5 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-300 text-[11px] text-center font-medium flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock text-purple-400"></i> Marca este personaje como <strong>Obtenido</strong> para modificar sus estadísticas.
+                </div>
+            ` : ''}
+
             <!-- NIVELES DE ATAQUES EN RECUADROS INDEPENDIENTES -->
-            <div class="space-y-1.5">
+            <div class="space-y-1.5 ${isOwned ? '' : 'opacity-40 pointer-events-none select-none'}">
                 <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Nivel de Ataques</span>
                 
                 <div class="grid grid-cols-2 gap-2">
@@ -417,7 +461,7 @@ function openCharacterModal(charId) {
             </div>
 
             <!-- SECCIÓN 5 RECUADROS DE EQUIPAMIENTOS -->
-            <div class="space-y-1.5">
+            <div class="space-y-1.5 ${isOwned ? '' : 'opacity-40 pointer-events-none select-none'}">
                 <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Equipamientos y Artefacto</span>
                 <div class="grid grid-cols-5 gap-2">
                     <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer">
@@ -444,7 +488,7 @@ function openCharacterModal(charId) {
             </div>
 
             <!-- SECCIÓN 4 RECUADROS DE MONSTERLINGS -->
-            <div class="space-y-1.5">
+            <div class="space-y-1.5 ${isOwned ? '' : 'opacity-40 pointer-events-none select-none'}">
                 <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Monsterlings</span>
                 <div class="grid grid-cols-4 gap-2">
                     <div class="aspect-square bg-amber-950/30 border-2 border-yellow-500 rounded-xl flex flex-col items-center justify-center p-1 text-center shadow-lg shadow-yellow-950/40 hover:scale-105 transition cursor-pointer">
@@ -480,6 +524,7 @@ function closeCharacterModal() {
 
 function renderAll() {
     filterCharacters();
+    updateOwnedCounter();
 
     const equipGrid = document.getElementById('equipGrid');
     if (equipGrid) {
