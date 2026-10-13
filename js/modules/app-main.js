@@ -4,21 +4,76 @@ function renderAll() {
     filterCharacters();
     updateOwnedCounter();
 
+    // RENDERIZADO DE EQUIPAMIENTOS (SETS DE ROPA) + FUENTES
     const equipGrid = document.getElementById('equipGrid');
     if (equipGrid) {
-        equipGrid.innerHTML = equipData.map(e => `
-            <div class="bg-brand-card border border-white/10 rounded-xl p-3 flex items-center gap-3">
-                <img src="${e.image}" alt="${e.name}" class="w-12 h-12 rounded-lg object-contain bg-slate-900 border border-white/5" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
-                <div class="flex-1 min-w-0">
-                    <div class="flex justify-between items-start mb-0.5">
-                        <h3 class="font-title font-bold text-sm text-purple-300 truncate">${e.name}</h3>
-                        <span class="text-xs text-yellow-400 font-bold">${e.rarity}</span>
+        let html = equipData.map(e => `
+            <div class="bg-brand-card border border-white/10 rounded-xl p-4 flex flex-col justify-between space-y-3 hover:border-cyan-400 transition relative overflow-hidden group">
+                
+                <!-- Encabezado del Set -->
+                <div class="flex items-start justify-between gap-3 border-b border-white/10 pb-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-xl bg-slate-900 border border-white/10 flex items-center justify-center flex-shrink-0 p-1">
+                            <img src="${e.image}" alt="${e.name}" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='assets/images/Equipment/icon_equip_volcano.png';">
+                        </div>
+                        <div>
+                            <h3 class="font-title font-bold text-sm text-slate-100 group-hover:text-cyan-300 transition">${e.name}</h3>
+                            <span class="text-[10px] text-yellow-400 font-extrabold px-1.5 py-0.5 bg-yellow-950/60 border border-yellow-500/30 rounded">${e.rarity}</span>
+                        </div>
                     </div>
-                    <p class="text-xs text-cyan-400 font-semibold mb-1">${e.type} | ${e.stat}</p>
-                    <p class="text-[11px] text-slate-400 line-clamp-2">${e.desc}</p>
                 </div>
+
+                <!-- Piezas del Set -->
+                <div class="space-y-1">
+                    <span class="text-[10px] font-title font-bold text-slate-400 uppercase tracking-wider">Piezas del Set:</span>
+                    <div class="grid grid-cols-2 gap-1 text-[10px] text-slate-300 font-medium">
+                        <span class="flex items-center gap-1"><i class="fa-solid fa-helmet-safety text-cyan-400"></i> ${e.pieces[0]}</span>
+                        <span class="flex items-center gap-1"><i class="fa-solid fa-shirt text-cyan-400"></i> ${e.pieces[1]}</span>
+                        <span class="flex items-center gap-1"><i class="fa-solid fa-mitten text-cyan-400"></i> ${e.pieces[2]}</span>
+                        <span class="flex items-center gap-1"><i class="fa-solid fa-socks text-cyan-400"></i> ${e.pieces[3]}</span>
+                    </div>
+                </div>
+
+                <!-- Bonificaciones del Set (2 y 4 piezas) -->
+                <div class="space-y-1.5 bg-slate-900/60 p-2.5 rounded-lg border border-white/5 text-xs">
+                    <div>
+                        <span class="font-bold text-cyan-400 text-[11px]">(2 Piezas):</span>
+                        <span class="text-slate-200 text-[11px]">${e.bonus2}</span>
+                    </div>
+                    <div>
+                        <span class="font-bold text-purple-400 text-[11px]">(4 Piezas):</span>
+                        <span class="text-slate-300 text-[11px]">${e.bonus4}</span>
+                    </div>
+                </div>
+
+                <!-- Dónde Conseguir -->
+                <div class="pt-1 flex items-center gap-2 text-[10px] text-slate-400 bg-brand-surface/80 p-2 rounded-lg border border-white/5">
+                    <i class="fa-solid fa-location-dot text-cyan-400"></i>
+                    <span class="truncate"><strong>Obtención:</strong> ${e.howToGet}</span>
+                </div>
+
             </div>
         `).join('');
+
+        // Agregar sección de Fuentes con GameWith.ai
+        if (typeof equipSources !== 'undefined' && equipSources.length > 0) {
+            html += `
+                <div class="col-span-full mt-4 p-3 bg-brand-surface border border-white/10 rounded-xl text-xs space-y-2">
+                    <div class="flex items-center gap-2 text-cyan-400 font-title font-bold">
+                        <i class="fa-solid fa-link"></i> Fuentes y Bases de Datos Consultadas
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        ${equipSources.map(s => `
+                            <a href="${s.url}" target="_blank" rel="noopener noreferrer" class="text-purple-300 hover:text-cyan-300 underline flex items-center gap-1 text-[11px]">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i> ${s.name}
+                            </a>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        equipGrid.innerHTML = html;
     }
 
     const monsterGrid = document.getElementById('monsterGrid');
