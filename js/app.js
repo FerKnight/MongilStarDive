@@ -18,6 +18,35 @@ function getElementBadge(element) {
     }
 }
 
+// CAMBIO DE PESTAÑAS Y SECCIONES
+function switchTab(tabId) {
+    // Ocultar todas las secciones
+    const sections = document.querySelectorAll('.content-section');
+    sections.forEach(el => {
+        el.classList.remove('active');
+        el.style.display = 'none';
+    });
+
+    // Desactivar todos los botones de navegación
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(el => el.classList.remove('active'));
+
+    // Mostrar la sección seleccionada
+    const targetSection = document.getElementById(`tab-${tabId}`);
+    if (targetSection) {
+        targetSection.classList.add('active');
+        targetSection.style.display = 'block';
+    }
+
+    // Activar el botón correspondiente en la barra inferior si existe
+    const targetNav = document.getElementById(`nav-${tabId}`);
+    if (targetNav) {
+        targetNav.classList.add('active');
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 // LÓGICA DE CONFIGURACIÓN Y MODO DE MENÚ
 function applyMenuMode(mode) {
     const bottomNav = document.getElementById('bottomNav');
@@ -96,7 +125,7 @@ function filterCharacters() {
     } else if (sortVal === 'za') {
         filtered.sort((a, b) => b.name.localeCompare(a.name));
     } else if (sortVal === 'rarity-desc') {
-        filtered.sort((a, b) => a.rarity.localeCompare(b.rarity));
+        filtered.sort((a, b) => b.rarity.localeCompare(a.rarity));
     } else if (sortVal === 'rarity-asc') {
         filtered.sort((a, b) => a.rarity.localeCompare(b.rarity));
     }
@@ -304,19 +333,6 @@ function renderAll() {
     }
 }
 
-function switchTab(tabId) {
-    document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-
-    const targetSection = document.getElementById(`tab-${tabId}`);
-    if (targetSection) targetSection.classList.add('active');
-
-    const targetNav = document.getElementById(`nav-${tabId}`);
-    if (targetNav) targetNav.classList.add('active');
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
 function saveProfile() {
     const profile = {
         name: document.getElementById('pName').value,
@@ -394,4 +410,5 @@ window.onload = function() {
     applyMenuMode(savedMenuMode);
     renderAll();
     loadProfile();
+    switchTab('inicio'); // Forzar visualización del apartado inicial
 };
