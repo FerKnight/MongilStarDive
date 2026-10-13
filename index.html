@@ -15,11 +15,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Firebase App, Database y Auth SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-
     <script>
         tailwind.config = {
             theme: {
@@ -308,20 +303,36 @@
         <!-- 5. INICIO (PERFIL Y AUTENTICACIÓN) -->
         <section id="tab-inicio" class="content-section active">
             
-            <!-- CONTENEDOR DE LOGIN / REGISTRO (Se muestra si NO ha iniciado sesión) -->
+            <!-- CONTENEDOR DE LOGIN / REGISTRO CON CORREO Y SOCIAL LOGIN -->
             <div id="authContainer" class="bg-brand-surface border border-purple-500/30 rounded-2xl p-6 mb-5 neon-glow max-w-md mx-auto text-center space-y-4">
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-600 to-cyan-500 flex items-center justify-center text-white text-2xl mx-auto shadow-lg">
                     <i class="fa-solid fa-cloud-arrow-up"></i>
                 </div>
                 <div>
                     <h2 class="font-title font-black text-lg text-slate-100">Sincroniza tu Cuenta</h2>
-                    <p class="text-xs text-slate-400 mt-1">Inicia sesión con tu correo para guardar y sincronizar tu progreso entre tu PC y tu celular.</p>
+                    <p class="text-xs text-slate-400 mt-1">Inicia sesión para guardar y sincronizar tu progreso entre tu PC y tu celular.</p>
+                </div>
+
+                <!-- Botones de Proveedores Sociales -->
+                <div class="space-y-2 pt-1">
+                    <button onclick="handleGoogleLogin()" class="w-full py-2.5 bg-white hover:bg-slate-100 text-slate-900 rounded-xl text-xs font-bold transition cursor-pointer shadow-md flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-google text-red-500 text-sm"></i> Continuar con Google
+                    </button>
+                    <button onclick="handleAppleLogin()" class="w-full py-2.5 bg-black hover:bg-slate-900 text-white border border-white/20 rounded-xl text-xs font-bold transition cursor-pointer shadow-md flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-apple text-white text-sm"></i> Continuar con Apple
+                    </button>
+                </div>
+
+                <div class="flex items-center my-3">
+                    <div class="flex-grow border-t border-white/10"></div>
+                    <span class="px-3 text-[10px] text-slate-400 uppercase tracking-widest font-semibold">o con correo</span>
+                    <div class="flex-grow border-t border-white/10"></div>
                 </div>
 
                 <div class="space-y-3 text-left">
                     <div>
                         <label class="block text-[11px] text-slate-400 font-semibold mb-1">Correo Electrónico</label>
-                        <input type="email5" id="authEmail" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none" placeholder="tucorreo@example.com">
+                        <input type="email" id="authEmail" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none" placeholder="tucorreo@example.com">
                     </div>
                     <div>
                         <label class="block text-[11px] text-slate-400 font-semibold mb-1">Contraseña</label>
@@ -553,7 +564,7 @@
     <script src="js/data/news.js"></script>
 
     <!-- 2. Scripts de Módulos Lógicos -->
-    <script src="js/modules/firebase-config.js"></script>
+    <script type="module" src="js/modules/firebase-config.js"></script>
     <script src="js/modules/navigation.js"></script>
     <script src="js/modules/profile.js"></script>
     <script src="js/modules/characters.js"></script>
