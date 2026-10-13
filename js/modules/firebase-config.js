@@ -1,13 +1,5 @@
-// Importar los SDKs necesarios de Firebase (versión modular moderna)
+// Importar los SDKs necesarios de Firebase (versión modular)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-analytics.js";
-import { 
-    getAuth, 
-    signOut, 
-    onAuthStateChanged,
-    GoogleAuthProvider,
-    signInWithPopup
-} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
 import { 
     getDatabase, 
     ref, 
@@ -29,63 +21,26 @@ const firebaseConfig = {
 
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
 const db = getDatabase(app);
 
-let currentUserId = null;
-
-// Escuchar cambios de autenticación en tiempo real
-onAuthStateChanged(auth, (user) => {
-    const authContainer = document.getElementById('authContainer');
-    const loggedInStatus = document.getElementById('loggedInStatus');
-    const emailDisplay = document.getElementById('userEmailDisplay');
-
-    if (user) {
-        currentUserId = user.uid;
-        if (authContainer) authContainer.classList.add('hidden');
-        if (loggedInStatus) loggedInStatus.classList.remove('hidden');
-        if (emailDisplay) emailDisplay.innerText = user.email || user.displayName || 'Usuario Google';
-
-        // Cargar datos de la nube automáticamente al conectar
-        loadCloudData(() => {
-            if (typeof renderAll === 'function') renderAll();
-        });
-    } else {
-        currentUserId = null;
-        if (authContainer) authContainer.classList.remove('hidden');
-        if (loggedInStatus) loggedInStatus.classList.add('hidden');
-        updateCloudStatus(false);
+// Obtener la clave normalizada del UID para Realtime Database
+function getCleanPlayerUID() {
+    const pUIDInput = document.getElementById('pUID');
+    let uid = pUIDInput ? pUIDInput.value.trim() : '';
+    
+    if (!uid) {
+        // Buscar en localStorage si la caja de texto no ha cargado aún
+        const savedProfile = JSON.parse(localStorage.getItem('mongil_player_profile'));
+        uid = savedProfile && savedProfile.uid ? savedProfile.uid.trim() : 'MNG-9842013';
     }
-});
 
-// Inicio de sesión con Google
-window.handleGoogleLogin = function() {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-        .then(() => {
-            showToast('¡Conectado con Google!');
-        })
-        .catch((error) => {
-            showToast('Error con Google: ' + error.message);
-        });
-};
+    // Remplazar caracteres no permitidos por Firebase Realtime Database
+    return uid.replace(/[^a-zA-Z0-9-_]/g, '_');
+}
 
-// Cerrar sesión
-window.handleLogout = function() {
-    signOut(auth).then(() => {
-        showToast('Desconectado de la nube');
-    }).catch(() => {
-        showToast('Error al desconectar');
-    });
-};
-
-// Guardar datos en la Realtime Database
+// Guardar datos en la Realtime Database usando el UID
 window.saveCloudData = function() {
-    if (!currentUserId) {
-        showToast('Inicia sesión con Google para sincronizar');
-        return;
-    }
+    const playerUID = getCleanPlayerUID();
 
     const payload = {
         collection: JSON.parse(localStorage.getItem('mongil_user_collection')) || {},
@@ -95,30 +50,30 @@ window.saveCloudData = function() {
         lastUpdated: new Date().toISOString()
     };
 
-    const userRef = ref(db, 'users/' + currentUserId);
+    const userRef = ref(db, 'players/' + playerUID);
     set(userRef, payload)
         .then(() => {
             updateCloudStatus(true);
-            showToast('¡Progreso sincronizado en la nube!');
+            showToast('¡Guardado en la nube con tu UID!');
         })
         .catch((error) => {
             console.error("Error al guardar en Firebase:", error);
             updateCloudStatus(false);
-            showToast('Error al sincronizar datos');
+            showToast('Error de conexión a la nube');
         });
 };
 
-// Cargar datos desde la Realtime Database
+// Cargar datos desde la Realtime Database usando el UID
 window.loadCloudData = function(callback) {
-    if (!currentUserId) return;
+    const playerUID = getCleanPlayerUID();
 
     const statusEl = document.getElementById('cloudSyncStatus');
     if (statusEl) {
         statusEl.className = "inline-block w-2 h-2 rounded-full bg-yellow-500 animate-pulse";
-        statusEl.title = "Sincronizando con la nube...";
+        statusEl.title = "Cargando desde la nube...";
     }
 
-    const userRef = ref(db, 'users/' + currentUserId);
+    const userRef = ref(db, 'players/' + playerUID);
     get(userRef)
         .then((snapshot) => {
             if (snapshot.exists()) {
@@ -131,6 +86,7 @@ window.loadCloudData = function(callback) {
                 updateCloudStatus(true);
                 if (typeof loadProfile === 'function') loadProfile();
             } else {
+                // Si la clave no existe en Firebase, creamos la entrada por primera vez
                 saveCloudData();
             }
             if (callback) callback();
@@ -145,7 +101,7 @@ window.loadCloudData = function(callback) {
 function updateCloudStatus(isOnline) {
     const statusEl = document.getElementById('cloudSyncStatus');
     if (statusEl) {
-        statusEl.className = `inline-block w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-400' : 'bg-slate-500'}`;
-        statusEl.title = isOnline ? 'Sincronizado con la nube' : 'Modo Local';
+        statusEl.className = `inline-block w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-400' : 'bg-red-500'}`;
+        statusEl.title = isOnline ? 'Conectado y sincronizado por UID' : 'Error de sincronización con la nube';
     }
 }
