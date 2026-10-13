@@ -308,9 +308,9 @@
                     <h2 class="font-title font-black text-base text-slate-100 flex items-center gap-2">
                         <i class="fa-solid fa-address-card text-purple-400"></i> PERFIL DE JUGADOR
                     </h2>
-                    <span class="text-[10px] text-cyan-300 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/30 font-mono">
-                        Sincronización por Código
-                    </span>
+                    <button onclick="openAccountModal()" class="text-[10px] text-cyan-300 bg-cyan-950/80 hover:bg-cyan-900 px-2.5 py-1 rounded-lg border border-cyan-500/40 font-semibold transition cursor-pointer flex items-center gap-1.5">
+                        <i class="fa-solid fa-arrows-rotate"></i> Cambiar / Iniciar Sesión
+                    </button>
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5 mb-5">
@@ -334,7 +334,7 @@
                                 Código de amistad <span class="text-[10px] text-cyan-400 font-normal">(Clave de Sincronización)</span>
                             </label>
                             <div class="flex gap-2">
-                                <input type="text" id="pFriendCode" onchange="handleFriendCodeChange()" class="w-full bg-brand-card border border-cyan-500/40 rounded-lg px-3 py-2 text-sm text-slate-100 font-mono focus:border-cyan-400 focus:outline-none" value="FRIEND-STARDIVE-2026">
+                                <input type="text" id="pFriendCode" readonly class="w-full bg-brand-card/60 border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-300 font-mono focus:outline-none cursor-not-allowed" value="FRIEND-STARDIVE-2026">
                                 <button onclick="copyField('pFriendCode')" class="px-3 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer">
                                     <i class="fa-regular fa-copy"></i> Copiar
                                 </button>
@@ -349,10 +349,10 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <button onclick="saveProfile()" class="py-3 bg-gradient-to-r from-purple-600 to-cyan-500 rounded-xl font-title font-bold text-xs sm:text-sm text-white shadow-lg cursor-pointer hover:opacity-95 active:scale-98 transition">
-                        <i class="fa-solid fa-floppy-disk"></i> GUARDAR LOCALMENTE
+                        <i class="fa-solid fa-floppy-disk"></i> GUARDAR CAMBIOS
                     </button>
                     <button onclick="loadCloudData()" class="py-3 bg-brand-card hover:bg-slate-700 border border-cyan-500/40 rounded-xl font-title font-bold text-xs sm:text-sm text-cyan-300 shadow-lg cursor-pointer active:scale-98 transition">
-                        <i class="fa-solid fa-cloud-arrow-down"></i> CARGAR ESTA CUENTA
+                        <i class="fa-solid fa-cloud-arrow-down"></i> RECAGAR DESDE LA NUBE
                     </button>
                 </div>
             </div>
@@ -431,6 +431,43 @@
             </button>
         </div>
     </nav>
+
+    <!-- MODAL DE CAMBIO / INICIO DE SESIÓN DE CUENTA -->
+    <div id="accountModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-brand-surface border border-purple-500/30 w-full max-w-md rounded-2xl p-5 neon-glow relative space-y-4">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h3 class="font-title font-bold text-base text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-users-gear text-cyan-400"></i> GESTIONAR CUENTA
+                </h3>
+                <button onclick="closeAccountModal()" class="w-8 h-8 rounded-lg bg-brand-card hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Opción 1: Iniciar Sesión con un Código Existente -->
+            <div class="bg-brand-card p-4 rounded-xl border border-white/10 space-y-2">
+                <label class="block text-xs font-bold text-slate-200">Cargar otra cuenta existente:</label>
+                <p class="text-[10px] text-slate-400">Escribe el Código de Amistad de tu otra cuenta para sincronizar sus datos inmediatamente.</p>
+                <div class="flex gap-2 pt-1">
+                    <input type="text" id="switchCodeInput" class="w-full bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-slate-100 font-mono focus:border-cyan-400 focus:outline-none" placeholder="Ej. FRIEND-STARDIVE-2026">
+                    <button onclick="switchAccountByCode()" class="px-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-bold transition flex-shrink-0 cursor-pointer">
+                        Cargar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Opción 2: Crear un nuevo perfil desde cero -->
+            <div class="bg-brand-card p-4 rounded-xl border border-white/10 flex items-center justify-between">
+                <div>
+                    <h4 class="text-xs font-bold text-slate-200">¿Crear una nueva cuenta?</h4>
+                    <p class="text-[10px] text-slate-400">Generará un nuevo código limpio para empezar desde cero.</p>
+                </div>
+                <button onclick="createNewAccount()" class="px-3 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-bold transition cursor-pointer flex-shrink-0">
+                    Crear Nueva
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL DE DETALLES DEL PERSONAJE -->
     <div id="charModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
