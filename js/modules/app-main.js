@@ -4,7 +4,7 @@ function renderAll() {
     filterCharacters();
     updateOwnedCounter();
 
-    // RENDERIZADO DE EQUIPAMIENTOS (SETS DE ROPA)
+    // RENDERIZADO DE EQUIPAMIENTOS
     const equipGrid = document.getElementById('equipGrid');
     if (equipGrid) {
         let html = equipData.map(e => `
@@ -59,7 +59,7 @@ function renderAll() {
         equipGrid.innerHTML = html;
     }
 
-    // RENDERIZADO DE MONSTERLINGS (MONPURAN) + FUENTES
+    // RENDERIZADO DE MONSTERLINGS
     const monsterGrid = document.getElementById('monsterGrid');
     if (monsterGrid) {
         let mHtml = monsterData.map(m => `
@@ -92,7 +92,7 @@ function renderAll() {
         monsterGrid.innerHTML = mHtml;
     }
 
-    // RENDERIZADO DE ARTEFACTOS + FUENTES
+    // RENDERIZADO DE ARTEFACTOS
     const artifactGrid = document.getElementById('artifactGrid');
     if (artifactGrid) {
         let aHtml = artifactData.map(a => `
@@ -218,7 +218,10 @@ if ('serviceWorker' in navigator) {
 window.onload = function() {
     const savedMenuMode = localStorage.getItem('mongil_menu_mode') || 'bottom';
     applyMenuMode(savedMenuMode);
-    renderAll();
     loadProfile();
-    switchTab('inicio');
+    
+    // Cargar desde la nube primero y luego renderizar
+    loadCloudData(() => {
+        renderAll();
+    });
 };
