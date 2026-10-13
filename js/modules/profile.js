@@ -38,7 +38,6 @@ function saveProfile() {
     const avatarImg = document.getElementById('avatarImg');
     const profile = {
         name: document.getElementById('pName').value,
-        uid: document.getElementById('pUID').value,
         friendCode: document.getElementById('pFriendCode').value,
         message: document.getElementById('pMessage').value,
         avatar: avatarImg ? avatarImg.src : 'assets/images/Character_Portrait/portrait_Verna_01.png'
@@ -58,7 +57,6 @@ function loadProfile() {
     if (saved) {
         const profile = JSON.parse(saved);
         if (profile.name) document.getElementById('pName').value = profile.name;
-        if (profile.uid) document.getElementById('pUID').value = profile.uid;
         if (profile.friendCode) document.getElementById('pFriendCode').value = profile.friendCode;
         if (profile.message) document.getElementById('pMessage').value = profile.message;
         if (profile.avatar) {
