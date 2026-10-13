@@ -216,13 +216,16 @@ function renderAll() {
     const equipGrid = document.getElementById('equipGrid');
     if (equipGrid) {
         equipGrid.innerHTML = equipData.map(e => `
-            <div class="bg-brand-card border border-white/10 rounded-xl p-3">
-                <div class="flex justify-between items-start mb-1">
-                    <h3 class="font-title font-bold text-sm text-purple-300">${e.name}</h3>
-                    <span class="text-xs text-yellow-400 font-bold">${e.rarity}</span>
+            <div class="bg-brand-card border border-white/10 rounded-xl p-3 flex items-center gap-3">
+                <img src="${e.image}" alt="${e.name}" class="w-12 h-12 rounded-lg object-contain bg-slate-900 border border-white/5" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
+                <div class="flex-1 min-w-0">
+                    <div class="flex justify-between items-start mb-0.5">
+                        <h3 class="font-title font-bold text-sm text-purple-300 truncate">${e.name}</h3>
+                        <span class="text-xs text-yellow-400 font-bold">${e.rarity}</span>
+                    </div>
+                    <p class="text-xs text-cyan-400 font-semibold mb-1">${e.type} | ${e.stat}</p>
+                    <p class="text-[11px] text-slate-400 line-clamp-2">${e.desc}</p>
                 </div>
-                <p class="text-xs text-cyan-400 font-semibold mb-2">${e.type} | ${e.stat}</p>
-                <p class="text-xs text-slate-400">${e.desc}</p>
             </div>
         `).join('');
     }
@@ -230,10 +233,13 @@ function renderAll() {
     const monsterGrid = document.getElementById('monsterGrid');
     if (monsterGrid) {
         monsterGrid.innerHTML = monsterData.map(m => `
-            <div class="bg-brand-card border border-white/10 rounded-xl p-3">
-                <h3 class="font-title font-bold text-sm text-slate-100">${m.name}</h3>
-                <p class="text-[10px] text-purple-400 mb-1">${m.habitat} • <span class="text-slate-300">${m.rarity}</span></p>
-                <p class="text-xs text-slate-400"><strong class="text-slate-200">Habilidad:</strong> ${m.skill}</p>
+            <div class="bg-brand-card border border-white/10 rounded-xl p-3 flex items-center gap-3">
+                <img src="${m.image}" alt="${m.name}" class="w-12 h-12 rounded-lg object-contain bg-slate-900 border border-white/5" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-title font-bold text-sm text-slate-100 truncate">${m.name}</h3>
+                    <p class="text-[10px] text-purple-400 mb-1">${m.habitat} • <span class="text-slate-300">${m.rarity}</span></p>
+                    <p class="text-[11px] text-slate-400 line-clamp-2"><strong class="text-slate-200">Habilidad:</strong> ${m.skill}</p>
+                </div>
             </div>
         `).join('');
     }
@@ -241,13 +247,20 @@ function renderAll() {
     const artifactGrid = document.getElementById('artifactGrid');
     if (artifactGrid) {
         artifactGrid.innerHTML = artifactData.map(a => `
-            <div class="bg-brand-card border border-white/10 rounded-xl p-3">
-                <h3 class="font-title font-bold text-sm text-cyan-300 mb-1">${a.name}</h3>
-                <p class="text-xs text-slate-300 mb-1"><strong>(2 Pcs):</strong> ${a.set2}</p>
-                <p class="text-xs text-slate-400"><strong>(4 Pcs):</strong> ${a.set4}</p>
+            <div class="bg-brand-card border border-white/10 rounded-xl p-3 flex items-center gap-3">
+                <img src="${a.image}" alt="${a.name}" class="w-12 h-12 rounded-lg object-contain bg-slate-900 border border-white/5" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-title font-bold text-sm text-cyan-300 mb-1 truncate">${a.name}</h3>
+                    <p class="text-[11px] text-slate-300 mb-0.5"><strong>(2 Pcs):</strong> ${a.set2}</p>
+                    <p class="text-[11px] text-slate-400"><strong>(4 Pcs):</strong> ${a.set4}</p>
+                </div>
             </div>
         `).join('');
     }
+
+    // Resto de renders (builds, mapas, eventos, novedades)...
+    // ...
+}
 
     const buildsList = document.getElementById('buildsList');
     if (buildsList) {
