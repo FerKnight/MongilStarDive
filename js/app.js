@@ -18,6 +18,55 @@ function getElementBadge(element) {
     }
 }
 
+// LÓGICA DE CONFIGURACIÓN Y MODO DE MENÚ
+function applyMenuMode(mode) {
+    const bottomNav = document.getElementById('bottomNav');
+    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+    const radioBottom = document.getElementById('radioBottomNav');
+    const radioSidebar = document.getElementById('radioSidebarNav');
+
+    if (mode === 'sidebar') {
+        if (bottomNav) bottomNav.classList.add('hidden');
+        if (sidebarToggleBtn) sidebarToggleBtn.classList.remove('hidden');
+        if (radioSidebar) radioSidebar.checked = true;
+    } else {
+        if (bottomNav) bottomNav.classList.remove('hidden');
+        if (sidebarToggleBtn) sidebarToggleBtn.classList.add('hidden');
+        if (radioBottom) radioBottom.checked = true;
+    }
+}
+
+function setMenuMode(mode) {
+    localStorage.setItem('mongil_menu_mode', mode);
+    applyMenuMode(mode);
+    showToast(`Modo de menú cambiado a: ${mode === 'sidebar' ? 'Desplegable' : 'Inferior'}`);
+}
+
+function openSettingsModal() {
+    const modal = document.getElementById('settingsModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+}
+
+function closeSettingsModal() {
+    const modal = document.getElementById('settingsModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+}
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebarMenu');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (sidebar && overlay) {
+        sidebar.classList.toggle('-translate-x-full');
+        overlay.classList.toggle('hidden');
+    }
+}
+
 // LÓGICA DE FILTRADO COMBINABLE DE PERSONAJES
 function filterCharacters() {
     const searchInput = document.getElementById('charSearch');
@@ -70,7 +119,6 @@ function renderCharacterGrid(list) {
         return;
     }
 
-    // Grilla adaptable para mostrar 2 a 4 elementos en pantalla móvil/escritorio
     charGrid.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3";
 
     charGrid.innerHTML = list.map(c => {
@@ -331,6 +379,8 @@ if ('serviceWorker' in navigator) {
 }
 
 window.onload = function() {
+    const savedMenuMode = localStorage.getItem('mongil_menu_mode') || 'bottom';
+    applyMenuMode(savedMenuMode);
     renderAll();
     loadProfile();
 };
