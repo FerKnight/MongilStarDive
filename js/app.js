@@ -270,6 +270,7 @@ function filterCharacters() {
     renderCharacterGrid(filtered);
 }
 
+// RENDERIZADO COMPACTO (4 COLUMNAS EN CELULARES)
 function renderCharacterGrid(list) {
     const charGrid = document.getElementById('charGrid');
     const charCount = document.getElementById('charCount');
@@ -287,7 +288,7 @@ function renderCharacterGrid(list) {
         return;
     }
 
-    charGrid.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3";
+    charGrid.className = "grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-1.5 sm:gap-3";
 
     charGrid.innerHTML = list.map(c => {
         const elemBadge = getElementBadge(c.element);
@@ -295,32 +296,32 @@ function renderCharacterGrid(list) {
         const isOwned = uData.owned;
 
         return `
-            <div onclick="openCharacterModal('${c.id}')" class="bg-brand-card border ${isOwned ? 'border-cyan-400/80 shadow-md shadow-cyan-950/50' : 'border-white/10 opacity-70'} rounded-xl p-2.5 hover:border-cyan-400 cursor-pointer transition transform relative overflow-hidden group">
+            <div onclick="openCharacterModal('${c.id}')" class="bg-brand-card border ${isOwned ? 'border-cyan-400/80 shadow-md shadow-cyan-950/50' : 'border-white/10 opacity-70'} rounded-lg p-1 sm:p-2 hover:border-cyan-400 cursor-pointer transition transform relative overflow-hidden group">
                 
-                <button onclick="toggleCharOwned(event, '${c.id}')" class="absolute top-2 left-2 z-10 w-6 h-6 rounded-md ${isOwned ? 'bg-cyan-500 text-white' : 'bg-slate-900/80 text-slate-500 border border-white/20'} flex items-center justify-center text-xs shadow-md transition active:scale-90">
+                <button onclick="toggleCharOwned(event, '${c.id}')" class="absolute top-1 left-1 z-10 w-4 h-4 sm:w-5 sm:h-5 rounded ${isOwned ? 'bg-cyan-500 text-white' : 'bg-slate-900/80 text-slate-500 border border-white/20'} flex items-center justify-center text-[9px] sm:text-xs shadow-md transition active:scale-90">
                     <i class="fa-solid fa-check"></i>
                 </button>
 
                 ${isOwned && uData.awakening > 0 ? `
-                    <span class="absolute bottom-11 right-2 z-10 bg-purple-600/90 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded border border-purple-400">
+                    <span class="absolute bottom-8 sm:bottom-10 right-1 z-10 bg-purple-600/90 text-white text-[8px] sm:text-[9px] font-extrabold px-1 py-0.2 rounded border border-purple-400">
                         D${uData.awakening}
                     </span>
                 ` : ''}
 
-                <div class="w-full h-28 rounded-lg bg-slate-900 overflow-hidden mb-2 relative flex items-center justify-center">
+                <div class="w-full h-16 sm:h-24 rounded-md bg-slate-900 overflow-hidden mb-1 relative flex items-center justify-center">
                     <img src="${c.image}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top ${isOwned ? '' : 'grayscale'} group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
-                    <span class="absolute top-1 right-1 bg-black/70 backdrop-blur-md text-yellow-400 font-bold text-[10px] px-1.5 py-0.5 rounded border border-yellow-500/30">${c.rarity}</span>
+                    <span class="absolute top-0.5 right-0.5 bg-black/70 backdrop-blur-md text-yellow-400 font-bold text-[8px] sm:text-[10px] px-1 py-0.2 rounded border border-yellow-500/30">${c.rarity}</span>
                 </div>
                 
-                <div class="truncate mb-1">
-                    <h3 class="font-title font-bold text-xs text-slate-100 truncate">${c.name}</h3>
+                <div class="truncate mb-0.5 text-center sm:text-left">
+                    <h3 class="font-title font-bold text-[10px] sm:text-xs text-slate-100 truncate">${c.name}</h3>
                 </div>
                 
-                <div class="flex items-center justify-between gap-1">
-                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
-                        <i class="fa-solid ${elemBadge.icon}"></i> ${c.element}
+                <div class="flex items-center justify-between gap-0.5">
+                    <span class="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[8px] sm:text-[9px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
+                        <i class="fa-solid ${elemBadge.icon}"></i> <span class="hidden sm:inline">${c.element}</span>
                     </span>
-                    <span class="text-[9px] text-purple-300 font-semibold truncate">${c.role}</span>
+                    <span class="text-[8px] sm:text-[9px] text-purple-300 font-semibold truncate">${c.role}</span>
                 </div>
             </div>
         `;
