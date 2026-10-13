@@ -99,7 +99,17 @@ function changeSkillLevel(id, skillType, delta) {
     filterCharacters();
 }
 
-// ICONOS DE ELEMENTOS DESDE assets/images/elements/icons/
+// MANEJO DE FALLBACK DE IMAGEN (_00 a _01)
+function handleImageError(img, characterName) {
+    if (img.src.includes('_00.png')) {
+        img.src = img.src.replace('_00.png', '_01.png');
+    } else {
+        img.onerror = null;
+        img.src = 'assets/images/Character_Portrait/portrait_Verna_01.png';
+    }
+}
+
+// OBTENER ÍCONO DE ELEMENTO
 function getElementIconHTML(element) {
     let iconFile = 'fire.png';
     switch (element) {
@@ -110,10 +120,10 @@ function getElementIconHTML(element) {
         case 'Tierra': iconFile = 'earth.png'; break;
     }
     const path = `assets/images/elements/icons/${iconFile}`;
-    return `<img src="${path}" alt="${element}" class="w-3.5 h-3.5 object-contain inline-block" onerror="this.onerror=null; this.style.display='none';">`;
+    return `<img src="${path}" alt="${element}" title="${element}" class="w-4 h-4 object-contain inline-block">`;
 }
 
-// FUNCIONES DE SELECCIÓN DE AVATAR PARA EL PERFIL
+// SELECCIÓN DE AVATAR
 function openAvatarSelectorModal() {
     const modal = document.getElementById('avatarModal');
     const grid = document.getElementById('avatarGrid');
@@ -121,7 +131,7 @@ function openAvatarSelectorModal() {
     if (grid) {
         grid.innerHTML = charactersData.map(c => `
             <div onclick="selectAvatarImage('${c.image}')" class="aspect-square rounded-xl bg-slate-900 border border-white/10 hover:border-cyan-400 overflow-hidden cursor-pointer transition transform active:scale-95 group relative">
-                <img src="${c.image}" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-200" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
+                <img src="${c.image}" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-200" onerror="handleImageError(this, '${c.name}')">
                 <span class="absolute bottom-0 inset-x-0 bg-black/80 text-slate-200 text-[8px] text-center font-semibold truncate py-0.5 px-1">${c.name}</span>
             </div>
         `).join('');
@@ -288,13 +298,13 @@ function filterCharacters() {
     } else if (sortVal === 'rarity-desc') {
         filtered.sort((a, b) => b.rarity.localeCompare(a.rarity));
     } else if (sortVal === 'rarity-asc') {
-        filtered.sort((a, b) => a.rarity.ancestorScore ? 0 : a.rarity.localeCompare(b.rarity));
+        filtered.sort((a, b) => a.rarity.localeCompare(b.rarity));
     }
 
     renderCharacterGrid(filtered);
 }
 
-// RENDERIZADO CON NIVELES DE HABILIDAD EN LA TARJETA E ICONOS DE ELEMENTO
+// RENDERIZADO DEL GRID DE PERSONAJES
 function renderCharacterGrid(list) {
     const charGrid = document.getElementById('charGrid');
     const charCount = document.getElementById('charCount');
@@ -333,7 +343,7 @@ function renderCharacterGrid(list) {
                 ` : ''}
 
                 <div class="w-full h-16 sm:h-24 rounded-md bg-slate-900 overflow-hidden mb-1 relative flex items-center justify-center">
-                    <img src="${c.image}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top ${isOwned ? '' : 'grayscale'} group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
+                    <img src="${c.image}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top ${isOwned ? '' : 'grayscale'} group-hover:scale-105 transition duration-300" onerror="handleImageError(this, '${c.name}')">
                     <span class="absolute top-0.5 right-0.5 bg-black/70 backdrop-blur-md text-yellow-400 font-bold text-[8px] sm:text-[10px] px-1 py-0.2 rounded border border-yellow-500/30">${c.rarity}</span>
                 </div>
                 
@@ -341,7 +351,6 @@ function renderCharacterGrid(list) {
                     <h3 class="font-title font-bold text-[10px] sm:text-xs text-slate-100 truncate">${c.name}</h3>
                 </div>
 
-                <!-- MOSTRAR NIVELES DE HABILIDADES SI ESTÁ OBTENIDO -->
                 ${isOwned ? `
                     <div class="grid grid-cols-4 gap-0.5 bg-slate-900/80 rounded p-0.5 mb-1 text-[7px] text-center font-mono">
                         <span class="text-cyan-400" title="Básico">B:${uData.skills.basic}</span>
@@ -352,8 +361,8 @@ function renderCharacterGrid(list) {
                 ` : ''}
                 
                 <div class="flex items-center justify-between gap-0.5">
-                    <span class="inline-flex items-center gap-1 px-1 py-0.2 rounded text-[8px] sm:text-[9px] font-bold bg-slate-800 text-slate-300 border border-white/10">
-                        ${elementIcon} <span class="hidden sm:inline">${c.element}</span>
+                    <span class="p-0.5 rounded bg-slate-800/80 border border-white/10 flex items-center justify-center">
+                        ${elementIcon}
                     </span>
                     <span class="text-[8px] sm:text-[9px] text-purple-300 font-semibold truncate">${c.role}</span>
                 </div>
@@ -376,7 +385,7 @@ function openCharacterModal(charId) {
     modalContent.innerHTML = `
         <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
             <div class="flex items-center gap-3">
-                <img src="${char.image}" alt="${char.name}" class="w-14 h-14 rounded-xl object-cover object-top border border-purple-500/40 shadow-lg bg-slate-900 ${isOwned ? '' : 'grayscale'}" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
+                <img src="${char.image}" alt="${char.name}" class="w-14 h-14 rounded-xl object-cover object-top border border-purple-500/40 shadow-lg bg-slate-900 ${isOwned ? '' : 'grayscale'}" onerror="handleImageError(this, '${char.name}')">
                 <div>
                     <div class="flex items-center gap-2">
                         <h3 class="font-title font-black text-base text-slate-100">${char.name}</h3>
@@ -388,8 +397,8 @@ function openCharacterModal(charId) {
                     </div>
                     <div class="flex items-center gap-2 mt-1">
                         <span class="text-xs text-yellow-400 font-bold">${char.rarity}</span>
-                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-white/10">
-                            ${elementIcon} ${char.element}
+                        <span class="p-1 rounded bg-slate-800 border border-white/10 flex items-center justify-center">
+                            ${elementIcon}
                         </span>
                         <span class="text-xs text-purple-300 font-semibold">${char.role}</span>
                     </div>
@@ -416,12 +425,11 @@ function openCharacterModal(charId) {
                 </div>
             ` : ''}
 
-            <!-- NIVELES DE ATAQUES EN RECUADROS INDEPENDIENTES -->
+            <!-- NIVELES DE ATAQUES -->
             <div class="space-y-1.5 ${isOwned ? '' : 'opacity-40 pointer-events-none select-none'}">
                 <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Nivel de Ataques</span>
                 
                 <div class="grid grid-cols-2 gap-2">
-                    <!-- BÁSICO -->
                     <div class="bg-brand-card/80 p-2.5 rounded-xl border border-white/10 flex flex-col justify-between items-center text-center gap-1.5">
                         <span class="font-bold text-cyan-400 text-xs">Básico</span>
                         <div class="flex items-center gap-2">
@@ -431,7 +439,6 @@ function openCharacterModal(charId) {
                         </div>
                     </div>
 
-                    <!-- RELEVO -->
                     <div class="bg-brand-card/80 p-2.5 rounded-xl border border-white/10 flex flex-col justify-between items-center text-center gap-1.5">
                         <span class="font-bold text-purple-400 text-xs">Relevo</span>
                         <div class="flex items-center gap-2">
@@ -441,7 +448,6 @@ function openCharacterModal(charId) {
                         </div>
                     </div>
 
-                    <!-- ESPECIAL -->
                     <div class="bg-brand-card/80 p-2.5 rounded-xl border border-white/10 flex flex-col justify-between items-center text-center gap-1.5">
                         <span class="font-bold text-yellow-400 text-xs">Especial</span>
                         <div class="flex items-center gap-2">
@@ -451,7 +457,6 @@ function openCharacterModal(charId) {
                         </div>
                     </div>
 
-                    <!-- CARGADO -->
                     <div class="bg-brand-card/80 p-2.5 rounded-xl border border-white/10 flex flex-col justify-between items-center text-center gap-1.5">
                         <span class="font-bold text-pink-400 text-xs">Cargado</span>
                         <div class="flex items-center gap-2">
@@ -463,7 +468,7 @@ function openCharacterModal(charId) {
                 </div>
             </div>
 
-            <!-- SECCIÓN 5 RECUADROS DE EQUIPAMIENTOS -->
+            <!-- SECCIÓN EQUIPAMIENTOS -->
             <div class="space-y-1.5 ${isOwned ? '' : 'opacity-40 pointer-events-none select-none'}">
                 <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Equipamientos y Artefacto</span>
                 <div class="grid grid-cols-5 gap-2">
@@ -490,7 +495,7 @@ function openCharacterModal(charId) {
                 </div>
             </div>
 
-            <!-- SECCIÓN 4 RECUADROS DE MONSTERLINGS -->
+            <!-- SECCIÓN MONSTERLINGS -->
             <div class="space-y-1.5 ${isOwned ? '' : 'opacity-40 pointer-events-none select-none'}">
                 <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Monsterlings</span>
                 <div class="grid grid-cols-4 gap-2">
