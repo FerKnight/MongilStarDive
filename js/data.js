@@ -9,7 +9,7 @@ const charactersData = [
         image: "assets/images/Character_Portrait/portrait_Vivian_01.png"
     },
     { 
-        id: "brishell", name: "Brishell", rarity: "5★", element: "Viento", role: "Asesino", weapon: "Dagas", 
+        id: "brisshell", name: "Brisshell", rarity: "5★", element: "Viento", role: "Asesino", weapon: "Dagas", 
         image: "assets/images/Character_Portrait/portrait_Brishell_01.png"
     },
     { 
@@ -18,11 +18,11 @@ const charactersData = [
     },
     { 
         id: "francis_summer", name: "Francis: Summer Dive!", rarity: "5★", element: "Viento", role: "Luchador", weapon: "Espada corta", 
-        image: "assets/images/Character_Portrait/portrait_Francis_01.png"
+        image: "assets/images/Character_Portrait/portrait_FrancisSummer_01.png"
     },
     { 
         id: "verna_summer", name: "Verna: Summer Dive!", rarity: "5★", element: "Fuego", role: "Luchador", weapon: "Espada corta", 
-        image: "assets/images/Character_Portrait/portrait_Verna_01.png"
+        image: "assets/images/Character_Portrait/portrait_VernaSummer_01.png"
     },
     { 
         id: "nagi", name: "Nagi", rarity: "5★", element: "Rayo", role: "Asesino", weapon: "Lanza", 
