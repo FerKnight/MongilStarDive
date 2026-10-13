@@ -15,9 +15,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Firebase App (Modular SDK CDN) -->
+    <!-- Firebase App, Database y Auth SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
     <script>
         tailwind.config = {
@@ -133,7 +134,7 @@
                     MONGIL: STAR DIVE
                 </h1>
                 <p class="text-[10px] text-slate-400 font-medium flex items-center gap-1.5">
-                    <span>VER. 1.4</span> <span id="cloudSyncStatus" class="inline-block w-2 h-2 rounded-full bg-yellow-500" title="Conectando a la nube..."></span>
+                    <span>VER. 1.4</span> <span id="cloudSyncStatus" class="inline-block w-2 h-2 rounded-full bg-yellow-500" title="Conectando..."></span>
                 </p>
             </div>
         </div>
@@ -304,13 +305,53 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="artifactGrid"></div>
         </section>
 
-        <!-- 5. INICIO (PERFIL) -->
+        <!-- 5. INICIO (PERFIL Y AUTENTICACIÓN) -->
         <section id="tab-inicio" class="content-section active">
-            <div class="bg-brand-surface border border-purple-500/30 rounded-2xl p-5 mb-5 relative overflow-hidden neon-glow">
-                <h2 class="font-title font-black text-lg text-slate-100 mb-5 flex items-center justify-between">
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-address-card text-purple-400"></i> PERFIL DE JUGADOR</span>
-                    <span id="cloudSyncText" class="text-[10px] font-normal text-slate-400">Sincronizado con la nube</span>
-                </h2>
+            
+            <!-- CONTENEDOR DE LOGIN / REGISTRO (Se muestra si NO ha iniciado sesión) -->
+            <div id="authContainer" class="bg-brand-surface border border-purple-500/30 rounded-2xl p-6 mb-5 neon-glow max-w-md mx-auto text-center space-y-4">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-600 to-cyan-500 flex items-center justify-center text-white text-2xl mx-auto shadow-lg">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <div>
+                    <h2 class="font-title font-black text-lg text-slate-100">Sincroniza tu Cuenta</h2>
+                    <p class="text-xs text-slate-400 mt-1">Inicia sesión con tu correo para guardar y sincronizar tu progreso entre tu PC y tu celular.</p>
+                </div>
+
+                <div class="space-y-3 text-left">
+                    <div>
+                        <label class="block text-[11px] text-slate-400 font-semibold mb-1">Correo Electrónico</label>
+                        <input type="email5" id="authEmail" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none" placeholder="tucorreo@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-400 font-semibold mb-1">Contraseña</label>
+                        <input type="password" id="authPassword" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <button onclick="handleLogin()" class="py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-bold transition cursor-pointer shadow-md">
+                        Iniciar Sesión
+                    </button>
+                    <button onclick="handleRegister()" class="py-2.5 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-bold transition cursor-pointer shadow-md">
+                        Registrarse
+                    </button>
+                </div>
+            </div>
+
+            <!-- CONTENEDOR DE PERFIL DE JUGADOR (Se muestra SI ha iniciado sesión) -->
+            <div id="profileContainer" class="bg-brand-surface border border-purple-500/30 rounded-2xl p-5 mb-5 relative overflow-hidden neon-glow hidden">
+                <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+                    <h2 class="font-title font-black text-base text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-address-card text-purple-400"></i> PERFIL DE JUGADOR
+                    </h2>
+                    <div class="flex items-center gap-2">
+                        <span id="userEmailDisplay" class="text-[11px] text-cyan-300 font-mono bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/30"></span>
+                        <button onclick="handleLogout()" class="px-2.5 py-1 bg-red-600/80 hover:bg-red-500 text-white text-[10px] font-bold rounded-lg transition cursor-pointer">
+                            <i class="fa-solid fa-right-from-bracket"></i> Salir
+                        </button>
+                    </div>
+                </div>
 
                 <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5 mb-5">
                     <div onclick="openAvatarSelectorModal()" class="relative group cursor-pointer flex-shrink-0">
