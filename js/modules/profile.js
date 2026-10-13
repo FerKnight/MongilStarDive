@@ -65,12 +65,68 @@ function loadProfile() {
     }
 }
 
-// Función ejecutada cuando el usuario cambia manualmente el código de amistad
-function handleFriendCodeChange() {
+// Abrir modal de gestión de cuentas
+function openAccountModal() {
+    const modal = document.getElementById('accountModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+}
+
+// Cerrar modal de gestión de cuentas
+function closeAccountModal() {
+    const modal = document.getElementById('accountModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+}
+
+// Lógica para cambiar a un nuevo código de amistad
+function switchAccountByCode() {
+    const inputCode = document.getElementById('switchCodeInput');
+    const newCode = inputCode ? inputCode.value.trim() : '';
+
+    if (!newCode) {
+        if (typeof showToast === 'function') showToast('Ingresa un Código de Amistad válido');
+        return;
+    }
+
+    // Actualizar el campo en la vista
+    const currentCodeInput = document.getElementById('pFriendCode');
+    if (currentCodeInput) currentCodeInput.value = newCode;
+
+    // Guardar perfil y cargar datos desde la nube
     saveProfile();
     if (typeof loadCloudData === 'function') {
-        loadCloudData();
+        loadCloudData(() => {
+            closeAccountModal();
+            if (inputCode) inputCode.value = '';
+        });
     }
+}
+
+// Lógica para generar un perfil totalmente nuevo
+function createNewAccount() {
+    const randomNum = Math.floor(100000 + Math.random() * 900000);
+    const newCode = `STARDIVE-${randomNum}`;
+    
+    // Limpiar almacenamiento local
+    localStorage.setItem('mongil_user_collection', JSON.stringify({}));
+    
+    const currentCodeInput = document.getElementById('pFriendCode');
+    if (currentCodeInput) currentCodeInput.value = newCode;
+
+    const currentNameInput = document.getElementById('pName');
+    if (currentNameInput) currentNameInput.value = `DiveMaster_${randomNum.toString().slice(-3)}`;
+
+    saveProfile();
+    closeAccountModal();
+    
+    if (typeof renderCharacters === 'function') renderCharacters();
+    if (typeof renderAll === 'function') renderAll();
+    if (typeof showToast === 'function') showToast('¡Nueva cuenta creada!');
 }
 
 function copyField(elementId) {
