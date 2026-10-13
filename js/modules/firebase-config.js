@@ -3,12 +3,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebas
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-analytics.js";
 import { 
     getAuth, 
-    createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword, 
     signOut, 
     onAuthStateChanged,
     GoogleAuthProvider,
-    OAuthProvider,
     signInWithPopup
 } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
 import { 
@@ -41,23 +38,24 @@ let currentUserId = null;
 // Escuchar cambios de autenticación en tiempo real
 onAuthStateChanged(auth, (user) => {
     const authContainer = document.getElementById('authContainer');
-    const profileContainer = document.getElementById('profileContainer');
+    const loggedInStatus = document.getElementById('loggedInStatus');
     const emailDisplay = document.getElementById('userEmailDisplay');
 
     if (user) {
         currentUserId = user.uid;
         if (authContainer) authContainer.classList.add('hidden');
-        if (profileContainer) profileContainer.classList.remove('hidden');
-        if (emailDisplay) emailDisplay.innerText = user.email || user.displayName || 'Usuario';
+        if (loggedInStatus) loggedInStatus.classList.remove('hidden');
+        if (emailDisplay) emailDisplay.innerText = user.email || user.displayName || 'Usuario Google';
 
-        // Cargar datos de la nube automáticamente al iniciar sesión
+        // Cargar datos de la nube automáticamente al conectar
         loadCloudData(() => {
             if (typeof renderAll === 'function') renderAll();
         });
     } else {
         currentUserId = null;
         if (authContainer) authContainer.classList.remove('hidden');
-        if (profileContainer) profileContainer.classList.add('hidden');
+        if (loggedInStatus) loggedInStatus.classList.add('hidden');
+        updateCloudStatus(false);
     }
 });
 
@@ -66,80 +64,28 @@ window.handleGoogleLogin = function() {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
         .then(() => {
-            showToast('¡Sesión iniciada con Google!');
+            showToast('¡Conectado con Google!');
         })
         .catch((error) => {
             showToast('Error con Google: ' + error.message);
         });
 };
 
-// Inicio de sesión con Apple
-window.handleAppleLogin = function() {
-    const provider = new OAuthProvider('apple.com');
-    signInWithPopup(auth, provider)
-        .then(() => {
-            showToast('¡Sesión iniciada con Apple!');
-        })
-        .catch((error) => {
-            showToast('Error con Apple: ' + error.message);
-        });
-};
-
-// Registrarse con correo y contraseña
-window.handleRegister = function() {
-    const emailInput = document.getElementById('authEmail');
-    const passInput = document.getElementById('authPassword');
-    const email = emailInput ? emailInput.value.trim() : '';
-    const password = passInput ? passInput.value.trim() : '';
-
-    if (!email || !password) {
-        showToast('Ingresa un correo y contraseña válidos');
-        return;
-    }
-
-    createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-            showToast('¡Cuenta creada con éxito!');
-            saveCloudData();
-        })
-        .catch((error) => {
-            showToast('Error: ' + error.message);
-        });
-};
-
-// Iniciar sesión con correo y contraseña
-window.handleLogin = function() {
-    const emailInput = document.getElementById('authEmail');
-    const passInput = document.getElementById('authPassword');
-    const email = emailInput ? emailInput.value.trim() : '';
-    const password = passInput ? passInput.value.trim() : '';
-
-    if (!email || !password) {
-        showToast('Ingresa tu correo y contraseña');
-        return;
-    }
-
-    signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-            showToast('¡Sesión iniciada con éxito!');
-        })
-        .catch((error) => {
-            showToast('Error al iniciar sesión: ' + error.message);
-        });
-};
-
 // Cerrar sesión
 window.handleLogout = function() {
     signOut(auth).then(() => {
-        showToast('Sesión cerrada');
+        showToast('Desconectado de la nube');
     }).catch(() => {
-        showToast('Error al cerrar sesión');
+        showToast('Error al desconectar');
     });
 };
 
 // Guardar datos en la Realtime Database
 window.saveCloudData = function() {
-    if (!currentUserId) return;
+    if (!currentUserId) {
+        showToast('Inicia sesión con Google para sincronizar');
+        return;
+    }
 
     const payload = {
         collection: JSON.parse(localStorage.getItem('mongil_user_collection')) || {},
@@ -153,11 +99,12 @@ window.saveCloudData = function() {
     set(userRef, payload)
         .then(() => {
             updateCloudStatus(true);
-            showToast('¡Guardado en la nube!');
+            showToast('¡Progreso sincronizado en la nube!');
         })
         .catch((error) => {
             console.error("Error al guardar en Firebase:", error);
             updateCloudStatus(false);
+            showToast('Error al sincronizar datos');
         });
 };
 
@@ -198,7 +145,7 @@ window.loadCloudData = function(callback) {
 function updateCloudStatus(isOnline) {
     const statusEl = document.getElementById('cloudSyncStatus');
     if (statusEl) {
-        statusEl.className = `inline-block w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-400' : 'bg-red-500'}`;
-        statusEl.title = isOnline ? 'Conectado a la nube (Firebase)' : 'Desconectado';
+        statusEl.className = `inline-block w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-400' : 'bg-slate-500'}`;
+        statusEl.title = isOnline ? 'Sincronizado con la nube' : 'Modo Local';
     }
 }
