@@ -29,17 +29,19 @@ function applyMenuMode(mode) {
         if (bottomNav) bottomNav.classList.add('hidden');
         if (sidebarToggleBtn) sidebarToggleBtn.classList.remove('hidden');
         if (radioSidebar) radioSidebar.checked = true;
+        if (radioBottom) radioBottom.checked = false;
     } else {
         if (bottomNav) bottomNav.classList.remove('hidden');
         if (sidebarToggleBtn) sidebarToggleBtn.classList.add('hidden');
         if (radioBottom) radioBottom.checked = true;
+        if (radioSidebar) radioSidebar.checked = false;
     }
 }
 
 function setMenuMode(mode) {
     localStorage.setItem('mongil_menu_mode', mode);
     applyMenuMode(mode);
-    showToast(`Modo de menú cambiado a: ${mode === 'sidebar' ? 'Desplegable' : 'Inferior'}`);
+    showToast(`Modo cambiado a: ${mode === 'sidebar' ? 'Menú Desplegable' : 'Menú Inferior'}`);
 }
 
 function openSettingsModal() {
@@ -94,9 +96,9 @@ function filterCharacters() {
     } else if (sortVal === 'za') {
         filtered.sort((a, b) => b.name.localeCompare(a.name));
     } else if (sortVal === 'rarity-desc') {
-        filtered.sort((a, b) => a.rarity.localeCompare(b.rarity));
-    } else if (sortVal === 'rarity-asc') {
         filtered.sort((a, b) => b.rarity.localeCompare(a.rarity));
+    } else if (sortVal === 'rarity-asc') {
+        filtered.sort((a, b) => b.rarity.localeCompare(b.rarity));
     }
 
     renderCharacterGrid(filtered);
@@ -167,7 +169,7 @@ function openCharacterModal(charId) {
                     </div>
                 </div>
             </div>
-            <button onclick="closeCharacterModal()" class="w-8 h-8 rounded-lg bg-brand-card hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm">
+            <button onclick="closeCharacterModal()" class="w-8 h-8 rounded-lg bg-brand-card hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm cursor-pointer">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
