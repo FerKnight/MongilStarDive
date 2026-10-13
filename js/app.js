@@ -337,12 +337,21 @@ function openCharacterModal(charId) {
     const uData = getCharData(char.id);
 
     modalContent.innerHTML = `
+        <!-- ENCABEZADO CON INFO Y BOTONES DE DESPERTARES INTEGRADOS -->
         <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
             <div class="flex items-center gap-3">
-                <img src="${char.image}" alt="${char.name}" class="w-16 h-16 rounded-xl object-cover object-top border border-purple-500/40 shadow-lg bg-slate-900" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
+                <img src="${char.image}" alt="${char.name}" class="w-14 h-14 rounded-xl object-cover object-top border border-purple-500/40 shadow-lg bg-slate-900" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
                 <div>
-                    <h3 class="font-title font-black text-lg text-slate-100">${char.name}</h3>
-                    <div class="flex items-center gap-2 mt-0.5">
+                    <div class="flex items-center gap-2">
+                        <h3 class="font-title font-black text-base text-slate-100">${char.name}</h3>
+                        <!-- DESPERTARES INTEGRADOS -->
+                        <div class="flex items-center gap-1 bg-brand-card/90 px-2 py-0.5 rounded-lg border border-purple-500/30">
+                            <button onclick="changeAwakening('${char.id}', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-xs flex items-center justify-center border border-white/10 cursor-pointer">-</button>
+                            <span class="font-title font-black text-xs text-purple-300 w-5 text-center">D${uData.awakening}</span>
+                            <button onclick="changeAwakening('${char.id}', 1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-xs flex items-center justify-center border border-white/10 cursor-pointer">+</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 mt-1">
                         <span class="text-xs text-yellow-400 font-bold">${char.rarity}</span>
                         <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
                             <i class="fa-solid ${elemBadge.icon}"></i> ${char.element}
@@ -358,53 +367,49 @@ function openCharacterModal(charId) {
 
         <div class="space-y-4 text-xs max-h-[75vh] overflow-y-auto pr-1">
             
-            <!-- CONTROL DE DESPERTARES -->
-            <div class="bg-brand-card p-3 rounded-xl border border-purple-500/30 flex items-center justify-between">
-                <span class="font-title font-bold text-slate-100 text-xs">Despertares</span>
-                <div class="flex items-center gap-2">
-                    <button onclick="changeAwakening('${char.id}', -1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-sm flex items-center justify-center border border-white/10 cursor-pointer">-</button>
-                    <span class="font-title font-black text-base text-purple-300 w-6 text-center">${uData.awakening}</span>
-                    <button onclick="changeAwakening('${char.id}', 1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-sm flex items-center justify-center border border-white/10 cursor-pointer">+</button>
-                </div>
-            </div>
-
-            <!-- NIVELES DE ATAQUES -->
-            <div class="bg-brand-card/60 p-3 rounded-xl border border-white/5 space-y-2">
-                <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider mb-1">Nivel de Ataques</span>
+            <!-- NIVELES DE ATAQUES EN RECUADROS INDEPENDIENTES -->
+            <div class="space-y-1.5">
+                <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Nivel de Ataques</span>
                 
-                <div class="flex items-center justify-between py-1 border-b border-white/5">
-                    <span class="font-bold text-cyan-400 text-xs">Básico</span>
-                    <div class="flex items-center gap-2">
-                        <button onclick="changeSkillLevel('${char.id}', 'basic', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">-</button>
-                        <span class="text-xs font-mono font-bold text-slate-100 w-6 text-center">${uData.skills.basic}</span>
-                        <button onclick="changeSkillLevel('${char.id}', 'basic', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">+</button>
+                <div class="grid grid-cols-2 gap-2">
+                    <!-- BÁSICO -->
+                    <div class="bg-brand-card/80 p-2.5 rounded-xl border border-white/10 flex flex-col justify-between items-center text-center gap-1.5">
+                        <span class="font-bold text-cyan-400 text-xs">Básico</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeSkillLevel('${char.id}', 'basic', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">-</button>
+                            <span class="text-xs font-mono font-bold text-slate-100 w-5 text-center">${uData.skills.basic}</span>
+                            <button onclick="changeSkillLevel('${char.id}', 'basic', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">+</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="flex items-center justify-between py-1 border-b border-white/5">
-                    <span class="font-bold text-purple-400 text-xs">Relevo</span>
-                    <div class="flex items-center gap-2">
-                        <button onclick="changeSkillLevel('${char.id}', 'relay', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">-</button>
-                        <span class="text-xs font-mono font-bold text-slate-100 w-6 text-center">${uData.skills.relay}</span>
-                        <button onclick="changeSkillLevel('${char.id}', 'relay', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">+</button>
+                    <!-- RELEVO -->
+                    <div class="bg-brand-card/80 p-2.5 rounded-xl border border-white/10 flex flex-col justify-between items-center text-center gap-1.5">
+                        <span class="font-bold text-purple-400 text-xs">Relevo</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeSkillLevel('${char.id}', 'relay', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">-</button>
+                            <span class="text-xs font-mono font-bold text-slate-100 w-5 text-center">${uData.skills.relay}</span>
+                            <button onclick="changeSkillLevel('${char.id}', 'relay', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">+</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="flex items-center justify-between py-1 border-b border-white/5">
-                    <span class="font-bold text-yellow-400 text-xs">Especial</span>
-                    <div class="flex items-center gap-2">
-                        <button onclick="changeSkillLevel('${char.id}', 'special', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">-</button>
-                        <span class="text-xs font-mono font-bold text-slate-100 w-6 text-center">${uData.skills.special}</span>
-                        <button onclick="changeSkillLevel('${char.id}', 'special', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">+</button>
+                    <!-- ESPECIAL -->
+                    <div class="bg-brand-card/80 p-2.5 rounded-xl border border-white/10 flex flex-col justify-between items-center text-center gap-1.5">
+                        <span class="font-bold text-yellow-400 text-xs">Especial</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeSkillLevel('${char.id}', 'special', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">-</button>
+                            <span class="text-xs font-mono font-bold text-slate-100 w-5 text-center">${uData.skills.special}</span>
+                            <button onclick="changeSkillLevel('${char.id}', 'special', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">+</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="flex items-center justify-between py-1">
-                    <span class="font-bold text-pink-400 text-xs">Cargado</span>
-                    <div class="flex items-center gap-2">
-                        <button onclick="changeSkillLevel('${char.id}', 'charged', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">-</button>
-                        <span class="text-xs font-mono font-bold text-slate-100 w-6 text-center">${uData.skills.charged}</span>
-                        <button onclick="changeSkillLevel('${char.id}', 'charged', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">+</button>
+                    <!-- CARGADO -->
+                    <div class="bg-brand-card/80 p-2.5 rounded-xl border border-white/10 flex flex-col justify-between items-center text-center gap-1.5">
+                        <span class="font-bold text-pink-400 text-xs">Cargado</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeSkillLevel('${char.id}', 'charged', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">-</button>
+                            <span class="text-xs font-mono font-bold text-slate-100 w-5 text-center">${uData.skills.charged}</span>
+                            <button onclick="changeSkillLevel('${char.id}', 'charged', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">+</button>
+                        </div>
                     </div>
                 </div>
             </div>
