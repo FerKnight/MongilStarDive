@@ -7,7 +7,7 @@ import {
     get 
 } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
-// Tu configuración de Firebase
+// Configuración de Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyA7UOK8iqYZJhFI_7FELm22cV6tQs6JdBw",
     authDomain: "mongilstardive-7a70a.firebaseapp.com",
@@ -23,7 +23,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Obtener la clave limpia del Código de Amistad
+// Obtener la clave del Código de Amistad formateada
 function getCleanFriendCode() {
     const codeInput = document.getElementById('pFriendCode');
     let code = codeInput ? codeInput.value.trim() : '';
@@ -36,9 +36,10 @@ function getCleanFriendCode() {
     return code.replace(/[^a-zA-Z0-9-_]/g, '_');
 }
 
-// Guardar datos en la nube usando el Código de Amistad
+// Guardar datos en la nube para el Código de Amistad actual
 window.saveCloudData = function() {
     const friendCodeKey = getCleanFriendCode();
+    if (!friendCodeKey) return;
 
     const payload = {
         collection: JSON.parse(localStorage.getItem('mongil_user_collection')) || {},
@@ -52,23 +53,24 @@ window.saveCloudData = function() {
     set(userRef, payload)
         .then(() => {
             updateCloudStatus(true);
-            showToast('¡Progreso sincronizado en la nube!');
+            if (typeof showToast === 'function') showToast('¡Datos sincronizados en la nube!');
         })
         .catch((error) => {
             console.error("Error al guardar en Firebase:", error);
             updateCloudStatus(false);
-            showToast('Error de conexión a la nube');
+            if (typeof showToast === 'function') showToast('Error de conexión a la nube');
         });
 };
 
-// Cargar datos desde la nube usando el Código de Amistad
+// Cargar datos desde la nube cuando cambia el Código de Amistad
 window.loadCloudData = function(callback) {
     const friendCodeKey = getCleanFriendCode();
+    if (!friendCodeKey) return;
 
     const statusEl = document.getElementById('cloudSyncStatus');
     if (statusEl) {
         statusEl.className = "inline-block w-2 h-2 rounded-full bg-yellow-500 animate-pulse";
-        statusEl.title = "Cargando desde la nube...";
+        statusEl.title = "Cargando cuenta...";
     }
 
     const userRef = ref(db, 'players/' + friendCodeKey);
@@ -76,20 +78,31 @@ window.loadCloudData = function(callback) {
         .then((snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val();
-                if (data.collection) localStorage.setItem('mongil_user_collection', JSON.stringify(data.collection));
-                if (data.profile) localStorage.setItem('mongil_player_profile', JSON.stringify(data.profile));
+                
+                // Sobrescribir el localStorage local con los datos traídos de la cuenta nueva
+                localStorage.setItem('mongil_user_collection', JSON.stringify(data.collection || {}));
+                localStorage.setItem('mongil_player_profile', JSON.stringify(data.profile || {}));
                 if (data.gridCols) localStorage.setItem('mongil_grid_cols', data.gridCols);
                 if (data.menuMode) localStorage.setItem('mongil_menu_mode', data.menuMode);
                 
                 updateCloudStatus(true);
-                if (typeof loadProfile === 'function') loadProfile();
+                if (typeof showToast === 'function') showToast('¡Cuenta cargada desde la nube!');
             } else {
+                // Si la cuenta no existe en Firebase, resetear la colección local para esa clave nueva
+                localStorage.setItem('mongil_user_collection', JSON.stringify({}));
                 saveCloudData();
+                if (typeof showToast === 'function') showToast('Nueva cuenta creada con este Código');
             }
+
+            // Actualizar la interfaz gráfica
+            if (typeof loadProfile === 'function') loadProfile();
+            if (typeof renderCharacters === 'function') renderCharacters();
+            if (typeof renderAll === 'function') renderAll();
+            
             if (callback) callback();
         })
         .catch((error) => {
-            console.error("Error al cargar de Firebase:", error);
+            console.error("Error al cargar desde Firebase:", error);
             updateCloudStatus(false);
             if (callback) callback();
         });
