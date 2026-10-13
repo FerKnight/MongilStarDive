@@ -1,5 +1,4 @@
 // --- CONFIGURACIÓN DE FIREBASE ---
-// (Reemplaza estos datos con los de tu consola de Firebase: https://console.firebase.google.com/)
 const firebaseConfig = {
     apiKey: "TU_API_KEY",
     authDomain: "tu-proyecto.firebaseapp.com",
@@ -13,19 +12,85 @@ const firebaseConfig = {
 // Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+const auth = firebase.auth();
 
-// Clave única basada en el UID del jugador para la nube
-function getCloudPlayerKey() {
-    const uidInput = document.getElementById('pUID');
-    const uid = uidInput ? uidInput.value.trim() : 'MNG-9842013';
-    // Limpiamos caracteres especiales para que sea una ruta válida en Firebase
-    return uid.replace(/[^a-zA-Z0-9-_]/g, '_');
+let currentUserId = null;
+
+// Escuchar cambios de autenticación (Login / Logout automático)
+auth.onAuthStateChanged((user) => {
+    const authContainer = document.getElementById('authContainer');
+    const profileContainer = document.getElementById('profileContainer');
+    const emailDisplay = document.getElementById('userEmailDisplay');
+
+    if (user) {
+        currentUserId = user.uid;
+        if (authContainer) authContainer.classList.add('hidden');
+        if (profileContainer) profileContainer.classList.remove('hidden');
+        if (emailDisplay) emailDisplay.innerText = user.email;
+
+        // Cargar datos del usuario desde la nube
+        loadCloudData(() => {
+            if (typeof renderAll === 'function') renderAll();
+        });
+    } else {
+        currentUserId = null;
+        if (authContainer) authContainer.classList.remove('hidden');
+        if (profileContainer) profileContainer.classList.add('hidden');
+    }
+});
+
+// Registrarse con correo y contraseña
+function handleRegister() {
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value.trim();
+
+    if (!email || !password) {
+        showToast('Ingresa un correo y contraseña válidos');
+        return;
+    }
+
+    auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            showToast('¡Cuenta creada con éxito!');
+            saveCloudData();
+        })
+        .catch((error) => {
+            showToast('Error: ' + error.message);
+        });
 }
 
-// Guardar datos completos en Firebase y LocalStorage
+// Iniciar sesión con correo y contraseña
+function handleLogin() {
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value.trim();
+
+    if (!email || !password) {
+        showToast('Ingresa tu correo y contraseña');
+        return;
+    }
+
+    auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            showToast('¡Sesión iniciada con éxito!');
+        })
+        .catch((error) => {
+            showToast('Error al iniciar sesión: ' + error.message);
+        });
+}
+
+// Cerrar sesión
+function handleLogout() {
+    auth.signOut().then(() => {
+        showToast('Sesión cerrada');
+    }).catch((error) => {
+        showToast('Error al cerrar sesión');
+    });
+}
+
+// Guardar datos en la nube asociados al UID del usuario autenticado
 function saveCloudData() {
-    const cloudKey = getCloudPlayerKey();
-    
+    if (!currentUserId) return;
+
     const payload = {
         collection: JSON.parse(localStorage.getItem('mongil_user_collection')) || {},
         profile: JSON.parse(localStorage.getItem('mongil_player_profile')) || {},
@@ -34,28 +99,28 @@ function saveCloudData() {
         lastUpdated: new Date().toISOString()
     };
 
-    db.ref('players/' + cloudKey).set(payload)
+    db.ref('users/' + currentUserId).set(payload)
         .then(() => {
             updateCloudStatus(true);
-            showToast('¡Datos sincronizados en la nube!');
+            showToast('¡Guardado en la nube!');
         })
         .catch((error) => {
-            console.error("Error al sincronizar con Firebase:", error);
+            console.error("Error al guardar en Firebase:", error);
             updateCloudStatus(false);
-            showToast('Error al conectar con la nube');
         });
 }
 
-// Cargar datos desde Firebase al iniciar o cambiar de UID
+// Cargar datos desde la nube asociados al UID del usuario autenticado
 function loadCloudData(callback) {
-    const cloudKey = getCloudPlayerKey();
+    if (!currentUserId) return;
+
     const statusEl = document.getElementById('cloudSyncStatus');
     if (statusEl) {
         statusEl.className = "inline-block w-2 h-2 rounded-full bg-yellow-500 animate-pulse";
-        statusEl.title = "Sincronizando...";
+        statusEl.title = "Sincronizando con la nube...";
     }
 
-    db.ref('players/' + cloudKey).once('value')
+    db.ref('users/' + currentUserId).once('value')
         .then((snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -72,15 +137,14 @@ function loadCloudData(callback) {
                     localStorage.setItem('mongil_menu_mode', data.menuMode);
                 }
                 updateCloudStatus(true);
-                console.log("Datos cargados desde la nube con éxito.");
+                loadProfile(); // Actualizar inputs del perfil visualmente
             } else {
-                // Si no existe, guardamos los locales actuales por primera vez
-                saveCloudData();
+                saveCloudData(); // Guardar por primera vez si está vacía la cuenta
             }
             if (callback) callback();
         })
         .catch((error) => {
-            console.error("Error al leer de Firebase:", error);
+            console.error("Error al cargar de Firebase:", error);
             updateCloudStatus(false);
             if (callback) callback();
         });
@@ -88,12 +152,8 @@ function loadCloudData(callback) {
 
 function updateCloudStatus(isOnline) {
     const statusEl = document.getElementById('cloudSyncStatus');
-    const syncText = document.getElementById('cloudSyncText');
     if (statusEl) {
         statusEl.className = `inline-block w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-400' : 'bg-red-500'}`;
-        statusEl.title = isOnline ? 'Conectado a la nube (Firebase)' : 'Desconectado / Error de red';
-    }
-    if (syncText) {
-        syncText.innerText = isOnline ? 'Nube sincronizada' : 'Modo local (Sin conexión)';
+        statusEl.title = isOnline ? 'Conectado a la nube (Firebase)' : 'Desconectado';
     }
 }
