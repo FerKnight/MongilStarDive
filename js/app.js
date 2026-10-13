@@ -256,7 +256,7 @@ function renderCharacterGrid(list) {
                 </div>
                 
                 <div class="flex items-center justify-between gap-1">
-                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold ${elemBadge.bg} ${elemBadge.text} border${elemBadge.border}">
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
                         <i class="fa-solid ${elemBadge.icon}"></i> ${c.element}
                     </span>
                     <span class="text-[9px] text-purple-300 font-semibold truncate">${c.role}</span>
@@ -284,7 +284,7 @@ function openCharacterModal(charId) {
                     <h3 class="font-title font-black text-lg text-slate-100">${char.name}</h3>
                     <div class="flex items-center gap-2 mt-0.5">
                         <span class="text-xs text-yellow-400 font-bold">${char.rarity}</span>
-                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${elemBadge.bg} ${elemBadge.text} border${elemBadge.border}">
+                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
                             <i class="fa-solid ${elemBadge.icon}"></i> ${char.element}
                         </span>
                         <span class="text-xs text-purple-300 font-semibold">${char.role}</span>
@@ -432,7 +432,7 @@ function renderAll() {
                         <h3 class="font-title font-bold text-sm text-purple-300 truncate">${e.name}</h3>
                         <span class="text-xs text-yellow-400 font-bold">${e.rarity}</span>
                     </div>
-                    <p class="text-xs text-cyan-400 font-semibold mb-1">${e.type} \vert{}${e.stat}</p>
+                    <p class="text-xs text-cyan-400 font-semibold mb-1">${e.type} | ${e.stat}</p>
                     <p class="text-[11px] text-slate-400 line-clamp-2">${e.desc}</p>
                 </div>
             </div>
@@ -507,4 +507,88 @@ function renderAll() {
             <div class="bg-brand-card border border-white/10 rounded-xl p-4">
                 <span class="text-[10px] px-2 py-0.5 bg-cyan-900/60 text-cyan-300 rounded font-bold tracking-wider">${n.tag}</span>
                 <h3 class="font-title font-bold text-base text-slate-100 mt-2 mb-1">${n.title}</h3>
-                <p
+                <p class="text-xs text-slate-300 leading-relaxed">${n.desc}</p>
+            </div>
+        `).join('');
+    }
+}
+
+function saveProfile() {
+    const profile = {
+        name: document.getElementById('pName').value,
+        uid: document.getElementById('pUID').value,
+        friendCode: document.getElementById('pFriendCode').value,
+        message: document.getElementById('pMessage').value,
+        icon: document.getElementById('avatarIcon').className
+    };
+    localStorage.setItem('mongil_player_profile', JSON.stringify(profile));
+    showToast('Perfil guardado correctamente');
+}
+
+function loadProfile() {
+    const saved = localStorage.getItem('mongil_player_profile');
+    if (saved) {
+        const profile = JSON.parse(saved);
+        if (profile.name) document.getElementById('pName').value = profile.name;
+        if (profile.uid) document.getElementById('pUID').value = profile.uid;
+        if (profile.friendCode) document.getElementById('pFriendCode').value = profile.friendCode;
+        if (profile.message) document.getElementById('pMessage').value = profile.message;
+        if (profile.icon) document.getElementById('avatarIcon').className = profile.icon;
+    }
+}
+
+function setAvatar(iconClass) {
+    document.getElementById('avatarIcon').className = `fa-solid ${iconClass}`;
+    saveProfile();
+}
+
+function copyField(elementId) {
+    const input = document.getElementById(elementId);
+    input.select();
+    navigator.clipboard.writeText(input.value);
+    showToast('¡Copiado al portapapeles!');
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    if (toast) {
+        document.getElementById('toastMsg').innerText = msg;
+        toast.classList.remove('translate-x-full');
+        setTimeout(() => toast.classList.add('translate-x-full'), 2500);
+    }
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const btn = document.getElementById('installPwaBtn');
+    if (btn) btn.classList.remove('hidden');
+});
+
+function installPWA() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                document.getElementById('installPwaBtn').classList.add('hidden');
+            }
+            deferredPrompt = null;
+        });
+    }
+}
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('SW Registrado con éxito', reg))
+            .catch(err => console.log('Error al registrar SW', err));
+    });
+}
+
+window.onload = function() {
+    const savedMenuMode = localStorage.getItem('mongil_menu_mode') || 'bottom';
+    applyMenuMode(savedMenuMode);
+    renderAll();
+    loadProfile();
+    switchTab('inicio');
+};
