@@ -13,17 +13,16 @@ function getCharData(id) {
             owned: false,
             awakening: 0,
             skills: { basic: 1, relay: 1, special: 1, charged: 1 },
-            equip: [null, null, null, null], // 4 espacios de equipamiento
-            artifact: null,                  // 1 espacio de artefacto
+            equip: [null, null, null, null],
+            artifact: null,
             monsterlings: {
-                link: null,                  // 1 Monsterling Link (Dorado)
-                normal1: null,               // 1 Monsterling Normal
-                normal2: null,               // 1 Monsterling Normal
-                legendary: null              // 1 Monsterling Legendario (Reginula / Sorin)
+                link: null,
+                normal1: null,
+                normal2: null,
+                legendary: null
             }
         };
     }
-    // Asegurar estructura
     if (!userCollection[id].equip) userCollection[id].equip = [null, null, null, null];
     if (!userCollection[id].monsterlings) {
         userCollection[id].monsterlings = { link: null, normal1: null, normal2: null, legendary: null };
@@ -257,7 +256,7 @@ function renderCharacterGrid(list) {
                 </div>
                 
                 <div class="flex items-center justify-between gap-1">
-                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold ${elemBadge.bg} ${elemBadge.text} border${elemBadge.border}">
                         <i class="fa-solid ${elemBadge.icon}"></i> ${c.element}
                     </span>
                     <span class="text-[9px] text-purple-300 font-semibold truncate">${c.role}</span>
@@ -276,7 +275,6 @@ function openCharacterModal(charId) {
     const modalContent = document.getElementById('charModalContent');
     const elemBadge = getElementBadge(char.element);
     const uData = getCharData(char.id);
-    const maxSkill = getMaxSkillLevel(uData.awakening || 0);
 
     modalContent.innerHTML = `
         <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
@@ -286,7 +284,7 @@ function openCharacterModal(charId) {
                     <h3 class="font-title font-black text-lg text-slate-100">${char.name}</h3>
                     <div class="flex items-center gap-2 mt-0.5">
                         <span class="text-xs text-yellow-400 font-bold">${char.rarity}</span>
-                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
+                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${elemBadge.bg} ${elemBadge.text} border${elemBadge.border}">
                             <i class="fa-solid ${elemBadge.icon}"></i> ${char.element}
                         </span>
                         <span class="text-xs text-purple-300 font-semibold">${char.role}</span>
@@ -302,10 +300,7 @@ function openCharacterModal(charId) {
             
             <!-- CONTROL DE DESPERTARES -->
             <div class="bg-brand-card p-3 rounded-xl border border-purple-500/30 flex items-center justify-between">
-                <div>
-                    <span class="block font-title font-bold text-slate-100 text-xs">Despertares</span>
-                    <span class="text-[10px] text-slate-400">Nivel Máx. de Habilidad: <strong class="text-cyan-400">${maxSkill}</strong></span>
-                </div>
+                <span class="font-title font-bold text-slate-100 text-xs">Despertares</span>
                 <div class="flex items-center gap-2">
                     <button onclick="changeAwakening('${char.id}', -1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-sm flex items-center justify-center border border-white/10 cursor-pointer">-</button>
                     <span class="font-title font-black text-base text-purple-300 w-6 text-center">${uData.awakening}</span>
@@ -313,7 +308,7 @@ function openCharacterModal(charId) {
                 </div>
             </div>
 
-            <!-- NIVELES DE ATAQUES (SIN TEXTOS DE DESCRIPCIÓN) -->
+            <!-- NIVELES DE ATAQUES (MUESTRA SOLO EL NIVEL ACTUAL) -->
             <div class="bg-brand-card/60 p-3 rounded-xl border border-white/5 space-y-2">
                 <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider mb-1">Nivel de Ataques</span>
                 
@@ -322,7 +317,7 @@ function openCharacterModal(charId) {
                     <span class="font-bold text-cyan-400 text-xs">Básico</span>
                     <div class="flex items-center gap-2">
                         <button onclick="changeSkillLevel('${char.id}', 'basic', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">-</button>
-                        <span class="text-xs font-mono font-bold text-slate-100 w-8 text-center">${uData.skills.basic} / ${maxSkill}</span>
+                        <span class="text-xs font-mono font-bold text-slate-100 w-6 text-center">${uData.skills.basic}</span>
                         <button onclick="changeSkillLevel('${char.id}', 'basic', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">+</button>
                     </div>
                 </div>
@@ -332,7 +327,7 @@ function openCharacterModal(charId) {
                     <span class="font-bold text-purple-400 text-xs">Relevo</span>
                     <div class="flex items-center gap-2">
                         <button onclick="changeSkillLevel('${char.id}', 'relay', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">-</button>
-                        <span class="text-xs font-mono font-bold text-slate-100 w-8 text-center">${uData.skills.relay} / ${maxSkill}</span>
+                        <span class="text-xs font-mono font-bold text-slate-100 w-6 text-center">${uData.skills.relay}</span>
                         <button onclick="changeSkillLevel('${char.id}', 'relay', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">+</button>
                     </div>
                 </div>
@@ -342,7 +337,7 @@ function openCharacterModal(charId) {
                     <span class="font-bold text-yellow-400 text-xs">Especial</span>
                     <div class="flex items-center gap-2">
                         <button onclick="changeSkillLevel('${char.id}', 'special', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">-</button>
-                        <span class="text-xs font-mono font-bold text-slate-100 w-8 text-center">${uData.skills.special} / ${maxSkill}</span>
+                        <span class="text-xs font-mono font-bold text-slate-100 w-6 text-center">${uData.skills.special}</span>
                         <button onclick="changeSkillLevel('${char.id}', 'special', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">+</button>
                     </div>
                 </div>
@@ -352,33 +347,32 @@ function openCharacterModal(charId) {
                     <span class="font-bold text-pink-400 text-xs">Cargado</span>
                     <div class="flex items-center gap-2">
                         <button onclick="changeSkillLevel('${char.id}', 'charged', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">-</button>
-                        <span class="text-xs font-mono font-bold text-slate-100 w-8 text-center">${uData.skills.charged} / ${maxSkill}</span>
+                        <span class="text-xs font-mono font-bold text-slate-100 w-6 text-center">${uData.skills.charged}</span>
                         <button onclick="changeSkillLevel('${char.id}', 'charged', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10">+</button>
                     </div>
                 </div>
             </div>
 
-            <!-- SECCIÓN 5 RECUADROS: EQUIPAMIENTO (4) Y ARTEFACTO (1) -->
+            <!-- SECCIÓN 5 RECUADROS: EQUIPAMIENTO (CASCO, PECHERA, GUANTES, BOTAS) Y ARTEFACTO -->
             <div class="space-y-1.5">
                 <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Equipamientos y Artefacto</span>
                 <div class="grid grid-cols-5 gap-2">
                     <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer">
-                        <i class="fa-solid fa-shield-halved text-cyan-400 text-sm mb-1"></i>
-                        <span class="text-[9px] text-slate-400 font-semibold">Arma 1</span>
+                        <i class="fa-solid fa-helmet-safety text-cyan-400 text-sm mb-1"></i>
+                        <span class="text-[9px] text-slate-400 font-semibold">Casco</span>
                     </div>
                     <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer">
-                        <i class="fa-solid fa-shield-halved text-cyan-400 text-sm mb-1"></i>
-                        <span class="text-[9px] text-slate-400 font-semibold">Arma 2</span>
+                        <i class="fa-solid fa-shirt text-cyan-400 text-sm mb-1"></i>
+                        <span class="text-[9px] text-slate-400 font-semibold">Pechera</span>
                     </div>
                     <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer">
-                        <i class="fa-solid fa-shield-halved text-cyan-400 text-sm mb-1"></i>
-                        <span class="text-[9px] text-slate-400 font-semibold">Arma 3</span>
+                        <i class="fa-solid fa-mitten text-cyan-400 text-sm mb-1"></i>
+                        <span class="text-[9px] text-slate-400 font-semibold">Guantes</span>
                     </div>
                     <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer">
-                        <i class="fa-solid fa-shield-halved text-cyan-400 text-sm mb-1"></i>
-                        <span class="text-[9px] text-slate-400 font-semibold">Arma 4</span>
+                        <i class="fa-solid fa-socks text-cyan-400 text-sm mb-1"></i>
+                        <span class="text-[9px] text-slate-400 font-semibold">Botas</span>
                     </div>
-                    <!-- RECUADRO ARTEFACTO -->
                     <div class="aspect-square bg-purple-950/40 border border-purple-500/50 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-purple-400 transition cursor-pointer">
                         <i class="fa-solid fa-gem text-purple-400 text-sm mb-1"></i>
                         <span class="text-[9px] text-purple-300 font-bold">Artefacto</span>
@@ -386,29 +380,26 @@ function openCharacterModal(charId) {
                 </div>
             </div>
 
-            <!-- SECCIÓN 4 RECUADROS: MONSTERLINGS (1 LINK GOLD + 2 NORMALES + 1 LEGENDARIO) -->
+            <!-- SECCIÓN 4 RECUADROS: MONSTERLINGS (SOLO ICONOS) -->
             <div class="space-y-1.5">
                 <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Monsterlings</span>
                 <div class="grid grid-cols-4 gap-2">
-                    <!-- LINK (DORADO) -->
+                    <!-- LINK (DORADO CON TEXTO LINK) -->
                     <div class="aspect-square bg-amber-950/30 border-2 border-yellow-500 rounded-xl flex flex-col items-center justify-center p-1 text-center shadow-lg shadow-yellow-950/40 hover:scale-105 transition cursor-pointer">
-                        <i class="fa-solid fa-link text-yellow-400 text-sm mb-1"></i>
+                        <i class="fa-solid fa-link text-yellow-400 text-base mb-1"></i>
                         <span class="text-[9px] text-yellow-300 font-extrabold">Link</span>
                     </div>
-                    <!-- NORMAL 1 -->
-                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer">
-                        <i class="fa-solid fa-paw text-slate-400 text-sm mb-1"></i>
-                        <span class="text-[9px] text-slate-400 font-semibold">Normal 1</span>
+                    <!-- NORMAL 1 (SOLO ICONO) -->
+                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex items-center justify-center hover:border-cyan-400 transition cursor-pointer">
+                        <i class="fa-solid fa-paw text-slate-400 text-lg"></i>
                     </div>
-                    <!-- NORMAL 2 -->
-                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer">
-                        <i class="fa-solid fa-paw text-slate-400 text-sm mb-1"></i>
-                        <span class="text-[9px] text-slate-400 font-semibold">Normal 2</span>
+                    <!-- NORMAL 2 (SOLO ICONO) -->
+                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex items-center justify-center hover:border-cyan-400 transition cursor-pointer">
+                        <i class="fa-solid fa-paw text-slate-400 text-lg"></i>
                     </div>
-                    <!-- LEGENDARIO (REGINULA / SORIN) -->
-                    <div class="aspect-square bg-red-950/40 border border-red-500/60 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-red-400 transition cursor-pointer">
-                        <i class="fa-solid fa-dragon text-red-400 text-sm mb-1"></i>
-                        <span class="text-[8px] text-red-300 font-bold leading-tight">Legendario</span>
+                    <!-- LEGENDARIO (SOLO ICONO) -->
+                    <div class="aspect-square bg-red-950/40 border border-red-500/60 rounded-xl flex items-center justify-center hover:border-red-400 transition cursor-pointer">
+                        <i class="fa-solid fa-dragon text-red-400 text-lg"></i>
                     </div>
                 </div>
             </div>
@@ -441,7 +432,7 @@ function renderAll() {
                         <h3 class="font-title font-bold text-sm text-purple-300 truncate">${e.name}</h3>
                         <span class="text-xs text-yellow-400 font-bold">${e.rarity}</span>
                     </div>
-                    <p class="text-xs text-cyan-400 font-semibold mb-1">${e.type} | ${e.stat}</p>
+                    <p class="text-xs text-cyan-400 font-semibold mb-1">${e.type} \vert{}${e.stat}</p>
                     <p class="text-[11px] text-slate-400 line-clamp-2">${e.desc}</p>
                 </div>
             </div>
@@ -516,88 +507,4 @@ function renderAll() {
             <div class="bg-brand-card border border-white/10 rounded-xl p-4">
                 <span class="text-[10px] px-2 py-0.5 bg-cyan-900/60 text-cyan-300 rounded font-bold tracking-wider">${n.tag}</span>
                 <h3 class="font-title font-bold text-base text-slate-100 mt-2 mb-1">${n.title}</h3>
-                <p class="text-xs text-slate-300 leading-relaxed">${n.desc}</p>
-            </div>
-        `).join('');
-    }
-}
-
-function saveProfile() {
-    const profile = {
-        name: document.getElementById('pName').value,
-        uid: document.getElementById('pUID').value,
-        friendCode: document.getElementById('pFriendCode').value,
-        message: document.getElementById('pMessage').value,
-        icon: document.getElementById('avatarIcon').className
-    };
-    localStorage.setItem('mongil_player_profile', JSON.stringify(profile));
-    showToast('Perfil guardado correctamente');
-}
-
-function loadProfile() {
-    const saved = localStorage.getItem('mongil_player_profile');
-    if (saved) {
-        const profile = JSON.parse(saved);
-        if (profile.name) document.getElementById('pName').value = profile.name;
-        if (profile.uid) document.getElementById('pUID').value = profile.uid;
-        if (profile.friendCode) document.getElementById('pFriendCode').value = profile.friendCode;
-        if (profile.message) document.getElementById('pMessage').value = profile.message;
-        if (profile.icon) document.getElementById('avatarIcon').className = profile.icon;
-    }
-}
-
-function setAvatar(iconClass) {
-    document.getElementById('avatarIcon').className = `fa-solid ${iconClass}`;
-    saveProfile();
-}
-
-function copyField(elementId) {
-    const input = document.getElementById(elementId);
-    input.select();
-    navigator.clipboard.writeText(input.value);
-    showToast('¡Copiado al portapapeles!');
-}
-
-function showToast(msg) {
-    const toast = document.getElementById('toast');
-    if (toast) {
-        document.getElementById('toastMsg').innerText = msg;
-        toast.classList.remove('translate-x-full');
-        setTimeout(() => toast.classList.add('translate-x-full'), 2500);
-    }
-}
-
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    const btn = document.getElementById('installPwaBtn');
-    if (btn) btn.classList.remove('hidden');
-});
-
-function installPWA() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                document.getElementById('installPwaBtn').classList.add('hidden');
-            }
-            deferredPrompt = null;
-        });
-    }
-}
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('SW Registrado con éxito', reg))
-            .catch(err => console.log('Error al registrar SW', err));
-    });
-}
-
-window.onload = function() {
-    const savedMenuMode = localStorage.getItem('mongil_menu_mode') || 'bottom';
-    applyMenuMode(savedMenuMode);
-    renderAll();
-    loadProfile();
-    switchTab('inicio');
-};
+                <p
