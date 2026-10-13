@@ -105,6 +105,7 @@ function handleImageError(img, characterName) {
     }
 }
 
+// OBTENER ÍCONO DE ELEMENTO (Ruta directa a assets/images/elements/icons/)
 function getElementIconHTML(element) {
     let iconFile = 'fire.png';
     switch (element) {
@@ -118,6 +119,7 @@ function getElementIconHTML(element) {
     return `<img src="${path}" alt="${element}" title="${element}" class="w-4 h-4 object-contain inline-block">`;
 }
 
+// FILTRADO Y ORDEN POR DEFECTO A-Z
 function filterCharacters() {
     const searchInput = document.getElementById('charSearch');
     const sortSelect = document.getElementById('charSort');
@@ -139,14 +141,15 @@ function filterCharacters() {
         return matchName && matchRarity && matchRole && matchElement;
     });
 
-    if (sortVal === 'az') {
+    // Ordenamiento: Por defecto siempre ordena A - Z
+    if (sortVal === 'default' || sortVal === 'az') {
         filtered.sort((a, b) => a.name.localeCompare(b.name));
     } else if (sortVal === 'za') {
         filtered.sort((a, b) => b.name.localeCompare(a.name));
     } else if (sortVal === 'rarity-desc') {
-        filtered.sort((a, b) => b.rarity.localeCompare(a.rarity));
+        filtered.sort((a, b) => b.rarity.localeCompare(a.rarity) || a.name.localeCompare(b.name));
     } else if (sortVal === 'rarity-asc') {
-        filtered.sort((a, b) => a.rarity.localeCompare(b.rarity));
+        filtered.sort((a, b) => a.rarity.localeCompare(b.rarity) || a.name.localeCompare(b.name));
     }
 
     renderCharacterGrid(filtered);
