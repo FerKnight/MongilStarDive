@@ -1,5 +1,56 @@
 let deferredPrompt;
 
+// ESTADO DE COLECCIÓN Y PROGRESIÓN (PERSISTIDO EN LOCALSTORAGE)
+let userCollection = JSON.parse(localStorage.getItem('mongil_user_collection')) || {};
+
+function saveUserCollection() {
+    localStorage.setItem('mongil_user_collection', JSON.stringify(userCollection));
+}
+
+function getCharData(id) {
+    if (!userCollection[id]) {
+        userCollection[id] = {
+            owned: false,
+            awakening: 0,
+            skills: { basic: 1, relay: 1, special: 1, charged: 1 }
+        };
+    }
+    return userCollection[id];
+}
+
+// TOGGLE OBTENIDO/NO OBTENIDO
+function toggleCharOwned(event, id) {
+    event.stopPropagation(); // Evitar abrir el modal al hacer clic en el check
+    const data = getCharData(id);
+    data.owned = !data.owned;
+    saveUserCollection();
+    filterCharacters(); // Recargar grilla
+}
+
+// CAMBIAR DESPERTARES
+function changeAwakening(id, delta) {
+    const data = getCharData(id);
+    let newVal = (data.awakening || 0) + delta;
+    if (newVal < 0) newVal = 0;
+    if (newVal > 6) newVal = 6; // Máximo 6 despertares
+    data.awakening = newVal;
+    saveUserCollection();
+    openCharacterModal(id); // Refrescar modal
+    filterCharacters(); // Refrescar tarjeta
+}
+
+// CAMBIAR NIVEL DE HABILIDAD
+function changeSkillLevel(id, skillType, delta) {
+    const data = getCharData(id);
+    let current = data.skills[skillType] || 1;
+    let newVal = current + delta;
+    if (newVal < 1) newVal = 1;
+    if (newVal > 10) newVal = 10; // Máximo Nivel 10
+    data.skills[skillType] = newVal;
+    saveUserCollection();
+    openCharacterModal(id); // Refrescar modal
+}
+
 // HELPER PARA COLORES Y BADGES ELEMENTALES
 function getElementBadge(element) {
     switch (element) {
@@ -18,27 +69,23 @@ function getElementBadge(element) {
     }
 }
 
-// CAMBIO DE PESTAÑAS Y SECCIONES
+// CAMBIO DE PESTAÑAS
 function switchTab(tabId) {
-    // Ocultar todas las secciones
     const sections = document.querySelectorAll('.content-section');
     sections.forEach(el => {
         el.classList.remove('active');
         el.style.display = 'none';
     });
 
-    // Desactivar todos los botones de navegación
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(el => el.classList.remove('active'));
 
-    // Mostrar la sección seleccionada
     const targetSection = document.getElementById(`tab-${tabId}`);
     if (targetSection) {
         targetSection.classList.add('active');
         targetSection.style.display = 'block';
     }
 
-    // Activar el botón correspondiente en la barra inferior si existe
     const targetNav = document.getElementById(`nav-${tabId}`);
     if (targetNav) {
         targetNav.classList.add('active');
@@ -98,7 +145,7 @@ function toggleSidebar() {
     }
 }
 
-// LÓGICA DE FILTRADO COMBINABLE DE PERSONAJES
+// FILTRADO Y RENDER DE PERSONAJES
 function filterCharacters() {
     const searchInput = document.getElementById('charSearch');
     const sortSelect = document.getElementById('charSort');
@@ -154,15 +201,33 @@ function renderCharacterGrid(list) {
 
     charGrid.innerHTML = list.map(c => {
         const elemBadge = getElementBadge(c.element);
+        const uData = getCharData(c.id);
+        const isOwned = uData.owned;
+
         return `
-            <div onclick="openCharacterModal('${c.id}')" class="bg-brand-card border border-white/10 rounded-xl p-2.5 hover:border-cyan-400 cursor-pointer active:scale-95 transition transform relative overflow-hidden group">
+            <div onclick="openCharacterModal('${c.id}')" class="bg-brand-card border ${isOwned ? 'border-cyan-400/80 shadow-md shadow-cyan-950/50' : 'border-white/10 opacity-70'} rounded-xl p-2.5 hover:border-cyan-400 cursor-pointer transition transform relative overflow-hidden group">
+                
+                <!-- Botón de Check (Poseído) -->
+                <button onclick="toggleCharOwned(event, '${c.id}')" class="absolute top-2 left-2 z-10 w-6 h-6 rounded-md ${isOwned ? 'bg-cyan-500 text-white' : 'bg-slate-900/80 text-slate-500 border border-white/20'} flex items-center justify-center text-xs shadow-md transition active:scale-90">
+                    <i class="fa-solid fa-check"></i>
+                </button>
+
+                <!-- Despertares Badge si tiene -->
+                ${isOwned && uData.awakening > 0 ? `
+                    <span class="absolute bottom-11 right-2 z-10 bg-purple-600/90 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded border border-purple-400">
+                        D${uData.awakening}
+                    </span>
+                ` : ''}
+
                 <div class="w-full h-28 rounded-lg bg-slate-900 overflow-hidden mb-2 relative flex items-center justify-center">
-                    <img src="${c.image}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
+                    <img src="${c.image}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top ${isOwned ? '' : 'grayscale'} group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
                     <span class="absolute top-1 right-1 bg-black/70 backdrop-blur-md text-yellow-400 font-bold text-[10px] px-1.5 py-0.5 rounded border border-yellow-500/30">${c.rarity}</span>
                 </div>
+                
                 <div class="truncate mb-1">
                     <h3 class="font-title font-bold text-xs text-slate-100 truncate">${c.name}</h3>
                 </div>
+                
                 <div class="flex items-center justify-between gap-1">
                     <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold ${elemBadge.bg} ${elemBadge.text} border ${elemBadge.border}">
                         <i class="fa-solid ${elemBadge.icon}"></i> ${c.element}
@@ -174,7 +239,7 @@ function renderCharacterGrid(list) {
     }).join('');
 }
 
-// MODAL INTERACTIVO CON DETALLES COMPLETOS
+// MODAL NUEVO CON DESPERTARES Y ATAQUES CON NIVELES +/-
 function openCharacterModal(charId) {
     const char = charactersData.find(c => c.id === charId);
     if (!char) return;
@@ -182,6 +247,7 @@ function openCharacterModal(charId) {
     const modal = document.getElementById('charModal');
     const modalContent = document.getElementById('charModalContent');
     const elemBadge = getElementBadge(char.element);
+    const uData = getCharData(char.id);
 
     modalContent.innerHTML = `
         <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
@@ -203,27 +269,73 @@ function openCharacterModal(charId) {
             </button>
         </div>
 
-        <div class="space-y-3 text-xs">
-            <div>
-                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Arma Principal</span>
-                <p class="text-slate-200 font-semibold"><i class="fa-solid fa-shield-halved text-cyan-400"></i> ${char.weapon}</p>
+        <div class="space-y-3 text-xs max-h-[75vh] overflow-y-auto pr-1">
+            
+            <!-- CONTROL DE DESPERTARES -->
+            <div class="bg-brand-card p-3 rounded-xl border border-purple-500/30 flex items-center justify-between">
+                <div>
+                    <span class="block font-title font-bold text-slate-100 text-xs">Despertares (Trascendencia)</span>
+                    <span class="text-[10px] text-slate-400">Nivel actual de duplicados</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="changeAwakening('${char.id}', -1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-sm flex items-center justify-center border border-white/10 cursor-pointer">-</button>
+                    <span class="font-title font-black text-base text-purple-300 w-6 text-center">${uData.awakening}</span>
+                    <button onclick="changeAwakening('${char.id}', 1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-sm flex items-center justify-center border border-white/10 cursor-pointer">+</button>
+                </div>
             </div>
-            <div>
-                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Descripción General</span>
-                <p class="text-slate-300 leading-relaxed">${char.desc}</p>
+
+            <!-- ATAQUE BÁSICO -->
+            <div class="bg-brand-card/60 p-2.5 rounded-lg border border-white/5 space-y-1">
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-cyan-400 text-[11px]">Ataque Básico</span>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="changeSkillLevel('${char.id}', 'basic', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">-</button>
+                        <span class="text-[10px] font-mono font-bold text-slate-200">Niv. ${uData.skills.basic}</span>
+                        <button onclick="changeSkillLevel('${char.id}', 'basic', 1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">+</button>
+                    </div>
+                </div>
+                <p class="text-slate-300 text-[11px] leading-relaxed">${char.skills.basic}</p>
             </div>
-            <div class="bg-brand-card/60 p-2.5 rounded-lg border border-white/5 space-y-1.5">
-                <span class="block text-[10px] font-bold text-purple-400 uppercase tracking-wider">Habilidad Pasiva</span>
-                <p class="text-slate-300">${char.skillPassive}</p>
+
+            <!-- HABILIDAD DE RELEVO -->
+            <div class="bg-brand-card/60 p-2.5 rounded-lg border border-white/5 space-y-1">
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-purple-400 text-[11px]">Habilidad de Relevo</span>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="changeSkillLevel('${char.id}', 'relay', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">-</button>
+                        <span class="text-[10px] font-mono font-bold text-slate-200">Niv. ${uData.skills.relay}</span>
+                        <button onclick="changeSkillLevel('${char.id}', 'relay', 1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">+</button>
+                    </div>
+                </div>
+                <p class="text-slate-300 text-[11px] leading-relaxed">${char.skills.relay}</p>
             </div>
-            <div class="bg-brand-card/60 p-2.5 rounded-lg border border-white/5 space-y-1.5">
-                <span class="block text-[10px] font-bold text-cyan-400 uppercase tracking-wider">Habilidad Activa Principal</span>
-                <p class="text-slate-300">${char.skillActive}</p>
+
+            <!-- ATAQUE ESPECIAL -->
+            <div class="bg-brand-card/60 p-2.5 rounded-lg border border-white/5 space-y-1">
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-yellow-400 text-[11px]">Ataque Especial</span>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="changeSkillLevel('${char.id}', 'special', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">-</button>
+                        <span class="text-[10px] font-mono font-bold text-slate-200">Niv. ${uData.skills.special}</span>
+                        <button onclick="changeSkillLevel('${char.id}', 'special', 1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">+</button>
+                    </div>
+                </div>
+                <p class="text-slate-300 text-[11px] leading-relaxed">${char.skills.special}</p>
             </div>
-            <div class="bg-purple-950/40 p-2.5 rounded-lg border border-purple-500/20">
-                <span class="block text-[10px] font-bold text-yellow-400 uppercase tracking-wider">Sinergia Monsterling Recomendada</span>
-                <p class="text-slate-200 font-semibold"><i class="fa-solid fa-paw text-yellow-400"></i> ${char.monsterlingCombo}</p>
+
+            <!-- ATAQUE CARGADO -->
+            <div class="bg-brand-card/60 p-2.5 rounded-lg border border-white/5 space-y-1">
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-pink-400 text-[11px]">Ataque Cargado</span>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="changeSkillLevel('${char.id}', 'charged', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">-</button>
+                        <span class="text-[10px] font-mono font-bold text-slate-200">Niv. ${uData.skills.charged}</span>
+                        <button onclick="changeSkillLevel('${char.id}', 'charged', 1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center">+</button>
+                    </div>
+                </div>
+                <p class="text-slate-300 text-[11px] leading-relaxed">${char.skills.charged}</p>
             </div>
+
         </div>
     `;
 
@@ -410,5 +522,5 @@ window.onload = function() {
     applyMenuMode(savedMenuMode);
     renderAll();
     loadProfile();
-    switchTab('inicio'); // Forzar visualización del apartado inicial
+    switchTab('inicio');
 };
