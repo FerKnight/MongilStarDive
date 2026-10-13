@@ -32,7 +32,6 @@ function selectAvatarImage(imagePath) {
     }
     closeAvatarSelectorModal();
     saveProfile();
-    showToast('Avatar actualizado');
 }
 
 function saveProfile() {
@@ -45,7 +44,13 @@ function saveProfile() {
         avatar: avatarImg ? avatarImg.src : 'assets/images/Character_Portrait/portrait_Verna_01.png'
     };
     localStorage.setItem('mongil_player_profile', JSON.stringify(profile));
-    showToast('Perfil guardado correctamente');
+    
+    // Sincronizar automáticamente con Firebase
+    if (typeof saveCloudData === 'function') {
+        saveCloudData();
+    } else {
+        showToast('Perfil guardado localmente');
+    }
 }
 
 function loadProfile() {
