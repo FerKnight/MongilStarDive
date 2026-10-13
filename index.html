@@ -129,7 +129,7 @@
                     MONGIL: STAR DIVE
                 </h1>
                 <p class="text-[10px] text-slate-400 font-medium flex items-center gap-1.5">
-                    <span>VER. 1.4</span> <span id="cloudSyncStatus" class="inline-block w-2 h-2 rounded-full bg-yellow-500" title="Conectando..."></span>
+                    <span>VER. 1.4</span> <span id="cloudSyncStatus" class="inline-block w-2 h-2 rounded-full bg-slate-500" title="Modo Local"></span>
                 </p>
             </div>
         </div>
@@ -300,69 +300,39 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="artifactGrid"></div>
         </section>
 
-        <!-- 5. INICIO (PERFIL Y AUTENTICACIÓN) -->
+        <!-- 5. INICIO (PERFIL Y NUBE OPCIONAL) -->
         <section id="tab-inicio" class="content-section active">
             
-            <!-- CONTENEDOR DE LOGIN / REGISTRO CON CORREO Y SOCIAL LOGIN -->
-            <div id="authContainer" class="bg-brand-surface border border-purple-500/30 rounded-2xl p-6 mb-5 neon-glow max-w-md mx-auto text-center space-y-4">
-                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-600 to-cyan-500 flex items-center justify-center text-white text-2xl mx-auto shadow-lg">
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
-                </div>
-                <div>
-                    <h2 class="font-title font-black text-lg text-slate-100">Sincroniza tu Cuenta</h2>
-                    <p class="text-xs text-slate-400 mt-1">Inicia sesión para guardar y sincronizar tu progreso entre tu PC y tu celular.</p>
-                </div>
-
-                <!-- Botones de Proveedores Sociales -->
-                <div class="space-y-2 pt-1">
-                    <button onclick="handleGoogleLogin()" class="w-full py-2.5 bg-white hover:bg-slate-100 text-slate-900 rounded-xl text-xs font-bold transition cursor-pointer shadow-md flex items-center justify-center gap-2">
-                        <i class="fa-brands fa-google text-red-500 text-sm"></i> Continuar con Google
-                    </button>
-                    <button onclick="handleAppleLogin()" class="w-full py-2.5 bg-black hover:bg-slate-900 text-white border border-white/20 rounded-xl text-xs font-bold transition cursor-pointer shadow-md flex items-center justify-center gap-2">
-                        <i class="fa-brands fa-apple text-white text-sm"></i> Continuar con Apple
-                    </button>
-                </div>
-
-                <div class="flex items-center my-3">
-                    <div class="flex-grow border-t border-white/10"></div>
-                    <span class="px-3 text-[10px] text-slate-400 uppercase tracking-widest font-semibold">o con correo</span>
-                    <div class="flex-grow border-t border-white/10"></div>
-                </div>
-
-                <div class="space-y-3 text-left">
+            <!-- PANEL DE AUTENTICACIÓN / STATUS NUBE (OPCIONAL) -->
+            <div class="bg-brand-surface border border-purple-500/30 rounded-2xl p-4 mb-5 neon-glow">
+                <div id="authContainer" class="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
                     <div>
-                        <label class="block text-[11px] text-slate-400 font-semibold mb-1">Correo Electrónico</label>
-                        <input type="email" id="authEmail" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none" placeholder="tucorreo@example.com">
+                        <h3 class="font-title font-bold text-sm text-slate-100 flex items-center gap-2 justify-center sm:justify-start">
+                            <i class="fa-solid fa-cloud text-cyan-400"></i> Sincronización en la Nube (Opcional)
+                        </h3>
+                        <p class="text-[11px] text-slate-400">Inicia sesión con Google para acceder a tus datos desde cualquier dispositivo.</p>
                     </div>
-                    <div>
-                        <label class="block text-[11px] text-slate-400 font-semibold mb-1">Contraseña</label>
-                        <input type="password" id="authPassword" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none" placeholder="••••••••">
-                    </div>
+                    <button onclick="handleGoogleLogin()" class="px-4 py-2 bg-white hover:bg-slate-100 text-slate-900 rounded-xl text-xs font-bold transition cursor-pointer shadow-md flex items-center gap-2 flex-shrink-0">
+                        <i class="fa-brands fa-google text-red-500 text-sm"></i> Conectar con Google
+                    </button>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2 pt-2">
-                    <button onclick="handleLogin()" class="py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-bold transition cursor-pointer shadow-md">
-                        Iniciar Sesión
-                    </button>
-                    <button onclick="handleRegister()" class="py-2.5 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-bold transition cursor-pointer shadow-md">
-                        Registrarse
+                <div id="loggedInStatus" class="hidden flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                        <span id="userEmailDisplay" class="text-xs text-cyan-300 font-mono font-semibold"></span>
+                    </div>
+                    <button onclick="handleLogout()" class="px-3 py-1 bg-red-600/80 hover:bg-red-500 text-white text-[10px] font-bold rounded-lg transition cursor-pointer">
+                        <i class="fa-solid fa-right-from-bracket"></i> Desconectar
                     </button>
                 </div>
             </div>
 
-            <!-- CONTENEDOR DE PERFIL DE JUGADOR (Se muestra SI ha iniciado sesión) -->
-            <div id="profileContainer" class="bg-brand-surface border border-purple-500/30 rounded-2xl p-5 mb-5 relative overflow-hidden neon-glow hidden">
-                <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
-                    <h2 class="font-title font-black text-base text-slate-100 flex items-center gap-2">
-                        <i class="fa-solid fa-address-card text-purple-400"></i> PERFIL DE JUGADOR
-                    </h2>
-                    <div class="flex items-center gap-2">
-                        <span id="userEmailDisplay" class="text-[11px] text-cyan-300 font-mono bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/30"></span>
-                        <button onclick="handleLogout()" class="px-2.5 py-1 bg-red-600/80 hover:bg-red-500 text-white text-[10px] font-bold rounded-lg transition cursor-pointer">
-                            <i class="fa-solid fa-right-from-bracket"></i> Salir
-                        </button>
-                    </div>
-                </div>
+            <!-- CONTENEDOR DE PERFIL DE JUGADOR -->
+            <div class="bg-brand-surface border border-white/10 rounded-2xl p-5 mb-5 relative overflow-hidden">
+                <h2 class="font-title font-black text-base text-slate-100 flex items-center gap-2 border-b border-white/10 pb-3 mb-4">
+                    <i class="fa-solid fa-address-card text-purple-400"></i> PERFIL DE JUGADOR
+                </h2>
 
                 <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5 mb-5">
                     <div onclick="openAvatarSelectorModal()" class="relative group cursor-pointer flex-shrink-0">
@@ -405,9 +375,14 @@
                     </div>
                 </div>
 
-                <button onclick="saveProfile()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-cyan-500 rounded-xl font-title font-bold text-sm text-white shadow-lg cursor-pointer hover:opacity-95 active:scale-98 transition">
-                    GUARDAR DATOS EN LA NUBE
-                </button>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <button onclick="saveProfile()" class="py-3 bg-gradient-to-r from-purple-600 to-cyan-500 rounded-xl font-title font-bold text-xs sm:text-sm text-white shadow-lg cursor-pointer hover:opacity-95 active:scale-98 transition">
+                        <i class="fa-solid fa-floppy-disk"></i> GUARDAR LOCALMENTE
+                    </button>
+                    <button onclick="saveCloudData()" class="py-3 bg-brand-card hover:bg-slate-700 border border-cyan-500/40 rounded-xl font-title font-bold text-xs sm:text-sm text-cyan-300 shadow-lg cursor-pointer active:scale-98 transition">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> SINCRONIZAR NUBE
+                    </button>
+                </div>
             </div>
         </section>
 
