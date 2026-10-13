@@ -1,4 +1,25 @@
 let userCollection = JSON.parse(localStorage.getItem('mongil_user_collection')) || {};
+let gridCols = parseInt(localStorage.getItem('mongil_grid_cols')) || 4;
+
+function setGridCols(num) {
+    gridCols = num;
+    localStorage.setItem('mongil_grid_cols', num);
+    updateGridColsUI();
+    filterCharacters();
+}
+
+function updateGridColsUI() {
+    [2, 3, 4, 5].forEach(n => {
+        const btn = document.getElementById(`colBtn${n}`);
+        if (btn) {
+            if (n === gridCols) {
+                btn.className = "px-2 py-0.5 text-xs font-extrabold rounded transition bg-cyan-500 text-white shadow-md shadow-cyan-950/50";
+            } else {
+                btn.className = "px-2 py-0.5 text-xs font-bold rounded transition text-slate-400 hover:bg-slate-700 hover:text-slate-200";
+            }
+        }
+    });
+}
 
 function saveUserCollection() {
     localStorage.setItem('mongil_user_collection', JSON.stringify(userCollection));
@@ -105,7 +126,6 @@ function handleImageError(img, characterName) {
     }
 }
 
-// OBTENER ÍCONO DE ELEMENTO (Ruta directa a assets/images/elements/icons/)
 function getElementIconHTML(element) {
     let iconFile = 'fire.png';
     switch (element) {
@@ -119,8 +139,8 @@ function getElementIconHTML(element) {
     return `<img src="${path}" alt="${element}" title="${element}" class="w-4 h-4 object-contain inline-block">`;
 }
 
-// FILTRADO Y ORDEN POR DEFECTO A-Z
 function filterCharacters() {
+    updateGridColsUI();
     const searchInput = document.getElementById('charSearch');
     const sortSelect = document.getElementById('charSort');
     const raritySelect = document.getElementById('charRarity');
@@ -141,7 +161,6 @@ function filterCharacters() {
         return matchName && matchRarity && matchRole && matchElement;
     });
 
-    // Ordenamiento: Por defecto siempre ordena A - Z
     if (sortVal === 'default' || sortVal === 'az') {
         filtered.sort((a, b) => a.name.localeCompare(b.name));
     } else if (sortVal === 'za') {
@@ -163,6 +182,7 @@ function renderCharacterGrid(list) {
     if (!charGrid) return;
 
     if (list.length === 0) {
+        charGrid.className = "grid grid-cols-1 gap-3";
         charGrid.innerHTML = `
             <div class="col-span-full py-8 text-center text-slate-400 text-xs font-medium">
                 <i class="fa-solid fa-filter-circle-xmark text-2xl mb-2 text-slate-500 block"></i>
@@ -172,7 +192,24 @@ function renderCharacterGrid(list) {
         return;
     }
 
-    charGrid.className = "grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-1.5 sm:gap-3";
+    // Configurar dinámica de columnas según botón presionado (2, 3, 4, 5)
+    let gridColsClass = "grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-1.5 sm:gap-3";
+    switch(gridCols) {
+        case 2:
+            gridColsClass = "grid grid-cols-2 gap-2 sm:gap-3";
+            break;
+        case 3:
+            gridColsClass = "grid grid-cols-3 gap-2 sm:gap-3";
+            break;
+        case 4:
+            gridColsClass = "grid grid-cols-4 gap-1.5 sm:gap-3";
+            break;
+        case 5:
+            gridColsClass = "grid grid-cols-5 gap-1.5 sm:gap-2";
+            break;
+    }
+
+    charGrid.className = gridColsClass;
 
     charGrid.innerHTML = list.map(c => {
         const uData = getCharData(c.id);
@@ -192,7 +229,7 @@ function renderCharacterGrid(list) {
                     </span>
                 ` : ''}
 
-                <div class="w-full h-16 sm:h-24 rounded-md bg-slate-900 overflow-hidden mb-1 relative flex items-center justify-center">
+                <div class="w-full h-20 sm:h-28 rounded-md bg-slate-900 overflow-hidden mb-1 relative flex items-center justify-center">
                     <img src="${c.image}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top ${isOwned ? '' : 'grayscale'} group-hover:scale-105 transition duration-300" onerror="handleImageError(this, '${c.name}')">
                     <span class="absolute top-0.5 right-0.5 bg-black/70 backdrop-blur-md text-yellow-400 font-bold text-[8px] sm:text-[10px] px-1 py-0.2 rounded border border-yellow-500/30">${c.rarity}</span>
                 </div>
