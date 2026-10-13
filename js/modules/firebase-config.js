@@ -6,7 +6,10 @@ import {
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, 
     signOut, 
-    onAuthStateChanged 
+    onAuthStateChanged,
+    GoogleAuthProvider,
+    OAuthProvider,
+    signInWithPopup
 } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
 import { 
     getDatabase, 
@@ -45,7 +48,7 @@ onAuthStateChanged(auth, (user) => {
         currentUserId = user.uid;
         if (authContainer) authContainer.classList.add('hidden');
         if (profileContainer) profileContainer.classList.remove('hidden');
-        if (emailDisplay) emailDisplay.innerText = user.email;
+        if (emailDisplay) emailDisplay.innerText = user.email || user.displayName || 'Usuario';
 
         // Cargar datos de la nube automáticamente al iniciar sesión
         loadCloudData(() => {
@@ -57,6 +60,30 @@ onAuthStateChanged(auth, (user) => {
         if (profileContainer) profileContainer.classList.add('hidden');
     }
 });
+
+// Inicio de sesión con Google
+window.handleGoogleLogin = function() {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+        .then(() => {
+            showToast('¡Sesión iniciada con Google!');
+        })
+        .catch((error) => {
+            showToast('Error con Google: ' + error.message);
+        });
+};
+
+// Inicio de sesión con Apple
+window.handleAppleLogin = function() {
+    const provider = new OAuthProvider('apple.com');
+    signInWithPopup(auth, provider)
+        .then(() => {
+            showToast('¡Sesión iniciada con Apple!');
+        })
+        .catch((error) => {
+            showToast('Error con Apple: ' + error.message);
+        });
+};
 
 // Registrarse con correo y contraseña
 window.handleRegister = function() {
@@ -157,7 +184,7 @@ window.loadCloudData = function(callback) {
                 updateCloudStatus(true);
                 if (typeof loadProfile === 'function') loadProfile();
             } else {
-                saveCloudData(); // Si es nuevo, sube los locales
+                saveCloudData();
             }
             if (callback) callback();
         })
