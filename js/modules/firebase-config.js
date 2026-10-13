@@ -23,24 +23,22 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Obtener la clave normalizada del UID para Realtime Database
-function getCleanPlayerUID() {
-    const pUIDInput = document.getElementById('pUID');
-    let uid = pUIDInput ? pUIDInput.value.trim() : '';
+// Obtener la clave limpia del Código de Amistad
+function getCleanFriendCode() {
+    const codeInput = document.getElementById('pFriendCode');
+    let code = codeInput ? codeInput.value.trim() : '';
     
-    if (!uid) {
-        // Buscar en localStorage si la caja de texto no ha cargado aún
+    if (!code) {
         const savedProfile = JSON.parse(localStorage.getItem('mongil_player_profile'));
-        uid = savedProfile && savedProfile.uid ? savedProfile.uid.trim() : 'MNG-9842013';
+        code = savedProfile && savedProfile.friendCode ? savedProfile.friendCode.trim() : 'FRIEND-STARDIVE-2026';
     }
 
-    // Remplazar caracteres no permitidos por Firebase Realtime Database
-    return uid.replace(/[^a-zA-Z0-9-_]/g, '_');
+    return code.replace(/[^a-zA-Z0-9-_]/g, '_');
 }
 
-// Guardar datos en la Realtime Database usando el UID
+// Guardar datos en la nube usando el Código de Amistad
 window.saveCloudData = function() {
-    const playerUID = getCleanPlayerUID();
+    const friendCodeKey = getCleanFriendCode();
 
     const payload = {
         collection: JSON.parse(localStorage.getItem('mongil_user_collection')) || {},
@@ -50,11 +48,11 @@ window.saveCloudData = function() {
         lastUpdated: new Date().toISOString()
     };
 
-    const userRef = ref(db, 'players/' + playerUID);
+    const userRef = ref(db, 'players/' + friendCodeKey);
     set(userRef, payload)
         .then(() => {
             updateCloudStatus(true);
-            showToast('¡Guardado en la nube con tu UID!');
+            showToast('¡Progreso sincronizado en la nube!');
         })
         .catch((error) => {
             console.error("Error al guardar en Firebase:", error);
@@ -63,9 +61,9 @@ window.saveCloudData = function() {
         });
 };
 
-// Cargar datos desde la Realtime Database usando el UID
+// Cargar datos desde la nube usando el Código de Amistad
 window.loadCloudData = function(callback) {
-    const playerUID = getCleanPlayerUID();
+    const friendCodeKey = getCleanFriendCode();
 
     const statusEl = document.getElementById('cloudSyncStatus');
     if (statusEl) {
@@ -73,7 +71,7 @@ window.loadCloudData = function(callback) {
         statusEl.title = "Cargando desde la nube...";
     }
 
-    const userRef = ref(db, 'players/' + playerUID);
+    const userRef = ref(db, 'players/' + friendCodeKey);
     get(userRef)
         .then((snapshot) => {
             if (snapshot.exists()) {
@@ -86,7 +84,6 @@ window.loadCloudData = function(callback) {
                 updateCloudStatus(true);
                 if (typeof loadProfile === 'function') loadProfile();
             } else {
-                // Si la clave no existe en Firebase, creamos la entrada por primera vez
                 saveCloudData();
             }
             if (callback) callback();
@@ -102,6 +99,6 @@ function updateCloudStatus(isOnline) {
     const statusEl = document.getElementById('cloudSyncStatus');
     if (statusEl) {
         statusEl.className = `inline-block w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-400' : 'bg-red-500'}`;
-        statusEl.title = isOnline ? 'Conectado y sincronizado por UID' : 'Error de sincronización con la nube';
+        statusEl.title = isOnline ? 'Sincronizado por Código de Amistad' : 'Error de sincronización';
     }
 }
