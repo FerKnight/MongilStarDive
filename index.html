@@ -195,7 +195,7 @@
     <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 hidden"></div>
 
     <!-- Contenedor Principal -->
-    <main class="max-w-4xl mx-auto px-4 pt-4">
+    <main class="max-w-4xl mx-auto px-2 sm:px-4 pt-4">
 
         <!-- 1. PERSONAJES -->
         <section id="tab-personajes" class="content-section">
@@ -257,7 +257,8 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3" id="charGrid"></div>
+            <!-- GRID DE PERSONAJES (4 COLUMNAS EN MÓVIL) -->
+            <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-1.5 sm:gap-3" id="charGrid"></div>
         </section>
 
         <!-- 2. EQUIPAMIENTOS -->
