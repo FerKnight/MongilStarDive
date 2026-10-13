@@ -15,12 +15,7 @@ function getCharData(id) {
             skills: { basic: 1, relay: 1, special: 1, charged: 1 },
             equip: [null, null, null, null],
             artifact: null,
-            monsterlings: {
-                link: null,
-                normal1: null,
-                normal2: null,
-                legendary: null
-            }
+            monsterlings: { link: null, normal1: null, normal2: null, legendary: null }
         };
     }
     if (!userCollection[id].equip) userCollection[id].equip = [null, null, null, null];
@@ -30,11 +25,10 @@ function getCharData(id) {
     return userCollection[id];
 }
 
-// CÁLCULO DE MÁXIMO NIVEL DE HABILIDAD SEGÚN DESPERTARES
 function getMaxSkillLevel(awakening) {
     if (awakening >= 5) return 16;
     if (awakening >= 3) return 14;
-    return 12; // 0, 1 o 2 despertares
+    return 12;
 }
 
 function toggleCharOwned(event, id) {
@@ -45,7 +39,6 @@ function toggleCharOwned(event, id) {
     filterCharacters();
 }
 
-// CAMBIAR DESPERTARES Y CAPAR HABILIDADES SI EXCEDEN EL NUEVO MÁXIMO
 function changeAwakening(id, delta) {
     const data = getCharData(id);
     let newVal = (data.awakening || 0) + delta;
@@ -65,7 +58,6 @@ function changeAwakening(id, delta) {
     filterCharacters();
 }
 
-// CAMBIAR NIVEL DE HABILIDAD SEGÚN LÍMITE
 function changeSkillLevel(id, skillType, delta) {
     const data = getCharData(id);
     const maxSkill = getMaxSkillLevel(data.awakening || 0);
@@ -80,7 +72,6 @@ function changeSkillLevel(id, skillType, delta) {
     openCharacterModal(id);
 }
 
-// HELPER DE COLORES
 function getElementBadge(element) {
     switch (element) {
         case 'Fuego':
@@ -98,7 +89,79 @@ function getElementBadge(element) {
     }
 }
 
-// PESTAÑAS
+// FUNCIONES PARA EL AVATAR DE PERFIL CON IMÁGENES
+function openAvatarSelectorModal() {
+    const modal = document.getElementById('avatarModal');
+    const grid = document.getElementById('avatarGrid');
+
+    if (grid) {
+        grid.innerHTML = charactersData.map(c => `
+            <div onclick="selectAvatarImage('${c.image}')" class="aspect-square rounded-xl bg-slate-900 border border-white/10 hover:border-cyan-400 overflow-hidden cursor-pointer transition transform active:scale-95 group relative">
+                <img src="${c.image}" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-200" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">
+                <span class="absolute bottom-0 inset-x-0 bg-black/80 text-slate-200 text-[8px] text-center font-semibold truncate py-0.5 px-1">${c.name}</span>
+            </div>
+        `).join('');
+    }
+
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+}
+
+function closeAvatarSelectorModal() {
+    const modal = document.getElementById('avatarModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+}
+
+function selectAvatarImage(imagePath) {
+    const imgEl = document.getElementById('avatarImg');
+    if (imgEl) {
+        imgEl.src = imagePath;
+    }
+    closeAvatarSelectorModal();
+    saveProfile();
+    showToast('Avatar actualizado');
+}
+
+function saveProfile() {
+    const avatarImg = document.getElementById('avatarImg');
+    const profile = {
+        name: document.getElementById('pName').value,
+        uid: document.getElementById('pUID').value,
+        friendCode: document.getElementById('pFriendCode').value,
+        message: document.getElementById('pMessage').value,
+        avatar: avatarImg ? avatarImg.src : 'assets/images/Character_Portrait/portrait_Verna_01.png'
+    };
+    localStorage.setItem('mongil_player_profile', JSON.stringify(profile));
+    showToast('Perfil guardado correctamente');
+}
+
+function loadProfile() {
+    const saved = localStorage.getItem('mongil_player_profile');
+    if (saved) {
+        const profile = JSON.parse(saved);
+        if (profile.name) document.getElementById('pName').value = profile.name;
+        if (profile.uid) document.getElementById('pUID').value = profile.uid;
+        if (profile.friendCode) document.getElementById('pFriendCode').value = profile.friendCode;
+        if (profile.message) document.getElementById('pMessage').value = profile.message;
+        if (profile.avatar) {
+            const avatarImg = document.getElementById('avatarImg');
+            if (avatarImg) avatarImg.src = profile.avatar;
+        }
+    }
+}
+
+function copyField(elementId) {
+    const input = document.getElementById(elementId);
+    input.select();
+    navigator.clipboard.writeText(input.value);
+    showToast('¡Copiado al portapapeles!');
+}
+
 function switchTab(tabId) {
     const sections = document.querySelectorAll('.content-section');
     sections.forEach(el => {
@@ -123,7 +186,6 @@ function switchTab(tabId) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// CONFIGURACIÓN MENÚ
 function applyMenuMode(mode) {
     const bottomNav = document.getElementById('bottomNav');
     const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
@@ -174,7 +236,6 @@ function toggleSidebar() {
     }
 }
 
-// FILTRADO DE PERSONAJES
 function filterCharacters() {
     const searchInput = document.getElementById('charSearch');
     const sortSelect = document.getElementById('charSort');
@@ -266,7 +327,6 @@ function renderCharacterGrid(list) {
     }).join('');
 }
 
-// MODAL DE DETALLES DEL PERSONAJE
 function openCharacterModal(charId) {
     const char = charactersData.find(c => c.id === charId);
     if (!char) return;
@@ -308,11 +368,10 @@ function openCharacterModal(charId) {
                 </div>
             </div>
 
-            <!-- NIVELES DE ATAQUES (MUESTRA SOLO EL NIVEL ACTUAL) -->
+            <!-- NIVELES DE ATAQUES -->
             <div class="bg-brand-card/60 p-3 rounded-xl border border-white/5 space-y-2">
                 <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider mb-1">Nivel de Ataques</span>
                 
-                <!-- BÁSICO -->
                 <div class="flex items-center justify-between py-1 border-b border-white/5">
                     <span class="font-bold text-cyan-400 text-xs">Básico</span>
                     <div class="flex items-center gap-2">
@@ -322,7 +381,6 @@ function openCharacterModal(charId) {
                     </div>
                 </div>
 
-                <!-- RELEVO -->
                 <div class="flex items-center justify-between py-1 border-b border-white/5">
                     <span class="font-bold text-purple-400 text-xs">Relevo</span>
                     <div class="flex items-center gap-2">
@@ -332,7 +390,6 @@ function openCharacterModal(charId) {
                     </div>
                 </div>
 
-                <!-- ESPECIAL -->
                 <div class="flex items-center justify-between py-1 border-b border-white/5">
                     <span class="font-bold text-yellow-400 text-xs">Especial</span>
                     <div class="flex items-center gap-2">
@@ -342,7 +399,6 @@ function openCharacterModal(charId) {
                     </div>
                 </div>
 
-                <!-- CARGADO -->
                 <div class="flex items-center justify-between py-1">
                     <span class="font-bold text-pink-400 text-xs">Cargado</span>
                     <div class="flex items-center gap-2">
@@ -353,7 +409,7 @@ function openCharacterModal(charId) {
                 </div>
             </div>
 
-            <!-- SECCIÓN 5 RECUADROS: EQUIPAMIENTO (CASCO, PECHERA, GUANTES, BOTAS) Y ARTEFACTO -->
+            <!-- SECCIÓN 5 RECUADROS DE EQUIPAMIENTOS -->
             <div class="space-y-1.5">
                 <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Equipamientos y Artefacto</span>
                 <div class="grid grid-cols-5 gap-2">
@@ -380,24 +436,20 @@ function openCharacterModal(charId) {
                 </div>
             </div>
 
-            <!-- SECCIÓN 4 RECUADROS: MONSTERLINGS (SOLO ICONOS) -->
+            <!-- SECCIÓN 4 RECUADROS DE MONSTERLINGS -->
             <div class="space-y-1.5">
                 <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Monsterlings</span>
                 <div class="grid grid-cols-4 gap-2">
-                    <!-- LINK (DORADO CON TEXTO LINK) -->
                     <div class="aspect-square bg-amber-950/30 border-2 border-yellow-500 rounded-xl flex flex-col items-center justify-center p-1 text-center shadow-lg shadow-yellow-950/40 hover:scale-105 transition cursor-pointer">
                         <i class="fa-solid fa-link text-yellow-400 text-base mb-1"></i>
                         <span class="text-[9px] text-yellow-300 font-extrabold">Link</span>
                     </div>
-                    <!-- NORMAL 1 (SOLO ICONO) -->
                     <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex items-center justify-center hover:border-cyan-400 transition cursor-pointer">
                         <i class="fa-solid fa-paw text-slate-400 text-lg"></i>
                     </div>
-                    <!-- NORMAL 2 (SOLO ICONO) -->
                     <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex items-center justify-center hover:border-cyan-400 transition cursor-pointer">
                         <i class="fa-solid fa-paw text-slate-400 text-lg"></i>
                     </div>
-                    <!-- LEGENDARIO (SOLO ICONO) -->
                     <div class="aspect-square bg-red-950/40 border border-red-500/60 rounded-xl flex items-center justify-center hover:border-red-400 transition cursor-pointer">
                         <i class="fa-solid fa-dragon text-red-400 text-lg"></i>
                     </div>
@@ -511,42 +563,6 @@ function renderAll() {
             </div>
         `).join('');
     }
-}
-
-function saveProfile() {
-    const profile = {
-        name: document.getElementById('pName').value,
-        uid: document.getElementById('pUID').value,
-        friendCode: document.getElementById('pFriendCode').value,
-        message: document.getElementById('pMessage').value,
-        icon: document.getElementById('avatarIcon').className
-    };
-    localStorage.setItem('mongil_player_profile', JSON.stringify(profile));
-    showToast('Perfil guardado correctamente');
-}
-
-function loadProfile() {
-    const saved = localStorage.getItem('mongil_player_profile');
-    if (saved) {
-        const profile = JSON.parse(saved);
-        if (profile.name) document.getElementById('pName').value = profile.name;
-        if (profile.uid) document.getElementById('pUID').value = profile.uid;
-        if (profile.friendCode) document.getElementById('pFriendCode').value = profile.friendCode;
-        if (profile.message) document.getElementById('pMessage').value = profile.message;
-        if (profile.icon) document.getElementById('avatarIcon').className = profile.icon;
-    }
-}
-
-function setAvatar(iconClass) {
-    document.getElementById('avatarIcon').className = `fa-solid ${iconClass}`;
-    saveProfile();
-}
-
-function copyField(elementId) {
-    const input = document.getElementById(elementId);
-    input.select();
-    navigator.clipboard.writeText(input.value);
-    showToast('¡Copiado al portapapeles!');
 }
 
 function showToast(msg) {
