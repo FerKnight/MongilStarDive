@@ -129,7 +129,7 @@
                     MONGIL: STAR DIVE
                 </h1>
                 <p class="text-[10px] text-slate-400 font-medium flex items-center gap-1.5">
-                    <span>VER. 1.4</span> <span id="cloudSyncStatus" class="inline-block w-2 h-2 rounded-full bg-slate-500" title="Modo Local"></span>
+                    <span>VER. 1.4</span> <span id="cloudSyncStatus" class="inline-block w-2 h-2 rounded-full bg-emerald-400" title="Sincronizado por UID"></span>
                 </p>
             </div>
         </div>
@@ -300,39 +300,18 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="artifactGrid"></div>
         </section>
 
-        <!-- 5. INICIO (PERFIL Y NUBE OPCIONAL) -->
+        <!-- 5. INICIO (PERFIL DE JUGADOR) -->
         <section id="tab-inicio" class="content-section active">
             
-            <!-- PANEL DE AUTENTICACIÓN / STATUS NUBE (OPCIONAL) -->
-            <div class="bg-brand-surface border border-purple-500/30 rounded-2xl p-4 mb-5 neon-glow">
-                <div id="authContainer" class="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-                    <div>
-                        <h3 class="font-title font-bold text-sm text-slate-100 flex items-center gap-2 justify-center sm:justify-start">
-                            <i class="fa-solid fa-cloud text-cyan-400"></i> Sincronización en la Nube (Opcional)
-                        </h3>
-                        <p class="text-[11px] text-slate-400">Inicia sesión con Google para acceder a tus datos desde cualquier dispositivo.</p>
-                    </div>
-                    <button onclick="handleGoogleLogin()" class="px-4 py-2 bg-white hover:bg-slate-100 text-slate-900 rounded-xl text-xs font-bold transition cursor-pointer shadow-md flex items-center gap-2 flex-shrink-0">
-                        <i class="fa-brands fa-google text-red-500 text-sm"></i> Conectar con Google
-                    </button>
+            <div class="bg-brand-surface border border-purple-500/30 rounded-2xl p-5 mb-5 relative overflow-hidden neon-glow">
+                <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+                    <h2 class="font-title font-black text-base text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-address-card text-purple-400"></i> PERFIL DE JUGADOR
+                    </h2>
+                    <span class="text-[10px] text-cyan-300 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/30 font-mono">
+                        Sincronización por UID
+                    </span>
                 </div>
-
-                <div id="loggedInStatus" class="hidden flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-                        <span id="userEmailDisplay" class="text-xs text-cyan-300 font-mono font-semibold"></span>
-                    </div>
-                    <button onclick="handleLogout()" class="px-3 py-1 bg-red-600/80 hover:bg-red-500 text-white text-[10px] font-bold rounded-lg transition cursor-pointer">
-                        <i class="fa-solid fa-right-from-bracket"></i> Desconectar
-                    </button>
-                </div>
-            </div>
-
-            <!-- CONTENEDOR DE PERFIL DE JUGADOR -->
-            <div class="bg-brand-surface border border-white/10 rounded-2xl p-5 mb-5 relative overflow-hidden">
-                <h2 class="font-title font-black text-base text-slate-100 flex items-center gap-2 border-b border-white/10 pb-3 mb-4">
-                    <i class="fa-solid fa-address-card text-purple-400"></i> PERFIL DE JUGADOR
-                </h2>
 
                 <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5 mb-5">
                     <div onclick="openAvatarSelectorModal()" class="relative group cursor-pointer flex-shrink-0">
@@ -351,9 +330,11 @@
                             <input type="text" id="pName" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-100 focus:border-cyan-400 focus:outline-none" value="DiveMaster">
                         </div>
                         <div>
-                            <label class="block text-xs text-slate-400 font-semibold mb-1">ID dentro del juego (UID)</label>
+                            <label class="block text-xs text-slate-400 font-semibold mb-1">
+                                ID dentro del juego (UID) <span class="text-[10px] text-cyan-400 font-normal">(Clave de Sincronización)</span>
+                            </label>
                             <div class="flex gap-2">
-                                <input type="text" id="pUID" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-100 font-mono focus:border-cyan-400 focus:outline-none" value="MNG-9842013">
+                                <input type="text" id="pUID" onchange="loadCloudData()" class="w-full bg-brand-card border border-cyan-500/40 rounded-lg px-3 py-2 text-sm text-slate-100 font-mono focus:border-cyan-400 focus:outline-none" value="MNG-9842013">
                                 <button onclick="copyField('pUID')" class="px-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer">
                                     <i class="fa-regular fa-copy"></i> Copiar
                                 </button>
@@ -380,7 +361,7 @@
                         <i class="fa-solid fa-floppy-disk"></i> GUARDAR LOCALMENTE
                     </button>
                     <button onclick="saveCloudData()" class="py-3 bg-brand-card hover:bg-slate-700 border border-cyan-500/40 rounded-xl font-title font-bold text-xs sm:text-sm text-cyan-300 shadow-lg cursor-pointer active:scale-98 transition">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> SINCRONIZAR NUBE
+                        <i class="fa-solid fa-cloud-arrow-up"></i> SINCRONIZAR CON ESTE UID
                     </button>
                 </div>
             </div>
