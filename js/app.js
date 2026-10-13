@@ -1,6 +1,6 @@
 let deferredPrompt;
 
-// ESTADO DE COLECCIÓN Y PROGRESIÓN
+// ESTADO DE COLECCIÓN Y PROGRESIÓN DE JUGADOR
 let userCollection = JSON.parse(localStorage.getItem('mongil_user_collection')) || {};
 
 function saveUserCollection() {
@@ -89,7 +89,7 @@ function getElementBadge(element) {
     }
 }
 
-// FUNCIONES PARA EL AVATAR DE PERFIL CON IMÁGENES
+// FUNCIONES DE SELECCIÓN DE AVATAR PARA EL PERFIL
 function openAvatarSelectorModal() {
     const modal = document.getElementById('avatarModal');
     const grid = document.getElementById('avatarGrid');
@@ -327,6 +327,7 @@ function renderCharacterGrid(list) {
     }).join('');
 }
 
+// MODAL DE DETALLES DEL PERSONAJE
 function openCharacterModal(charId) {
     const char = charactersData.find(c => c.id === charId);
     if (!char) return;
