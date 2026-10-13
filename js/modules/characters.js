@@ -6,6 +6,7 @@ function setGridCols(num) {
     localStorage.setItem('mongil_grid_cols', num);
     updateGridColsUI();
     filterCharacters();
+    if (typeof saveCloudData === 'function') saveCloudData();
 }
 
 function updateGridColsUI() {
@@ -24,6 +25,9 @@ function updateGridColsUI() {
 function saveUserCollection() {
     localStorage.setItem('mongil_user_collection', JSON.stringify(userCollection));
     updateOwnedCounter();
+    if (typeof saveCloudData === 'function') {
+        saveCloudData();
+    }
 }
 
 function updateOwnedCounter() {
@@ -168,7 +172,7 @@ function filterCharacters() {
     } else if (sortVal === 'rarity-desc') {
         filtered.sort((a, b) => b.rarity.localeCompare(a.rarity) || a.name.localeCompare(b.name));
     } else if (sortVal === 'rarity-asc') {
-        filtered.sort((a, b) => a.rarity.localeCompare(b.rarity) || a.name.localeCompare(b.name));
+        filtered.sort((a, b) => b.rarity.localeCompare(b.rarity) || a.name.localeCompare(b.name));
     }
 
     renderCharacterGrid(filtered);
@@ -192,7 +196,6 @@ function renderCharacterGrid(list) {
         return;
     }
 
-    // Configurar dinámica de columnas según botón presionado (2, 3, 4, 5)
     let gridColsClass = "grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-1.5 sm:gap-3";
     switch(gridCols) {
         case 2:
