@@ -56,11 +56,15 @@ function renderEquipment() {
     let filtered = equipmentData.filter(eq => {
         const matchSearch = eq.name.toLowerCase().includes(searchVal);
         let matchPieces = true;
+        
         if (piecesVal === '2') {
-            matchPieces = !!eq.effect2;
+            // Solo aquellos que TENGAN 2 piezas y NO TENGAN 4 piezas
+            matchPieces = !!eq.effect2 && !eq.effect4;
         } else if (piecesVal === '4') {
+            // Solo aquellos que TENGAN efecto de 4 piezas
             matchPieces = !!eq.effect4;
         }
+        
         return matchSearch && matchPieces;
     });
 
