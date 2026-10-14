@@ -8,13 +8,16 @@ function switchTab(tabId) {
         target.classList.add('active');
     }
 
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
+    // Resaltar elemento activo en la barra lateral
+    document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+        item.classList.remove('bg-brand-card', 'text-cyan-400');
+        item.classList.add('text-slate-300');
     });
 
     const navItem = document.getElementById(`nav-${tabId}`);
     if (navItem) {
-        navItem.classList.add('active');
+        navItem.classList.add('bg-brand-card', 'text-cyan-400');
+        navItem.classList.remove('text-slate-300');
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -26,49 +29,6 @@ function toggleSidebar() {
     if (sidebar && overlay) {
         sidebar.classList.toggle('-translate-x-full');
         overlay.classList.toggle('hidden');
-    }
-}
-
-function setMenuMode(mode) {
-    localStorage.setItem('mongil_menu_mode', mode);
-    applyMenuMode(mode);
-    closeSettingsModal();
-    if (typeof saveCloudData === 'function') saveCloudData();
-}
-
-function applyMenuMode(mode) {
-    const bottomNav = document.getElementById('bottomNav');
-    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
-
-    if (mode === 'sidebar') {
-        if (bottomNav) bottomNav.classList.add('hidden');
-        if (sidebarToggleBtn) sidebarToggleBtn.classList.remove('hidden');
-    } else {
-        if (bottomNav) bottomNav.classList.remove('hidden');
-        if (sidebarToggleBtn) sidebarToggleBtn.classList.add('hidden');
-    }
-
-    const radioBottom = document.getElementById('radioBottomNav');
-    const radioSidebar = document.getElementById('radioSidebarNav');
-    if (radioBottom && radioSidebar) {
-        radioBottom.checked = (mode === 'bottom');
-        radioSidebar.checked = (mode === 'sidebar');
-    }
-}
-
-function openSettingsModal() {
-    const modal = document.getElementById('settingsModal');
-    if (modal) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-    }
-}
-
-function closeSettingsModal() {
-    const modal = document.getElementById('settingsModal');
-    if (modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
     }
 }
 
