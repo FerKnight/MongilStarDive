@@ -300,51 +300,17 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="artifactGrid"></div>
         </section>
 
-        <!-- 5. INICIO (PERFIL Y SINCRONIZACIÓN) -->
+        <!-- 5. INICIO (PERFIL Y CONFIGURACIÓN) -->
         <section id="tab-inicio" class="content-section active">
             
-            <!-- TARJETA MODO LOCAL (Muestra formulario de login si no tiene cuenta vinculada) -->
-            <div id="authBox" class="bg-brand-surface border border-cyan-500/30 rounded-2xl p-5 mb-5 neon-glow">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-title font-bold text-sm text-slate-100">Sincronización Opcional en la Nube</h3>
-                        <p class="text-[11px] text-slate-400">Ingresa un Nombre y Código de Amistad para respaldar tus datos o acceder desde otros dispositivos.</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">
-                    <div>
-                        <label class="block text-[11px] text-slate-400 font-semibold mb-1">Nombre / Nickname</label>
-                        <input type="text" id="loginName" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none" placeholder="Ej. DiveMaster">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] text-slate-400 font-semibold mb-1">Código de amistad</label>
-                        <input type="text" id="loginCode" class="w-full bg-brand-card border border-cyan-500/40 rounded-lg px-3 py-2 text-xs text-slate-100 font-mono focus:border-cyan-400 focus:outline-none" placeholder="Ej. FRIEND-STARDIVE-2026">
-                    </div>
-                </div>
-
-                <button onclick="handleLoginSubmit()" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-cyan-500 rounded-xl font-title font-bold text-xs text-white shadow-lg cursor-pointer hover:opacity-95 transition">
-                    CONECTAR Y SINCRONIZAR
-                </button>
-            </div>
-
-            <!-- CONTENEDOR DE PERFIL DE JUGADOR (SI YA VINCULÓ CUENTA) -->
-            <div id="profileBox" class="bg-brand-surface border border-purple-500/30 rounded-2xl p-5 mb-5 relative overflow-hidden neon-glow hidden">
+            <div class="bg-brand-surface border border-purple-500/30 rounded-2xl p-5 mb-5 relative overflow-hidden neon-glow">
                 <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
                     <h2 class="font-title font-black text-base text-slate-100 flex items-center gap-2">
-                        <i class="fa-solid fa-address-card text-purple-400"></i> PERFIL DE JUGADOR
+                        <i class="fa-solid fa-address-card text-purple-400"></i> PERFIL DE JUGADOR Y NUBE
                     </h2>
-                    <div class="flex items-center gap-2">
-                        <span id="syncStatusBadge" class="text-[10px] text-cyan-300 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/30 font-mono">
-                            Modo Local Anónimo
-                        </span>
-                        <button onclick="handleUnlinkAccount()" class="px-2 py-1 bg-red-600/80 hover:bg-red-500 text-white text-[10px] font-bold rounded-lg transition cursor-pointer">
-                            Desconectar
-                        </button>
-                    </div>
+                    <span class="text-[10px] text-cyan-300 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/30 font-mono">
+                        Sincronización Automática
+                    </span>
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5 mb-5">
@@ -361,12 +327,14 @@
                     <div class="w-full space-y-3">
                         <div>
                             <label class="block text-xs text-slate-400 font-semibold mb-1">Nombre / Nickname</label>
-                            <input type="text" id="pName" onchange="saveProfile()" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-100 focus:border-cyan-400 focus:outline-none" value="DiveMaster">
+                            <input type="text" id="pName" onchange="saveProfile()" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-100 focus:border-cyan-400 focus:outline-none" placeholder="Tu Nickname">
                         </div>
                         <div>
-                            <label class="block text-xs text-slate-400 font-semibold mb-1">Código de amistad</label>
+                            <label class="block text-xs text-slate-400 font-semibold mb-1">
+                                Código de amistad <span class="text-[10px] text-cyan-400 font-normal">(Clave de Sincronización)</span>
+                            </label>
                             <div class="flex gap-2">
-                                <input type="text" id="pFriendCode" readonly class="w-full bg-brand-card/60 border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-300 font-mono focus:outline-none cursor-not-allowed" value="FRIEND-STARDIVE-2026">
+                                <input type="text" id="pFriendCode" oninput="handleFriendCodeInput()" class="w-full bg-brand-card border border-cyan-500/40 rounded-lg px-3 py-2 text-sm text-slate-100 font-mono focus:border-cyan-400 focus:outline-none" placeholder="Ej. FRIEND-2026">
                                 <button onclick="copyField('pFriendCode')" class="px-3 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer">
                                     <i class="fa-regular fa-copy"></i> Copiar
                                 </button>
@@ -374,17 +342,17 @@
                         </div>
                         <div>
                             <label class="block text-xs text-slate-400 font-semibold mb-1">Mensaje personalizado</label>
-                            <textarea id="pMessage" onchange="saveProfile()" rows="2" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-100 focus:border-cyan-400 focus:outline-none" placeholder="¡Escribe tu mensaje!">¡Explorando Belana y capturando todos los Monsterlings!</textarea>
+                            <textarea id="pMessage" onchange="saveProfile()" rows="2" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-100 focus:border-cyan-400 focus:outline-none" placeholder="¡Escribe tu estado o mensaje!"></textarea>
                         </div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <button onclick="saveProfile()" class="py-3 bg-gradient-to-r from-purple-600 to-cyan-500 rounded-xl font-title font-bold text-xs sm:text-sm text-white shadow-lg cursor-pointer hover:opacity-95 active:scale-98 transition">
-                        <i class="fa-solid fa-floppy-disk"></i> GUARDAR LOCALMENTE
+                    <button onclick="saveProfile(); showToast('¡Guardado local y automático!');" class="py-3 bg-gradient-to-r from-purple-600 to-cyan-500 rounded-xl font-title font-bold text-xs sm:text-sm text-white shadow-lg cursor-pointer hover:opacity-95 active:scale-98 transition">
+                        <i class="fa-solid fa-floppy-disk"></i> GUARDAR CAMBIOS
                     </button>
-                    <button onclick="saveCloudData()" class="py-3 bg-brand-card hover:bg-slate-700 border border-cyan-500/40 rounded-xl font-title font-bold text-xs sm:text-sm text-cyan-300 shadow-lg cursor-pointer active:scale-98 transition">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> FORZAR SINCRONIZACIÓN NUBE
+                    <button onclick="checkCodeAndSync()" class="py-3 bg-brand-card hover:bg-slate-700 border border-cyan-500/40 rounded-xl font-title font-bold text-xs sm:text-sm text-cyan-300 shadow-lg cursor-pointer active:scale-98 transition">
+                        <i class="fa-solid fa-cloud-arrow-down"></i> COMPROBAR NUBE
                     </button>
                 </div>
             </div>
@@ -472,28 +440,28 @@
                     <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
                 <div>
-                    <h3 class="font-title font-bold text-sm text-slate-100">Diferencias de Guardado</h3>
-                    <p class="text-[10px] text-slate-400">Los datos en la nube difieren de tu progreso actual.</p>
+                    <h3 class="font-title font-bold text-sm text-slate-100">Conflicto de Guardado Detectado</h3>
+                    <p class="text-[10px] text-slate-400">Este Código de Amistad ya existe en la nube.</p>
                 </div>
             </div>
 
             <p class="text-xs text-slate-300">
-                Se encontraron datos guardados previamente en la nube (<span id="cloudLastUpdated" class="text-cyan-400 font-mono">--/--/----</span>). Selecciona qué guardado deseas mantener:
+                Se detectó un guardado previo para este código en la nube (<span id="cloudLastUpdated" class="text-cyan-400 font-mono">--/--/----</span>). ¿Qué datos deseas mantener?
             </p>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                 <button onclick="resolveConflictUseCloud()" class="p-3 bg-brand-card hover:bg-slate-700 border border-cyan-500/40 rounded-xl text-left cursor-pointer transition">
                     <div class="flex items-center gap-2 text-cyan-400 text-xs font-bold mb-1">
-                        <i class="fa-solid fa-cloud-arrow-down"></i> Usar datos de la Nube
+                        <i class="fa-solid fa-cloud-arrow-down"></i> Usar Nube
                     </div>
-                    <span class="block text-[10px] text-slate-400">Reemplaza tu estado local con lo que hay guardado en la nube.</span>
+                    <span class="block text-[10px] text-slate-400">Descargar y usar los datos guardados en la nube.</span>
                 </button>
 
                 <button onclick="resolveConflictUseLocal()" class="p-3 bg-brand-card hover:bg-slate-700 border border-purple-500/40 rounded-xl text-left cursor-pointer transition">
                     <div class="flex items-center gap-2 text-purple-400 text-xs font-bold mb-1">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> Sobrescribir Nube
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Mantener Local
                     </div>
-                    <span class="block text-[10px] text-slate-400">Reemplaza lo que está en la nube con tu avance actual en el dispositivo.</span>
+                    <span class="block text-[10px] text-slate-400">Sobrescribir la nube con tu avance actual en este dispositivo.</span>
                 </button>
             </div>
         </div>
