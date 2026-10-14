@@ -1,15 +1,25 @@
-// Abrir modal de selección de avatares
+// Abrir modal de selección de avatares ordenados alfabéticamente
 function openAvatarSelectorModal() {
     const modal = document.getElementById('avatarModal');
     const grid = document.getElementById('avatarGrid');
 
     if (grid && typeof charactersData !== 'undefined') {
-        grid.innerHTML = charactersData.map(c => `
-            <div onclick="selectAvatarImage('assets/images/Character_Portrait/portrait_${c.name}_00.png', '${c.name}')" class="aspect-square rounded-xl bg-slate-900 border border-white/10 hover:border-cyan-400 overflow-hidden cursor-pointer transition transform active:scale-95 group relative">
-                <img src="assets/images/Character_Portrait/portrait_${c.name}_00.png" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-200" onerror="handleImageError(this, '${c.name}')">
-                <span class="absolute bottom-0 inset-x-0 bg-black/80 text-slate-200 text-[8px] text-center font-semibold truncate py-0.5 px-1">${c.name}</span>
-            </div>
-        `).join('');
+        // Ordenar los personajes alfabéticamente por nombre
+        const sortedCharacters = [...charactersData].sort((a, b) => a.name.localeCompare(b.name));
+
+        grid.innerHTML = sortedCharacters.map(c => {
+            // Reutilizamos la lógica segura de imágenes o ruta por defecto
+            let imagePath = `assets/images/Character_Portrait/portrait_${c.imageName || c.name}_00.png`;
+            if (c.imageName === "VernaSummer_01") imagePath = "assets/images/Character_Portrait/portrait_VernaSummer_01.png";
+            if (c.imageName === "FrancisSummer_01") imagePath = "assets/images/Character_Portrait/portrait_FrancisSummer_01.png";
+
+            return `
+                <div onclick="selectAvatarImage('${imagePath}', '${c.imageName || c.name}')" class="aspect-square rounded-xl bg-slate-900 border border-white/10 hover:border-cyan-400 overflow-hidden cursor-pointer transition transform active:scale-95 group relative">
+                    <img src="${imagePath}" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-200" onerror="handleImageError(this, ${JSON.stringify(c).replace(JSON.stringify(c), '"' + (c.imageName || c.name) + '"')})">
+                    <span class="absolute bottom-0 inset-x-0 bg-black/80 text-slate-200 text-[8px] text-center font-semibold truncate py-0.5 px-1">${c.name}</span>
+                </div>
+            `;
+        }).join('');
     }
 
     if (modal) {
