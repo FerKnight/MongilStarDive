@@ -1,82 +1,156 @@
-const equipSources = [
-    { name: "GameWith.ai Equipment DB (Español)", url: "https://gamewith.ai/mongil-stardive/es/equipment-db" },
-    { name: "MSD Tracker Equipment Database", url: "https://msd-tracker.debu.games/equipments" },
-    { name: "Game8 / GameWith Mongil: Star Dive Wiki", url: "https://game8.co/games/Mongil-Star-Dive/archives/592051" },
-    { name: "Kaiden.gg Equipment Guides", url: "https://www.kaiden.gg/mongil/" }
-];
-
-const equipData = [
-    // --- SETS DE 5★ ---
+const equipmentData = [
     {
-        id: "set_furia_volcanica",
-        name: "Set Furia Volcánica",
+        id: "abismo",
+        name: "Abismo",
         rarity: "5★",
-        pieces: ["Casco Volcánico", "Pechera Volcánica", "Guantes Volcánicos", "Botas Volcánicas"],
-        bonus2: "Daño de Fuego +15%",
-        bonus4: "Al infligir daño de Fuego, aumenta el Ataque del equipo un 20% durante 10 s (Efecto acumulable hasta 2 veces).",
-        howToGet: "Modo Conquista (Conquest Stage 10+) / Crafteo con Materiales de Jefe",
-        image: "assets/images/Equipment/icon_equip_volcano.png"
+        effect2: "Daño de viento +10 % durante 5 s al usar una habilidad especial",
+        effect4: "Daño de viento +10 % durante 5 s al asestar un golpe crítico"
     },
     {
-        id: "set_escudo_guardian",
-        name: "Set Fortaleza del Guardián",
+        id: "arbol_milenario",
+        name: "Árbol Milenario",
         rarity: "5★",
-        pieces: ["Casco de Guardián", "Pechera de Guardián", "Guantes de Guardián", "Botas de Guardián"],
-        bonus2: "Defensa +20%",
-        bonus4: "Al realizar un Cambio de Personaje (Tag), otorga a todo el equipo un escudo equivalente al 25% de la DEF máxima por 8 s.",
-        howToGet: "Raid de Conquista: Jefes Semanales (Sorin / King Slime)",
-        image: "assets/images/Equipment/icon_equip_guardian.png"
+        effect2: "Daño de fuego de todos los compañeros +7,5% durante 5s al usar una habilidad de apoyo",
+        effect4: null
     },
     {
-        id: "set_viento_mortal",
-        name: "Set Cazador del Viento",
+        id: "banquete_grandioso_gloton",
+        name: "Banquete Grandioso de Glotón",
         rarity: "5★",
-        pieces: ["Casco del Cazador", "Pechera del Cazador", "Guantes del Cazador", "Botas del Cazador"],
-        bonus2: "Probabilidad CRÍT +12%",
-        bonus4: "Aumenta el Daño CRÍT un 35% contra enemigos afectados por Ruptura o Stagger.",
-        howToGet: "Dominio de Crafteo: Minerales Raros y Encargos de Monstruos 5★",
-        image: "assets/images/Equipment/icon_equip_wind.png"
+        effect2: "Res al fuego del objetivo -6% durante 5s al impactar con una habilidad de relevo",
+        effect4: null
     },
     {
-        id: "set_sombra_asombrosa",
-        name: "Set Sombra Fulgurante",
+        id: "corazon_escarche_eterna",
+        name: "Corazón de Escarcha Eterna",
         rarity: "5★",
-        pieces: ["Casco Sombrío", "Pechera Sombría", "Guantes Sombríos", "Botas Sombrías"],
-        bonus2: "Daño de Rayo +15%",
-        bonus4: "Aumenta la velocidad de ataque un 15% y los ataques básicos generan un 30% más de energía para la Habilidad Especial.",
-        howToGet: "Modo Conquista (Etapas de Alto Nivel) / Menú de Crafteo",
-        image: "assets/images/Equipment/icon_equip_shadow.png"
-    },
-
-    // --- SETS DE 4★ ---
-    {
-        id: "set_caballero_inicio",
-        name: "Set Caballero de Centralia",
-        rarity: "4★",
-        pieces: ["Casco de Caballero", "Pechera de Caballero", "Guantes de Caballero", "Botas de Caballero"],
-        bonus2: "Ataque +10%",
-        bonus4: "Aumenta el daño del Ataque Cargado un 20%.",
-        howToGet: "Misión Principal 'Do It Yourself!' (Episodio 1) y Cofres de Exploración",
-        image: "assets/images/Equipment/icon_equip_knight.png"
+        effect2: "Daño de aturdimiento de ataque de rayo +7,5%",
+        effect4: null
     },
     {
-        id: "set_medico_tactico",
-        name: "Set Médico Táctico",
-        rarity: "4★",
-        pieces: ["Casco Táctico", "Pechera Táctica", "Guantes Tácticos", "Botas Tácticas"],
-        bonus2: "Bono de Curación +15%",
-        bonus4: "Usar la Habilidad de Relevo restaura un 10% de la vida máxima a todos los aliados.",
-        howToGet: "Encargos Diarios de Monstruos y Crafteo Básico",
-        image: "assets/images/Equipment/icon_equip_medic.png"
+        id: "destructor_despiadado",
+        name: "Destructor Despiadado",
+        rarity: "5★",
+        effect2: "Los ataques básicos infligen 5% más de daño de viento",
+        effect4: "Al usar la habilidad suprema, la res a viento del objetivo se reduce en 10% durante 5s"
     },
     {
-        id: "set_peregrino_hielo",
-        name: "Set Peregrino Escarchado",
-        rarity: "4★",
-        pieces: ["Casco de Escarcha", "Pechera de Escarcha", "Guantes de Escarcha", "Botas de Escarcha"],
-        bonus2: "Resistencia Elemental +15%",
-        bonus4: "Reduce el tiempo de recarga (Cooldown) de la Habilidad Especial en un 15%.",
-        howToGet: "Misiones del Cap. 4-6 y Tienda de Intercambio de Recursos",
-        image: "assets/images/Equipment/icon_equip_frost.png"
+        id: "devorador_del_abismo",
+        name: "Devorador del Abismo",
+        rarity: "5★",
+        effect2: "Daño de neutralización de ataque de hielo +7,5%",
+        effect4: null
+    },
+    {
+        id: "el_sin_nombre",
+        name: "El Sin Nombre",
+        rarity: "5★",
+        effect2: "Los ataques básicos infligen 5% más de daño de viento",
+        effect4: "Al usar una habilidad suprema, la res a viento del objetivo se reduce un 10% durante 5s"
+    },
+    {
+        id: "espiritu_lucha_zorro_youkai",
+        name: "Espíritu de Lucha Zorro Youkai",
+        rarity: "5★",
+        effect2: "Res al rayo -6% durante 5s al usar una habilidad de relevo",
+        effect4: null
+    },
+    {
+        id: "flores_todo_su_esplendor",
+        name: "Flores en Todo su Esplendor",
+        rarity: "5★",
+        effect2: "Daño de hielo +7,5% durante 5s al usar una habilidad especial",
+        effect4: null
+    },
+    {
+        id: "juez",
+        name: "Juez",
+        rarity: "5★",
+        effect2: "Daño de hielo +10% durante 5s al usar una habilidad de cambio",
+        effect4: "Daño de hielo +10% al atacar a un enemigo con aflicción de hielo"
+    },
+    {
+        id: "nivel_gloton",
+        name: "Nivel de Glotón",
+        rarity: "5★",
+        effect2: "Res de viento del objetivo -6% durante 5s al ejecutar con éxito una habilidad especial",
+        effect4: "Índice de crítico de todos los compañeros +6% durante 5s al usar una habilidad de relevo"
+    },
+    {
+        id: "noche_luna_llena",
+        name: "Noche de Luna Llena",
+        rarity: "5★",
+        effect2: "Daño de fuego +7,5% durante 5s al usar una habilidad especial",
+        effect4: "Daño de fuego +7,5% al atacar a un enemigo con aflicción de fuego"
+    },
+    {
+        id: "piedra_ancestral",
+        name: "Piedra Ancestral",
+        rarity: "5★",
+        effect2: "Daño de neutralización de ataque de viento +7,5%",
+        effect4: null
+    },
+    {
+        id: "poder_imponente_monte_tai",
+        name: "Poder Imponente del Monte Tai",
+        rarity: "5★",
+        effect2: "Índice de crítico +5% durante 5s al usar una habilidad de cambio",
+        effect4: "Daño de rayo +7,5% durante 5s al usar una habilidad especial"
+    },
+    {
+        id: "rey_espiritual",
+        name: "Rey Espiritual",
+        rarity: "5★",
+        effect2: "Daño de rayo +8 % durante 3 s al usar un ataque básico",
+        effect4: "Daño de rayo +10 % al atacar a un enemigo con aflicción de rayo"
+    },
+    {
+        id: "ritos_general_victorioso",
+        name: "Ritos del General Victorioso",
+        rarity: "5★",
+        effect2: "Daño de neutralización de ataque de tierra +7,5%",
+        effect4: null
+    },
+    {
+        id: "rugido_hanul",
+        name: "Rugido de Hanul",
+        rarity: "5★",
+        effect2: "Daño de fuego +10 % durante 5 s al usar una habilidad suprema",
+        effect4: "Daño crítico +10 % al atacar a un enemigo con aflicción de fuego"
+    },
+    {
+        id: "senor_de_la_cienaga",
+        name: "Señor de la Ciénaga",
+        rarity: "5★",
+        effect2: "Daño de hielo de todos los compañeros +5% durante 5s al conceder un escudo",
+        effect4: "Daño de debilidad elemental recibido por el objetivo +10% durante 5s al atacar a un enemigo que sufra aflicción de hielo y aturdimiento"
+    },
+    {
+        id: "sirius",
+        name: "Sirius",
+        rarity: "5★",
+        effect2: "Daño de tierra de todos los compañeros +7,5% durante 5s al usar una habilidad de apoyo",
+        effect4: "Daño de apoyo +7,5% durante 5s al usar una habilidad de cambio"
+    },
+    {
+        id: "tirano_del_bosque",
+        name: "Tirano del Bosque",
+        rarity: "5★",
+        effect2: "Daño de hielo +7,5% durante 3s al usar un ataque básico",
+        effect4: "Índice de crítico +5%% durante 5s al atacar a un enemigo con aflicción de hielo"
+    },
+    {
+        id: "vanguardia_de_victoria",
+        name: "Vanguardia de Victoria",
+        rarity: "5★",
+        effect2: "Daño de debilidad elemental del objetivo recibido +10% durante 5s al atacar a un enemigo con aflicción de tierra",
+        effect4: null
+    },
+    {
+        id: "viento_de_poniente",
+        name: "Viento de Poniente",
+        rarity: "5★",
+        effect2: "Daño de tierra +8 % durante 3 s al usar un ataque básico",
+        effect4: "Daño de tierra +10 % durante 5 s al usar una habilidad de cambio contra un enemigo con aflicción de tierra"
     }
 ];
