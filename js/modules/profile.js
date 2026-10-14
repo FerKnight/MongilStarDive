@@ -8,14 +8,14 @@ function openAvatarSelectorModal() {
         const sortedCharacters = [...charactersData].sort((a, b) => a.name.localeCompare(b.name));
 
         grid.innerHTML = sortedCharacters.map(c => {
-            // Reutilizamos la lógica segura de imágenes o ruta por defecto
-            let imagePath = `assets/images/Character_Portrait/portrait_${c.imageName || c.name}_00.png`;
-            if (c.imageName === "VernaSummer_01") imagePath = "assets/images/Character_Portrait/portrait_VernaSummer_01.png";
-            if (c.imageName === "FrancisSummer_01") imagePath = "assets/images/Character_Portrait/portrait_FrancisSummer_01.png";
+            // Utilizar exactamente la misma función de obtención de ruta que en personajes general
+            const imagePath = typeof getCharacterImagePath === 'function' 
+                ? getCharacterImagePath(c) 
+                : `assets/images/Character_Portrait/portrait_${c.imageName || c.name}_00.png`;
 
             return `
                 <div onclick="selectAvatarImage('${imagePath}', '${c.imageName || c.name}')" class="aspect-square rounded-xl bg-slate-900 border border-white/10 hover:border-cyan-400 overflow-hidden cursor-pointer transition transform active:scale-95 group relative">
-                    <img src="${imagePath}" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-200" onerror="handleImageError(this, ${JSON.stringify(c).replace(JSON.stringify(c), '"' + (c.imageName || c.name) + '"')})">
+                    <img src="${imagePath}" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-200" onerror="handleImageError(this, ${JSON.stringify(c).replace(/"/g, '&quot;')})">
                     <span class="absolute bottom-0 inset-x-0 bg-black/80 text-slate-200 text-[8px] text-center font-semibold truncate py-0.5 px-1">${c.name}</span>
                 </div>
             `;
@@ -40,7 +40,13 @@ function selectAvatarImage(imagePath, characterName) {
     const imgEl = document.getElementById('avatarImg');
     if (imgEl) {
         imgEl.src = imagePath;
-        imgEl.onerror = function() { handleImageError(this, characterName); };
+        imgEl.onerror = function() { 
+            if (typeof handleImageError === 'function') {
+                handleImageError(this, { name: characterName, imageName: characterName });
+            } else {
+                this.src = 'assets/images/Character_Portrait/portrait_Verna_01.png';
+            }
+        };
     }
     closeAvatarSelectorModal();
     saveProfile();
