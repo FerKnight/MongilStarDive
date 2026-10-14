@@ -161,28 +161,36 @@ function renderMonsterlings() {
         return;
     }
 
-    container.innerHTML = filtered.map(m => `
-        <div class="bg-brand-surface border border-white/10 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:border-cyan-400/40 transition">
-            <div class="flex items-center gap-3">
-                <span class="font-mono font-bold text-xs text-cyan-400 bg-cyan-950/60 px-2 py-1 rounded border border-cyan-500/30">
-                    N° ${m.nro}
-                </span>
-                <span class="font-title font-bold text-sm text-slate-100">
-                    ${m.name}
-                </span>
-            </div>
+    container.innerHTML = filtered.map(m => {
+        const formattedChain = m.chain !== '-' 
+            ? m.chain.replace(/\n/g, '<br>') 
+            : '-';
 
-            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 text-xs">
-                <div class="bg-brand-card px-2.5 py-1 rounded-lg border border-white/5">
-                    <span class="text-[10px] text-slate-400 block font-semibold">Efecto Rango</span>
-                    <span class="text-slate-200 font-medium">${m.effect}</span>
+        return `
+            <div class="bg-brand-surface border border-white/10 rounded-xl p-3 flex flex-col gap-2 hover:border-cyan-400/40 transition">
+                <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="font-mono font-bold text-xs text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/30">
+                            N° ${m.nro}
+                        </span>
+                        <span class="font-title font-bold text-sm text-slate-100 capitalize">
+                            ${m.name}
+                        </span>
+                    </div>
                 </div>
 
-                <div class="bg-brand-card px-2.5 py-1 rounded-lg border border-white/5">
-                    <span class="text-[10px] text-slate-400 block font-semibold">Cadena de Enlace</span>
-                    <span class="${m.chain !== '-' ? 'text-purple-300 font-bold' : 'text-slate-500'}">${m.chain}</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs pt-1">
+                    <div class="bg-brand-card p-2.5 rounded-lg border border-white/5">
+                        <span class="text-[10px] text-slate-400 block font-semibold mb-0.5">Efecto Rango</span>
+                        <span class="text-slate-200 font-medium leading-relaxed">${m.effect}</span>
+                    </div>
+
+                    <div class="bg-brand-card p-2.5 rounded-lg border border-white/5">
+                        <span class="text-[10px] text-slate-400 block font-semibold mb-0.5">Cadena de Enlace</span>
+                        <span class="${m.chain !== '-' ? 'text-purple-300 font-medium leading-relaxed block' : 'text-slate-500'}">${formattedChain}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
