@@ -150,17 +150,17 @@ function renderCharacters() {
         return `
             <div class="bg-brand-surface border ${isOwned ? 'border-cyan-500/50' : 'border-white/10'} rounded-2xl p-2.5 flex flex-col justify-between relative group hover:border-cyan-400 transition duration-200">
                 
-                <!-- Imagen con Rareza Arriba-Izquierda y Nombre + Despertar Arriba-Sobrepuesto -->
+                <!-- Imagen con Nombre, Despertar y Stats B, C, E, S dentro de la Imagen -->
                 <div class="relative aspect-square rounded-xl overflow-hidden bg-slate-900 mb-2 cursor-pointer" onclick="openCharacterModal('${c.id}')">
                     <img src="${initialImagePath}" alt="${c.name}" class="w-full h-full object-cover object-top ${!isOwned ? 'grayscale opacity-40' : ''} transition duration-300 group-hover:scale-105" onerror="handleImageError(this, ${JSON.stringify(c).replace(/"/g, '&quot;')})">
                     
                     <!-- Rareza -->
-                    <div class="absolute top-1.5 left-1.5 bg-black/70 backdrop-blur-xs px-1.5 py-0.5 rounded text-[10px] font-bold text-yellow-400 flex items-center gap-0.5">
+                    <div class="absolute top-1.5 left-1.5 bg-black/70 backdrop-blur-xs px-1.5 py-0.5 rounded text-[10px] font-bold text-yellow-400 flex items-center gap-0.5 z-10">
                         <i class="fa-solid fa-star text-[8px]"></i> ${c.rarity}
                     </div>
 
-                    <!-- Nombre del Personaje Arriba con Despertar al Lado -->
-                    <div class="absolute top-0 inset-x-0 bg-gradient-to-b from-black/90 via-black/50 to-transparent p-1.5 pt-1 flex items-center justify-between gap-1">
+                    <!-- Nombre del Personaje y Despertar (Arriba) -->
+                    <div class="absolute top-0 inset-x-0 bg-gradient-to-b from-black/90 via-black/50 to-transparent p-1.5 pt-1 flex items-center justify-between gap-1 z-10">
                         <span class="font-title font-bold text-[11px] text-slate-100 truncate pl-12">${c.name}</span>
                         ${isOwned ? `
                             <span class="bg-cyan-950/90 border border-cyan-400 text-cyan-300 px-1.5 py-0.5 rounded text-[9px] font-title font-bold flex-shrink-0">
@@ -168,6 +168,28 @@ function renderCharacters() {
                             </span>
                         ` : ''}
                     </div>
+
+                    <!-- Info B, C, E, S en la Parte Inferior DENTRO de la Imagen -->
+                    ${isOwned ? `
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-1 pt-3 grid grid-cols-4 gap-0.5 text-[8px] font-mono text-center z-10">
+                            <div class="bg-black/50 rounded py-0.5 border border-white/10" title="Ataque Básico">
+                                <span class="text-slate-400 font-bold block text-[7px]">B</span>
+                                <span class="text-cyan-300 font-bold">${userChar.basic ?? 1}</span>
+                            </div>
+                            <div class="bg-black/50 rounded py-0.5 border border-white/10" title="Habilidad de Cambio">
+                                <span class="text-slate-400 font-bold block text-[7px]">C</span>
+                                <span class="text-cyan-300 font-bold">${userChar.switch ?? 1}</span>
+                            </div>
+                            <div class="bg-black/50 rounded py-0.5 border border-white/10" title="Habilidad Especial">
+                                <span class="text-slate-400 font-bold block text-[7px]">E</span>
+                                <span class="text-cyan-300 font-bold">${userChar.special ?? 1}</span>
+                            </div>
+                            <div class="bg-black/50 rounded py-0.5 border border-white/10" title="Habilidad Suprema">
+                                <span class="text-slate-400 font-bold block text-[7px]">S</span>
+                                <span class="text-purple-300 font-bold">${userChar.ultimate ?? 1}</span>
+                            </div>
+                        </div>
+                    ` : ''}
                 </div>
 
                 <!-- Rol y Elemento -->
@@ -177,28 +199,6 @@ function renderCharacters() {
                         ${elementIcon} ${c.element}
                     </span>
                 </div>
-
-                <!-- Info B C E S en la parte Inferior de la Tarjeta (Solo si está obtenido) -->
-                ${isOwned ? `
-                    <div class="grid grid-cols-4 gap-1 text-[9px] font-mono text-center bg-brand-card/80 p-1 rounded-lg border border-white/5 mb-2">
-                        <div class="bg-slate-900/60 rounded py-0.5 border border-white/5" title="Ataque Básico">
-                            <span class="text-slate-400 font-bold block text-[8px]">B</span>
-                            <span class="text-cyan-300 font-bold">${userChar.basic ?? 1}</span>
-                        </div>
-                        <div class="bg-slate-900/60 rounded py-0.5 border border-white/5" title="Habilidad de Cambio">
-                            <span class="text-slate-400 font-bold block text-[8px]">C</span>
-                            <span class="text-cyan-300 font-bold">${userChar.switch ?? 1}</span>
-                        </div>
-                        <div class="bg-slate-900/60 rounded py-0.5 border border-white/5" title="Habilidad Especial">
-                            <span class="text-slate-400 font-bold block text-[8px]">E</span>
-                            <span class="text-cyan-300 font-bold">${userChar.special ?? 1}</span>
-                        </div>
-                        <div class="bg-slate-900/60 rounded py-0.5 border border-white/5" title="Habilidad Suprema">
-                            <span class="text-slate-400 font-bold block text-[8px]">S</span>
-                            <span class="text-purple-300 font-bold">${userChar.ultimate ?? 1}</span>
-                        </div>
-                    </div>
-                ` : ''}
 
                 <!-- Botón de Estado -->
                 <button onclick="toggleCharacterOwned('${c.id}')" class="w-full py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 ${isOwned ? 'bg-cyan-600/80 hover:bg-cyan-500 text-white' : 'bg-brand-card hover:bg-slate-700 text-slate-400 border border-white/10'}">
