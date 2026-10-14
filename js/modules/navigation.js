@@ -1,14 +1,19 @@
 function switchTab(tabId) {
+    // 1. Guardar la pestaña activa en localStorage
+    localStorage.setItem('mongil_active_tab', tabId);
+
+    // 2. Ocultar todas las secciones
     document.querySelectorAll('.content-section').forEach(sec => {
         sec.classList.remove('active');
     });
 
+    // 3. Mostrar la sección seleccionada
     const target = document.getElementById(`tab-${tabId}`);
     if (target) {
         target.classList.add('active');
     }
 
-    // Resaltar elemento activo en la barra lateral
+    // 4. Resaltar elemento activo en la barra lateral
     document.querySelectorAll('.sidebar-nav-item').forEach(item => {
         item.classList.remove('bg-brand-card', 'text-cyan-400');
         item.classList.add('text-slate-300');
