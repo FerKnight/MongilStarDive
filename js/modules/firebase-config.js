@@ -23,23 +23,23 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Obtener la clave del Código de Amistad formateada
-function getCleanFriendCode() {
-    const codeInput = document.getElementById('pFriendCode');
-    let code = codeInput ? codeInput.value.trim() : '';
-    
-    if (!code) {
-        const savedProfile = JSON.parse(localStorage.getItem('mongil_player_profile'));
-        code = savedProfile && savedProfile.friendCode ? savedProfile.friendCode.trim() : 'FRIEND-STARDIVE-2026';
-    }
+window.tempCloudData = null; // Guardar datos de la nube temporalmente para la comparación
 
-    return code.replace(/[^a-zA-Z0-9-_]/g, '_');
+// Obtener la clave formateada del Código de Amistad
+function getCleanFriendCode() {
+    const savedProfile = JSON.parse(localStorage.getItem('mongil_player_profile')) || {};
+    const code = savedProfile.friendCode ? savedProfile.friendCode.trim() : '';
+    return code ? code.replace(/[^a-zA-Z0-9-_]/g, '_') : null;
 }
 
-// Guardar datos en la nube para el Código de Amistad actual
-window.saveCloudData = function() {
+// Subir datos actuales del dispositivo a la nube
+window.saveCloudData = function(force = false) {
     const friendCodeKey = getCleanFriendCode();
-    if (!friendCodeKey) return;
+    
+    if (!friendCodeKey) {
+        if (typeof showToast === 'function') showToast('Debes vincular un Código de Amistad para sincronizar');
+        return;
+    }
 
     const payload = {
         collection: JSON.parse(localStorage.getItem('mongil_user_collection')) || {},
@@ -53,65 +53,74 @@ window.saveCloudData = function() {
     set(userRef, payload)
         .then(() => {
             updateCloudStatus(true);
-            if (typeof showToast === 'function') showToast('¡Datos sincronizados en la nube!');
+            if (typeof showToast === 'function') showToast('¡Nube actualizada con el progreso local!');
         })
         .catch((error) => {
             console.error("Error al guardar en Firebase:", error);
             updateCloudStatus(false);
-            if (typeof showToast === 'function') showToast('Error de conexión a la nube');
+            if (typeof showToast === 'function') showToast('Error al conectar con la nube');
         });
 };
 
-// Cargar datos desde la nube cuando cambia el Código de Amistad
-window.loadCloudData = function(callback) {
-    const friendCodeKey = getCleanFriendCode();
-    if (!friendCodeKey) return;
+// Conectar con la nube y verificar si existen conflictos
+window.connectAndCheckSync = function(friendCode) {
+    if (!friendCode) return;
+    const cleanKey = friendCode.replace(/[^a-zA-Z0-9-_]/g, '_');
 
     const statusEl = document.getElementById('cloudSyncStatus');
     if (statusEl) {
         statusEl.className = "inline-block w-2 h-2 rounded-full bg-yellow-500 animate-pulse";
-        statusEl.title = "Cargando cuenta...";
+        statusEl.title = "Verificando sincronización...";
     }
 
-    const userRef = ref(db, 'players/' + friendCodeKey);
+    const userRef = ref(db, 'players/' + cleanKey);
     get(userRef)
         .then((snapshot) => {
             if (snapshot.exists()) {
-                const data = snapshot.val();
-                
-                // Sobrescribir el localStorage local con los datos traídos de la cuenta nueva
-                localStorage.setItem('mongil_user_collection', JSON.stringify(data.collection || {}));
-                localStorage.setItem('mongil_player_profile', JSON.stringify(data.profile || {}));
-                if (data.gridCols) localStorage.setItem('mongil_grid_cols', data.gridCols);
-                if (data.menuMode) localStorage.setItem('mongil_menu_mode', data.menuMode);
-                
-                updateCloudStatus(true);
-                if (typeof showToast === 'function') showToast('¡Cuenta cargada desde la nube!');
-            } else {
-                // Si la cuenta no existe en Firebase, resetear la colección local para esa clave nueva
-                localStorage.setItem('mongil_user_collection', JSON.stringify({}));
-                saveCloudData();
-                if (typeof showToast === 'function') showToast('Nueva cuenta creada con este Código');
-            }
+                const cloudData = snapshot.val();
+                window.tempCloudData = cloudData;
 
-            // Actualizar la interfaz gráfica
-            if (typeof loadProfile === 'function') loadProfile();
-            if (typeof renderCharacters === 'function') renderCharacters();
-            if (typeof renderAll === 'function') renderAll();
-            
-            if (callback) callback();
+                const localCollection = localStorage.getItem('mongil_user_collection') || '{}';
+                const cloudCollection = JSON.stringify(cloudData.collection || {});
+
+                // Comprobar si existen diferencias entre la colección local y la de la nube
+                if (localCollection !== cloudCollection) {
+                    openConflictModal(cloudData);
+                } else {
+                    // Si son idénticos, actualizar sin preguntar
+                    applyCloudData(cloudData);
+                    if (typeof showToast === 'function') showToast('¡Sincronizado correctamente!');
+                }
+            } else {
+                // Si la cuenta es nueva en la nube, subir el estado local actual
+                saveCloudData(true);
+            }
         })
         .catch((error) => {
-            console.error("Error al cargar desde Firebase:", error);
+            console.error("Error al conectar con la nube:", error);
             updateCloudStatus(false);
-            if (callback) callback();
         });
+};
+
+// Aplicar los datos descargados desde la nube al almacenamiento local
+window.applyCloudData = function(data) {
+    if (!data) return;
+
+    if (data.collection) localStorage.setItem('mongil_user_collection', JSON.stringify(data.collection));
+    if (data.profile) localStorage.setItem('mongil_player_profile', JSON.stringify(data.profile));
+    if (data.gridCols) localStorage.setItem('mongil_grid_cols', data.gridCols);
+    if (data.menuMode) localStorage.setItem('mongil_menu_mode', data.menuMode);
+
+    updateCloudStatus(true);
+    if (typeof loadProfile === 'function') loadProfile();
+    if (typeof renderCharacters === 'function') renderCharacters();
+    if (typeof renderAll === 'function') renderAll();
 };
 
 function updateCloudStatus(isOnline) {
     const statusEl = document.getElementById('cloudSyncStatus');
     if (statusEl) {
-        statusEl.className = `inline-block w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-400' : 'bg-red-500'}`;
-        statusEl.title = isOnline ? 'Sincronizado por Código de Amistad' : 'Error de sincronización';
+        statusEl.className = `inline-block w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-400' : 'bg-slate-500'}`;
+        statusEl.title = isOnline ? 'Sincronizado con la Nube' : 'Modo Local (Offline)';
     }
 }
