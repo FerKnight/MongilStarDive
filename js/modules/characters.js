@@ -2,27 +2,20 @@
 function handleImageError(imgElement, characterName) {
     const currentSrc = imgElement.src;
     
-    // Si la imagen falló intentando cargar el sufijo _00.png, probamos con _01.png
     if (currentSrc.includes('_00.png')) {
         imgElement.src = currentSrc.replace('_00.png', '_01.png');
-    } 
-    // Si falló _01.png o no tenía _00.png, probamos directamente con _00.png
-    else if (!currentSrc.includes('_00.png') && !currentSrc.includes('portrait_Verna_01.png')) {
+    } else if (!currentSrc.includes('_00.png') && !currentSrc.includes('portrait_Verna_01.png')) {
         imgElement.src = `assets/images/Character_Portrait/portrait_${characterName}_00.png`;
-    }
-    // Fallback final genérico si no se encuentra ninguna versión
-    else if (!currentSrc.includes('portrait_Verna_01.png')) {
-        imgElement.onerror = null; // Evitar bucle infinito de recargas
+    } else if (!currentSrc.includes('portrait_Verna_01.png')) {
+        imgElement.onerror = null;
         imgElement.src = 'assets/images/Character_Portrait/portrait_Verna_01.png';
     }
 }
 
-// Obtener la colección guardada en el dispositivo
 function getUserCollection() {
     return JSON.parse(localStorage.getItem('mongil_user_collection')) || {};
 }
 
-// Guardar la colección en el dispositivo y sincronizar con la nube si corresponde
 function setUserCollection(collection) {
     localStorage.setItem('mongil_user_collection', JSON.stringify(collection));
     if (typeof saveCloudData === 'function') {
@@ -30,7 +23,6 @@ function setUserCollection(collection) {
     }
 }
 
-// Alternar el estado de adquisición de un personaje (Obtenido / No obtenido)
 function toggleCharacterOwned(charId) {
     const collection = getUserCollection();
     if (!collection[charId]) {
@@ -42,7 +34,6 @@ function toggleCharacterOwned(charId) {
     renderCharacters();
 }
 
-// Cambiar nivel de Despertar / Duplicados (A0 - A6)
 function setCharacterDupes(charId, dupes) {
     const collection = getUserCollection();
     if (!collection[charId]) collection[charId] = { owned: true, dupes: 0, skillLevel: 1 };
@@ -52,12 +43,10 @@ function setCharacterDupes(charId, dupes) {
     renderCharacters();
 }
 
-// Obtener el número de columnas activo para la cuadrícula (Predeterminado: 2)
 function getGridCols() {
     return localStorage.getItem('mongil_grid_cols') || 2;
 }
 
-// Cambiar la cantidad de columnas (2, 3, 4 o 5)
 function setGridCols(cols) {
     localStorage.setItem('mongil_grid_cols', cols);
     updateGridButtons(cols);
@@ -77,7 +66,11 @@ function updateGridButtons(cols) {
     });
 }
 
-// Renderizar la cuadrícula de personajes
+// Vinculación de filtros con re-renderizado
+window.filterCharacters = function() {
+    renderCharacters();
+};
+
 function renderCharacters() {
     const container = document.getElementById('charGrid');
     if (!container || typeof charactersData === 'undefined') return;
@@ -86,7 +79,6 @@ function renderCharacters() {
     const cols = getGridCols();
     updateGridButtons(cols);
 
-    // Ajustar clases del Grid según las columnas seleccionadas
     const gridClasses = {
         2: "grid grid-cols-2",
         3: "grid grid-cols-3",
@@ -95,7 +87,6 @@ function renderCharacters() {
     };
     container.className = `${gridClasses[cols] || gridClasses[2]} gap-2 sm:gap-3`;
 
-    // Filtros
     const searchVal = (document.getElementById('charSearch')?.value || '').toLowerCase();
     const rarityVal = document.getElementById('charRarity')?.value || 'all';
     const roleVal = document.getElementById('charRole')?.value || 'all';
@@ -110,13 +101,11 @@ function renderCharacters() {
         return matchSearch && matchRarity && matchRole && matchElement;
     });
 
-    // Ordenamiento
     if (sortVal === 'az') filtered.sort((a,b) => a.name.localeCompare(b.name));
     if (sortVal === 'za') filtered.sort((a,b) => b.name.localeCompare(a.name));
     if (sortVal === 'rarity-desc') filtered.sort((a,b) => b.rarity.localeCompare(a.rarity));
     if (sortVal === 'rarity-asc') filtered.sort((a,b) => a.rarity.localeCompare(b.rarity));
 
-    // Conteo de personajes poseídos
     let totalOwned = 0;
     charactersData.forEach(c => {
         if (collection[c.id]?.owned) totalOwned++;
@@ -128,12 +117,9 @@ function renderCharacters() {
     const charCountEl = document.getElementById('charCount');
     if (charCountEl) charCountEl.innerText = `Mostrando: ${filtered.length}`;
 
-    // Renderizado HTML del catálogo
     container.innerHTML = filtered.map(c => {
         const userChar = collection[c.id] || { owned: false, dupes: 0 };
         const isOwned = userChar.owned;
-        
-        // Prioridad de la ruta de imagen
         const initialImagePath = `assets/images/Character_Portrait/portrait_${c.name}_00.png`;
 
         return `
@@ -169,7 +155,6 @@ function renderCharacters() {
     }).join('');
 }
 
-// Abrir Modal de detalles del personaje
 function openCharacterModal(charId) {
     const c = charactersData.find(item => item.id === charId);
     if (!c) return;
