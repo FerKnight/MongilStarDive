@@ -52,9 +52,9 @@ function setCharacterDupes(charId, dupes) {
     renderCharacters();
 }
 
-// Obtener el número de columnas activo para la cuadrícula
+// Obtener el número de columnas activo para la cuadrícula (Predeterminado: 2)
 function getGridCols() {
-    return localStorage.getItem('mongil_grid_cols') || 4;
+    return localStorage.getItem('mongil_grid_cols') || 2;
 }
 
 // Cambiar la cantidad de columnas (2, 3, 4 o 5)
@@ -93,7 +93,7 @@ function renderCharacters() {
         4: "grid grid-cols-2 sm:grid-cols-4",
         5: "grid grid-cols-2 sm:grid-cols-5"
     };
-    container.className = `${gridClasses[cols] || gridClasses[4]} gap-2 sm:gap-3`;
+    container.className = `${gridClasses[cols] || gridClasses[2]} gap-2 sm:gap-3`;
 
     // Filtros
     const searchVal = (document.getElementById('charSearch')?.value || '').toLowerCase();
