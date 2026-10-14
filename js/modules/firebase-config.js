@@ -7,7 +7,7 @@ import {
     get 
 } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
-// Configuración de Firebase
+// Tu configuración de Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyA7UOK8iqYZJhFI_7FELm22cV6tQs6JdBw",
     authDomain: "mongilstardive-7a70a.firebaseapp.com",
@@ -23,23 +23,20 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-window.tempCloudData = null; // Guardar datos de la nube temporalmente para la comparación
+window.tempCloudData = null; // Guardado temporal para resolver conflictos
 
-// Obtener la clave formateada del Código de Amistad
+// Formatear el Código de Amistad como clave válida de Firebase
 function getCleanFriendCode() {
     const savedProfile = JSON.parse(localStorage.getItem('mongil_player_profile')) || {};
     const code = savedProfile.friendCode ? savedProfile.friendCode.trim() : '';
     return code ? code.replace(/[^a-zA-Z0-9-_]/g, '_') : null;
 }
 
-// Subir datos actuales del dispositivo a la nube
+// Subir datos locales a la nube
 window.saveCloudData = function(force = false) {
     const friendCodeKey = getCleanFriendCode();
     
-    if (!friendCodeKey) {
-        if (typeof showToast === 'function') showToast('Debes vincular un Código de Amistad para sincronizar');
-        return;
-    }
+    if (!friendCodeKey) return;
 
     const payload = {
         collection: JSON.parse(localStorage.getItem('mongil_user_collection')) || {},
@@ -53,7 +50,7 @@ window.saveCloudData = function(force = false) {
     set(userRef, payload)
         .then(() => {
             updateCloudStatus(true);
-            if (typeof showToast === 'function') showToast('¡Nube actualizada con el progreso local!');
+            if (typeof showToast === 'function') showToast('¡Datos sincronizados en la nube!');
         })
         .catch((error) => {
             console.error("Error al guardar en Firebase:", error);
@@ -62,7 +59,7 @@ window.saveCloudData = function(force = false) {
         });
 };
 
-// Conectar con la nube y verificar si existen conflictos
+// Verificar la existencia de datos y detectar conflictos
 window.connectAndCheckSync = function(friendCode) {
     if (!friendCode) return;
     const cleanKey = friendCode.replace(/[^a-zA-Z0-9-_]/g, '_');
@@ -83,16 +80,14 @@ window.connectAndCheckSync = function(friendCode) {
                 const localCollection = localStorage.getItem('mongil_user_collection') || '{}';
                 const cloudCollection = JSON.stringify(cloudData.collection || {});
 
-                // Comprobar si existen diferencias entre la colección local y la de la nube
-                if (localCollection !== cloudCollection) {
+                // Si hay diferencias entre el progreso local y la nube, abrir modal de conflicto
+                if (localCollection !== cloudCollection && localCollection !== '{}') {
                     openConflictModal(cloudData);
                 } else {
-                    // Si son idénticos, actualizar sin preguntar
                     applyCloudData(cloudData);
                     if (typeof showToast === 'function') showToast('¡Sincronizado correctamente!');
                 }
             } else {
-                // Si la cuenta es nueva en la nube, subir el estado local actual
                 saveCloudData(true);
             }
         })
@@ -102,7 +97,7 @@ window.connectAndCheckSync = function(friendCode) {
         });
 };
 
-// Aplicar los datos descargados desde la nube al almacenamiento local
+// Aplicar los datos de la nube en el almacenamiento local
 window.applyCloudData = function(data) {
     if (!data) return;
 
