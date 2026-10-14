@@ -5,8 +5,7 @@ const charactersData = [
         element: "Fuego",
         role: "Luchador",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Luchadora de elemento Fuego con gran capacidad de daño continuo."
+        imageName: "Mina"
     },
     {
         id: "angel",
@@ -14,8 +13,7 @@ const charactersData = [
         element: "Fuego",
         role: "Asesino",
         rarity: "4★",
-        signatureWeapon: "No especificada",
-        description: "Asesina rápida de Fuego especializada en ataques críticos."
+        imageName: "Angel"
     },
     {
         id: "vivian",
@@ -23,8 +21,7 @@ const charactersData = [
         element: "Fuego",
         role: "Soporte",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Unidad de apoyo de Fuego para potenciar el ataque del equipo."
+        imageName: "Vivian"
     },
     {
         id: "flare",
@@ -32,8 +29,7 @@ const charactersData = [
         element: "Fuego",
         role: "Destructor",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Especialista en romper escudos e infligir gran daño en área."
+        imageName: "Flare"
     },
     {
         id: "s_verna",
@@ -41,8 +37,7 @@ const charactersData = [
         element: "Fuego",
         role: "Luchador",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Versión especial de verano de Verna de elemento Fuego."
+        imageName: "VernaSummer_01"
     },
     {
         id: "verna",
@@ -50,8 +45,7 @@ const charactersData = [
         element: "Fuego",
         role: "Luchador",
         rarity: "4★",
-        signatureWeapon: "No especificada",
-        description: "Luchadora equilibrada de elemento Fuego."
+        imageName: "Verna"
     },
     {
         id: "leeho",
@@ -59,8 +53,7 @@ const charactersData = [
         element: "Fuego",
         role: "Asesino",
         rarity: "4★",
-        signatureWeapon: "No especificada",
-        description: "Asesino de Fuego enfocado en infligir daño directo."
+        imageName: "Leeho"
     },
     {
         id: "narae",
@@ -68,8 +61,7 @@ const charactersData = [
         element: "Hielo",
         role: "Soporte",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Excelente soporte de Hielo que cura y otorga utilidad al grupo."
+        imageName: "Narae"
     },
     {
         id: "isabella",
@@ -77,8 +69,7 @@ const charactersData = [
         element: "Hielo",
         role: "Destructor",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Destructora de Hielo con alta capacidad de ruptura."
+        imageName: "Isabella"
     },
     {
         id: "ophelia",
@@ -86,8 +77,7 @@ const charactersData = [
         element: "Hielo",
         role: "Luchador",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Luchadora de Hielo resistente con gran pegada."
+        imageName: "Ophelia"
     },
     {
         id: "cloud",
@@ -95,8 +85,7 @@ const charactersData = [
         element: "Hielo",
         role: "Destructor",
         rarity: "4★",
-        signatureWeapon: "No especificada",
-        description: "Unidad de Hielo enfocada en control y neutralización."
+        imageName: "Cloud"
     },
     {
         id: "sera",
@@ -104,8 +93,7 @@ const charactersData = [
         element: "Hielo",
         role: "Luchador",
         rarity: "4★",
-        signatureWeapon: "No especificada",
-        description: "Luchadora de cuerpo a cuerpo de elemento Hielo."
+        imageName: "Sera"
     },
     {
         id: "penny",
@@ -113,8 +101,7 @@ const charactersData = [
         element: "Rayo",
         role: "Luchador",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Luchadora de Rayo con ataques veloces y continuos."
+        imageName: "Penny"
     },
     {
         id: "mabel",
@@ -122,8 +109,7 @@ const charactersData = [
         element: "Rayo",
         role: "Destructor",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Destructora de Rayo ideal para debilitar jefes."
+        imageName: "Mabel"
     },
     {
         id: "yeonhwa",
@@ -131,8 +117,7 @@ const charactersData = [
         element: "Rayo",
         role: "Asesino",
         rarity: "4★",
-        signatureWeapon: "No especificada",
-        description: "Asesina de Rayo que aplica reducción de defensa."
+        imageName: "Yeonhwa"
     },
     {
         id: "benjamin",
@@ -140,8 +125,7 @@ const charactersData = [
         element: "Rayo",
         role: "Asesino",
         rarity: "4★",
-        signatureWeapon: "No especificada",
-        description: "Unidad rápida de Rayo especializada en ráfagas de daño."
+        imageName: "Benjamin"
     },
     {
         id: "reina",
@@ -149,8 +133,7 @@ const charactersData = [
         element: "Rayo",
         role: "Destructor",
         rarity: "4★",
-        signatureWeapon: "No especificada",
-        description: "Destructora de Rayo enfocada en la ruptura de postura."
+        imageName: "Reina"
     },
     {
         id: "sangun",
@@ -158,8 +141,7 @@ const charactersData = [
         element: "Viento",
         role: "Luchador",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Luchador de Viento con alto impacto en combate."
+        imageName: "Sangun"
     },
     {
         id: "jiwon",
@@ -167,8 +149,7 @@ const charactersData = [
         element: "Viento",
         role: "Soporte",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Soporte de Viento para mejorar la velocidad y regeneración."
+        imageName: "Jiwon"
     },
     {
         id: "esther",
@@ -176,8 +157,7 @@ const charactersData = [
         element: "Viento",
         role: "Asesino",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Asesina de Viento con gran potencia de daño individual."
+        imageName: "Esther"
     },
     {
         id: "nagi",
@@ -185,8 +165,7 @@ const charactersData = [
         element: "Viento",
         role: "Destructor",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Destructor de Viento especializado en control del campo."
+        imageName: "Nagi"
     },
     {
         id: "bonnie",
@@ -194,8 +173,7 @@ const charactersData = [
         element: "Viento",
         role: "Soporte",
         rarity: "4★",
-        signatureWeapon: "No especificada",
-        description: "Unidad de apoyo de Viento útil para principiantes."
+        imageName: "Bonnie"
     },
     {
         id: "gabi",
@@ -203,8 +181,7 @@ const charactersData = [
         element: "Tierra",
         role: "Luchador",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Luchadora de Tierra resistente y con buen daño."
+        imageName: "Gabi"
     },
     {
         id: "brisshell",
@@ -212,8 +189,7 @@ const charactersData = [
         element: "Tierra",
         role: "Asesino",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Asesina de Tierra con potentes multiplicadores y reducción de defensa."
+        imageName: "Brisshell"
     },
     {
         id: "s_francis",
@@ -221,8 +197,7 @@ const charactersData = [
         element: "Tierra",
         role: "Soporte",
         rarity: "5★",
-        signatureWeapon: "No especificada",
-        description: "Versión especial veraniega de Francis con gran kit de apoyo."
+        imageName: "FrancisSummer_01"
     },
     {
         id: "francis",
@@ -230,8 +205,7 @@ const charactersData = [
         element: "Tierra",
         role: "Soporte",
         rarity: "4★",
-        signatureWeapon: "No especificada",
-        description: "Soporte universal de Tierra indispensable para supervivencia y potenciación."
+        imageName: "Francis"
     },
     {
         id: "daisy",
@@ -239,8 +213,7 @@ const charactersData = [
         element: "Tierra",
         role: "Soporte",
         rarity: "4★",
-        signatureWeapon: "No especificada",
-        description: "Unidad de apoyo de Tierra para potenciar al equipo."
+        imageName: "Daisy"
     },
     {
         id: "ellie",
@@ -248,7 +221,6 @@ const charactersData = [
         element: "Tierra",
         role: "Destructor",
         rarity: "4★",
-        signatureWeapon: "No especificada",
-        description: "Destructora de Tierra clave para romper jefes y potenciar el elemento."
+        imageName: "Ellie"
     }
 ];
