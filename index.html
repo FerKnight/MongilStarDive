@@ -76,7 +76,6 @@
                 <i class="fa-solid fa-bars"></i>
             </button>
             
-            <!-- Icono dinámico desde assets/images/Monsterling_Icons -->
             <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-purple-600 to-cyan-500 p-0.5 flex items-center justify-center overflow-hidden shadow-md">
                 <img id="headerDynamicIcon" src="" alt="Monsterling Icon" class="w-full h-full object-cover rounded-md bg-slate-900" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'font-title font-black text-white text-lg tracking-wider\'>M</span>'">
             </div>
@@ -277,7 +276,6 @@
         <section id="tab-equipamientos" class="content-section">
             <h2 class="font-title font-extrabold text-xl text-cyan-400 mb-3">EQUIPAMIENTOS</h2>
 
-            <!-- Barra de Filtros y Búsqueda para Equipamientos -->
             <div class="bg-brand-surface border border-white/10 rounded-xl p-3 mb-4 space-y-3">
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <div class="relative sm:col-span-1">
@@ -303,11 +301,57 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="equipGrid"></div>
         </section>
 
-        <!-- 4. MONSTERLINGS -->
+        <!-- 4. MONSTERLINGS (SOLO TÍTULO "MONSTERLINGS") -->
         <section id="tab-monsterlings" class="content-section">
-            <h2 class="font-title font-extrabold text-xl text-cyan-400 mb-1">CÓDICE DE MONSTERLINGS</h2>
-            <p class="text-xs text-slate-400 mb-4">Criaturas capturables del Archipiélago de Gaba y Belana</p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="monsterGrid"></div>
+            <h2 class="font-title font-extrabold text-xl text-cyan-400 mb-3">MONSTERLINGS</h2>
+
+            <!-- Panel de Filtros para Monsterlings -->
+            <div class="bg-brand-surface border border-white/10 rounded-xl p-3 mb-4 space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                    <!-- Búsqueda por Nombre -->
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                        <input type="text" id="monsterSearch" oninput="renderMonsterlings()" placeholder="Buscar monsterling..." class="w-full bg-brand-card border border-white/10 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+                    </div>
+
+                    <!-- Filtro por Región -->
+                    <div>
+                        <select id="monsterRegionFilter" onchange="renderMonsterlings()" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+                            <option value="all">Todas las regiones</option>
+                            <option value="Isla del Despertar">Isla del Despertar</option>
+                            <option value="Plaza del Templo">Plaza del Templo</option>
+                            <option value="Planicies del Silencio">Planicies del Silencio</option>
+                            <option value="Puerto de Garras">Puerto de Garras</option>
+                            <option value="Ruinas de Ankora">Ruinas de Ankora</option>
+                            <option value="Valle de las Sombras">Valle de las Sombras</option>
+                            <option value="Montaña de Hielo">Montaña de Hielo</option>
+                            <option value="Cumbre Celestial">Cumbre Celestial</option>
+                        </select>
+                    </div>
+
+                    <!-- Filtro por Cadena de Enlace -->
+                    <div>
+                        <select id="monsterChainFilter" onchange="renderMonsterlings()" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+                            <option value="all">Todas las cadenas</option>
+                            <option value="withChain">Con Cadena de Enlace</option>
+                            <option value="noChain">Sin Cadena de Enlace</option>
+                        </select>
+                    </div>
+
+                    <!-- Ordenamiento -->
+                    <div>
+                        <select id="monsterSort" onchange="renderMonsterlings()" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+                            <option value="az">Por defecto (A - Z)</option>
+                            <option value="za">Nombre: Z - A</option>
+                            <option value="numAsc">Número: Ascendente</option>
+                            <option value="numDesc">Número: Descendente</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla/Lista de Monsterlings -->
+            <div id="monsterListContainer" class="space-y-2"></div>
         </section>
 
         <!-- 5. ARTEFACTOS -->
