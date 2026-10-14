@@ -8,16 +8,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Renderizar equipamientos
     renderEquipment();
 
-    // 4. Renderizar otras secciones generales
+    // 4. Renderizar Monsterlings
+    renderMonsterlings();
+
+    // 5. Renderizar otras secciones generales
     if (typeof renderAll === 'function') renderAll();
 
-    // 5. Recuperar la última pestaña activa (por defecto 'inicio')
+    // 6. Recuperar la última pestaña activa (por defecto 'inicio')
     const savedTab = localStorage.getItem('mongil_active_tab') || 'inicio';
     if (typeof switchTab === 'function') {
         switchTab(savedTab);
     }
 
-    // 6. Cambiar aleatoriamente el icono superior desde assets/images/Monsterling_Icons al recargar
+    // 7. Cambiar aleatoriamente el icono superior desde assets/images/Monsterling_Icons al recargar
     initHeaderMonsterlingIcon();
 });
 
@@ -58,10 +61,8 @@ function renderEquipment() {
         let matchPieces = true;
         
         if (piecesVal === '2') {
-            // Solo aquellos que TENGAN 2 piezas y NO TENGAN 4 piezas
             matchPieces = !!eq.effect2 && !eq.effect4;
         } else if (piecesVal === '4') {
-            // Solo aquellos que TENGAN efecto de 4 piezas
             matchPieces = !!eq.effect4;
         }
         
@@ -110,6 +111,76 @@ function renderEquipment() {
                             <p class="text-slate-300 leading-relaxed">${eq.effect4}</p>
                         </div>
                     ` : ''}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Renderizado y filtrado de Monsterlings
+function renderMonsterlings() {
+    const container = document.getElementById('monsterListContainer');
+    if (!container || typeof monsterlingsData === 'undefined') return;
+
+    const searchVal = (document.getElementById('monsterSearch')?.value || '').toLowerCase();
+    const regionVal = document.getElementById('monsterRegionFilter')?.value || 'all';
+    const chainVal = document.getElementById('monsterChainFilter')?.value || 'all';
+    const sortVal = document.getElementById('monsterSort')?.value || 'az';
+
+    let filtered = monsterlingsData.filter(m => {
+        const matchSearch = m.name.toLowerCase().includes(searchVal);
+        const matchRegion = regionVal === 'all' || m.region === regionVal;
+        
+        let matchChain = true;
+        if (chainVal === 'withChain') {
+            matchChain = m.chain !== '-';
+        } else if (chainVal === 'noChain') {
+            matchChain = m.chain === '-';
+        }
+
+        return matchSearch && matchRegion && matchChain;
+    });
+
+    // Ordenamiento
+    if (sortVal === 'az') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortVal === 'za') {
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+    } else if (sortVal === 'numAsc') {
+        filtered.sort((a, b) => parseInt(a.nro) - parseInt(b.nro));
+    } else if (sortVal === 'numDesc') {
+        filtered.sort((a, b) => parseInt(b.nro) - parseInt(a.nro));
+    }
+
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <div class="py-8 text-center text-slate-500 text-xs">
+                No se encontraron monsterlings con los filtros aplicados.
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = filtered.map(m => `
+        <div class="bg-brand-surface border border-white/10 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:border-cyan-400/40 transition">
+            <div class="flex items-center gap-3">
+                <span class="font-mono font-bold text-xs text-cyan-400 bg-cyan-950/60 px-2 py-1 rounded border border-cyan-500/30">
+                    N° ${m.nro}
+                </span>
+                <span class="font-title font-bold text-sm text-slate-100">
+                    ${m.name}
+                </span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 text-xs">
+                <div class="bg-brand-card px-2.5 py-1 rounded-lg border border-white/5">
+                    <span class="text-[10px] text-slate-400 block font-semibold">Efecto Rango</span>
+                    <span class="text-slate-200 font-medium">${m.effect}</span>
+                </div>
+
+                <div class="bg-brand-card px-2.5 py-1 rounded-lg border border-white/5">
+                    <span class="text-[10px] text-slate-400 block font-semibold">Cadena de Enlace</span>
+                    <span class="${m.chain !== '-' ? 'text-purple-300 font-bold' : 'text-slate-500'}">${m.chain}</span>
                 </div>
             </div>
         </div>
