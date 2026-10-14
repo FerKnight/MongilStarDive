@@ -119,7 +119,7 @@
                     <i class="fa-solid fa-users text-sm w-5"></i> Personajes
                 </button>
                 <button onclick="switchTab('equipamientos'); toggleSidebar();" class="sidebar-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:bg-brand-card hover:text-cyan-400 transition" id="nav-equipamientos">
-                    <i class="fa-solid fa-shield-halved text-sm w-5"></i> Equipos y Armas
+                    <i class="fa-solid fa-shield-halved text-sm w-5"></i> Equipamientos
                 </button>
                 <button onclick="switchTab('monsterlings'); toggleSidebar();" class="sidebar-nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:bg-brand-card hover:text-cyan-400 transition" id="nav-monsterlings">
                     <i class="fa-solid fa-paw text-sm w-5"></i> Monsterlings
@@ -275,8 +275,31 @@
 
         <!-- 3. EQUIPAMIENTOS -->
         <section id="tab-equipamientos" class="content-section">
-            <h2 class="font-title font-extrabold text-xl text-cyan-400 mb-1">EQUIPAMIENTOS Y ARMAS</h2>
-            <p class="text-xs text-slate-400 mb-4">Arsenal para maximizar el poder de combate</p>
+            <h2 class="font-title font-extrabold text-xl text-cyan-400 mb-3">EQUIPAMIENTOS</h2>
+
+            <!-- Barra de Filtros y Búsqueda para Equipamientos -->
+            <div class="bg-brand-surface border border-white/10 rounded-xl p-3 mb-4 space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div class="relative sm:col-span-1">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                        <input type="text" id="equipSearch" oninput="renderEquipment()" placeholder="Buscar conjunto..." class="w-full bg-brand-card border border-white/10 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+                    </div>
+                    <div>
+                        <select id="equipPiecesFilter" onchange="renderEquipment()" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+                            <option value="all">Todos los conjuntos</option>
+                            <option value="2">Solo con Conjunto de 2 piezas</option>
+                            <option value="4">Solo con Conjunto de 4 piezas</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="equipSort" onchange="renderEquipment()" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+                            <option value="az">Por defecto (A - Z)</option>
+                            <option value="za">Nombre: Z - A</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="equipGrid"></div>
         </section>
 
