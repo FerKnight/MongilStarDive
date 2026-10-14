@@ -1,11 +1,12 @@
+// Abrir modal de selección de avatares utilizando el sistema de fallback inteligente
 function openAvatarSelectorModal() {
     const modal = document.getElementById('avatarModal');
     const grid = document.getElementById('avatarGrid');
 
     if (grid && typeof charactersData !== 'undefined') {
         grid.innerHTML = charactersData.map(c => `
-            <div onclick="selectAvatarImage('${c.image}')" class="aspect-square rounded-xl bg-slate-900 border border-white/10 hover:border-cyan-400 overflow-hidden cursor-pointer transition transform active:scale-95 group relative">
-                <img src="${c.image}" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-200" onerror="handleImageError(this, '${c.name}')">
+            <div onclick="selectAvatarImage('assets/images/Character_Portrait/portrait_${c.name}_00.png', '${c.name}')" class="aspect-square rounded-xl bg-slate-900 border border-white/10 hover:border-cyan-400 overflow-hidden cursor-pointer transition transform active:scale-95 group relative">
+                <img src="assets/images/Character_Portrait/portrait_${c.name}_00.png" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-200" onerror="handleImageError(this, '${c.name}')">
                 <span class="absolute bottom-0 inset-x-0 bg-black/80 text-slate-200 text-[8px] text-center font-semibold truncate py-0.5 px-1">${c.name}</span>
             </div>
         `).join('');
@@ -25,10 +26,12 @@ function closeAvatarSelectorModal() {
     }
 }
 
-function selectAvatarImage(imagePath) {
+function selectAvatarImage(imagePath, characterName) {
     const imgEl = document.getElementById('avatarImg');
     if (imgEl) {
         imgEl.src = imagePath;
+        // Asignar el listener de error en el elemento seleccionado por si la ruta _00.png no existe
+        imgEl.onerror = function() { handleImageError(this, characterName); };
     }
     closeAvatarSelectorModal();
     saveProfile();
@@ -67,7 +70,6 @@ function loadProfile() {
             if (avatarImg) avatarImg.src = profile.avatar;
         }
 
-        // Mostrar estado según si está vinculado a la nube o no
         if (profile.friendCode) {
             if (syncStatusBadge) syncStatusBadge.innerText = "Sincronizado por Código";
             if (authBox) authBox.classList.add('hidden');
@@ -80,7 +82,7 @@ function loadProfile() {
     }
 }
 
-// Iniciar sesión / Vincular con Código de Amistad
+// Conectar Código de Amistad
 function handleLoginSubmit() {
     const nameInput = document.getElementById('loginName');
     const codeInput = document.getElementById('loginCode');
@@ -108,7 +110,7 @@ function handleLoginSubmit() {
     }
 }
 
-// Cerrar Sesión y regresar al Modo Local Anónimo
+// Desconectar cuenta y regresar a Modo Local
 function handleUnlinkAccount() {
     localStorage.removeItem('mongil_player_profile');
     loadProfile();
@@ -120,7 +122,7 @@ function handleUnlinkAccount() {
     if (typeof showToast === 'function') showToast('Desconectado de la nube (Modo Local)');
 }
 
-// Abrir Modal de Conflicto de Datos
+// Modal de conflicto de datos
 function openConflictModal(cloudData) {
     const modal = document.getElementById('conflictModal');
     const cloudDateEl = document.getElementById('cloudLastUpdated');
@@ -136,7 +138,6 @@ function openConflictModal(cloudData) {
     }
 }
 
-// Elección 1 del Usuario: Aceptar datos de la Nube
 function resolveConflictUseCloud() {
     if (window.tempCloudData && typeof applyCloudData === 'function') {
         applyCloudData(window.tempCloudData);
@@ -145,7 +146,6 @@ function resolveConflictUseCloud() {
     closeConflictModal();
 }
 
-// Elección 2 del Usuario: Sobrescribir la Nube con los datos Locales
 function resolveConflictUseLocal() {
     if (typeof saveCloudData === 'function') {
         saveCloudData(true);
