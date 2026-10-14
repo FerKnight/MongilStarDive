@@ -35,7 +35,6 @@ function selectAvatarImage(imagePath, characterName) {
     saveProfile();
 }
 
-// Guardado local instantáneo y automático a la nube si hay código
 function saveProfile() {
     const avatarImg = document.getElementById('avatarImg');
     const profile = {
@@ -47,13 +46,11 @@ function saveProfile() {
     
     localStorage.setItem('mongil_player_profile', JSON.stringify(profile));
     
-    // Guardado automático en la nube
     if (typeof saveCloudData === 'function') {
         saveCloudData();
     }
 }
 
-// Evento al modificar el código de amistad (detecta si ya existe en la nube)
 function handleFriendCodeInput() {
     saveProfile();
     const code = document.getElementById('pFriendCode').value.trim();
@@ -76,7 +73,6 @@ function loadProfile() {
     }
 }
 
-// Modal de resolución de conflictos
 function openConflictModal(cloudData) {
     const modal = document.getElementById('conflictModal');
     const cloudDateEl = document.getElementById('cloudLastUpdated');
