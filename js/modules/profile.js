@@ -44,15 +44,19 @@ function saveProfile() {
     };
     localStorage.setItem('mongil_player_profile', JSON.stringify(profile));
     
-    if (typeof saveCloudData === 'function') {
+    if (profile.friendCode && typeof saveCloudData === 'function') {
         saveCloudData();
     } else if (typeof showToast === 'function') {
-        showToast('Perfil guardado localmente');
+        showToast('Guardado localmente');
     }
 }
 
 function loadProfile() {
     const saved = localStorage.getItem('mongil_player_profile');
+    const syncStatusBadge = document.getElementById('syncStatusBadge');
+    const authBox = document.getElementById('authBox');
+    const profileBox = document.getElementById('profileBox');
+
     if (saved) {
         const profile = JSON.parse(saved);
         if (profile.name && document.getElementById('pName')) document.getElementById('pName').value = profile.name;
@@ -62,71 +66,100 @@ function loadProfile() {
             const avatarImg = document.getElementById('avatarImg');
             if (avatarImg) avatarImg.src = profile.avatar;
         }
+
+        // Mostrar estado según si está vinculado a la nube o no
+        if (profile.friendCode) {
+            if (syncStatusBadge) syncStatusBadge.innerText = "Sincronizado por Código";
+            if (authBox) authBox.classList.add('hidden');
+            if (profileBox) profileBox.classList.remove('hidden');
+        } else {
+            if (syncStatusBadge) syncStatusBadge.innerText = "Modo Local Anónimo";
+            if (authBox) authBox.classList.remove('hidden');
+            if (profileBox) profileBox.classList.add('hidden');
+        }
     }
 }
 
-// Abrir modal de gestión de cuentas
-function openAccountModal() {
-    const modal = document.getElementById('accountModal');
+// Iniciar sesión / Vincular con Código de Amistad
+function handleLoginSubmit() {
+    const nameInput = document.getElementById('loginName');
+    const codeInput = document.getElementById('loginCode');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    const code = codeInput ? codeInput.value.trim() : '';
+
+    if (!code) {
+        if (typeof showToast === 'function') showToast('Ingresa un Código de Amistad');
+        return;
+    }
+
+    const profile = {
+        name: name || 'DiveMaster',
+        friendCode: code,
+        message: '¡Explorando Belana!',
+        avatar: 'assets/images/Character_Portrait/portrait_Verna_01.png'
+    };
+
+    localStorage.setItem('mongil_player_profile', JSON.stringify(profile));
+    loadProfile();
+
+    if (typeof connectAndCheckSync === 'function') {
+        connectAndCheckSync(code);
+    }
+}
+
+// Cerrar Sesión y regresar al Modo Local Anónimo
+function handleUnlinkAccount() {
+    localStorage.removeItem('mongil_player_profile');
+    loadProfile();
+    const statusEl = document.getElementById('cloudSyncStatus');
+    if (statusEl) {
+        statusEl.className = "inline-block w-2 h-2 rounded-full bg-slate-500";
+        statusEl.title = "Modo Local (Offline)";
+    }
+    if (typeof showToast === 'function') showToast('Desconectado de la nube (Modo Local)');
+}
+
+// Abrir Modal de Conflicto de Datos
+function openConflictModal(cloudData) {
+    const modal = document.getElementById('conflictModal');
+    const cloudDateEl = document.getElementById('cloudLastUpdated');
+    
+    if (cloudDateEl && cloudData.lastUpdated) {
+        const date = new Date(cloudData.lastUpdated);
+        cloudDateEl.innerText = date.toLocaleString();
+    }
+
     if (modal) {
         modal.classList.remove('hidden');
         modal.classList.add('flex');
     }
 }
 
-// Cerrar modal de gestión de cuentas
-function closeAccountModal() {
-    const modal = document.getElementById('accountModal');
+// Elección 1 del Usuario: Aceptar datos de la Nube
+function resolveConflictUseCloud() {
+    if (window.tempCloudData && typeof applyCloudData === 'function') {
+        applyCloudData(window.tempCloudData);
+        if (typeof showToast === 'function') showToast('¡Datos cargados desde la Nube!');
+    }
+    closeConflictModal();
+}
+
+// Elección 2 del Usuario: Sobrescribir la Nube con los datos Locales
+function resolveConflictUseLocal() {
+    if (typeof saveCloudData === 'function') {
+        saveCloudData(true);
+        if (typeof showToast === 'function') showToast('¡Nube sobrescrita con el avance local!');
+    }
+    closeConflictModal();
+}
+
+function closeConflictModal() {
+    const modal = document.getElementById('conflictModal');
     if (modal) {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
     }
-}
-
-// Lógica para cambiar a un nuevo código de amistad
-function switchAccountByCode() {
-    const inputCode = document.getElementById('switchCodeInput');
-    const newCode = inputCode ? inputCode.value.trim() : '';
-
-    if (!newCode) {
-        if (typeof showToast === 'function') showToast('Ingresa un Código de Amistad válido');
-        return;
-    }
-
-    // Actualizar el campo en la vista
-    const currentCodeInput = document.getElementById('pFriendCode');
-    if (currentCodeInput) currentCodeInput.value = newCode;
-
-    // Guardar perfil y cargar datos desde la nube
-    saveProfile();
-    if (typeof loadCloudData === 'function') {
-        loadCloudData(() => {
-            closeAccountModal();
-            if (inputCode) inputCode.value = '';
-        });
-    }
-}
-
-// Lógica para generar un perfil totalmente nuevo
-function createNewAccount() {
-    const randomNum = Math.floor(100000 + Math.random() * 900000);
-    const newCode = `STARDIVE-${randomNum}`;
-    
-    // Limpiar almacenamiento local
-    localStorage.setItem('mongil_user_collection', JSON.stringify({}));
-    
-    const currentCodeInput = document.getElementById('pFriendCode');
-    if (currentCodeInput) currentCodeInput.value = newCode;
-
-    const currentNameInput = document.getElementById('pName');
-    if (currentNameInput) currentNameInput.value = `DiveMaster_${randomNum.toString().slice(-3)}`;
-
-    saveProfile();
-    closeAccountModal();
-    
-    if (typeof renderCharacters === 'function') renderCharacters();
-    if (typeof renderAll === 'function') renderAll();
-    if (typeof showToast === 'function') showToast('¡Nueva cuenta creada!');
 }
 
 function copyField(elementId) {
