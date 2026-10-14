@@ -1,3 +1,4 @@
+// Abrir modal de selección de avatares
 function openAvatarSelectorModal() {
     const modal = document.getElementById('avatarModal');
     const grid = document.getElementById('avatarGrid');
@@ -35,6 +36,7 @@ function selectAvatarImage(imagePath, characterName) {
     saveProfile();
 }
 
+// Guardado local automático instantáneo al escribir o elegir avatar
 function saveProfile() {
     const avatarImg = document.getElementById('avatarImg');
     const profile = {
@@ -45,20 +47,9 @@ function saveProfile() {
     };
     
     localStorage.setItem('mongil_player_profile', JSON.stringify(profile));
-    
-    if (typeof saveCloudData === 'function') {
-        saveCloudData();
-    }
 }
 
-function handleFriendCodeInput() {
-    saveProfile();
-    const code = document.getElementById('pFriendCode').value.trim();
-    if (code.length >= 4 && typeof checkCodeAndSync === 'function') {
-        checkCodeAndSync(code);
-    }
-}
-
+// Cargar perfil guardado localmente
 function loadProfile() {
     const saved = localStorage.getItem('mongil_player_profile');
     if (saved) {
@@ -70,45 +61,6 @@ function loadProfile() {
             const avatarImg = document.getElementById('avatarImg');
             if (avatarImg) avatarImg.src = profile.avatar;
         }
-    }
-}
-
-function openConflictModal(cloudData) {
-    const modal = document.getElementById('conflictModal');
-    const cloudDateEl = document.getElementById('cloudLastUpdated');
-    
-    if (cloudDateEl && cloudData.lastUpdated) {
-        const date = new Date(cloudData.lastUpdated);
-        cloudDateEl.innerText = date.toLocaleString();
-    }
-
-    if (modal) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-    }
-}
-
-function resolveConflictUseCloud() {
-    if (window.tempCloudData && typeof applyCloudData === 'function') {
-        applyCloudData(window.tempCloudData);
-        if (typeof showToast === 'function') showToast('¡Datos cargados desde la Nube!');
-    }
-    closeConflictModal();
-}
-
-function resolveConflictUseLocal() {
-    if (typeof saveCloudData === 'function') {
-        saveCloudData(true);
-        if (typeof showToast === 'function') showToast('¡Nube sobrescrita con tu sesión actual!');
-    }
-    closeConflictModal();
-}
-
-function closeConflictModal() {
-    const modal = document.getElementById('conflictModal');
-    if (modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
     }
 }
 
