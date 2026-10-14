@@ -1,381 +1,226 @@
-let userCollection = JSON.parse(localStorage.getItem('mongil_user_collection')) || {};
-let gridCols = parseInt(localStorage.getItem('mongil_grid_cols')) || 4;
-
-function setGridCols(num) {
-    gridCols = num;
-    localStorage.setItem('mongil_grid_cols', num);
-    updateGridColsUI();
-    filterCharacters();
-    if (typeof saveCloudData === 'function') saveCloudData();
+// Manejo inteligente de fallback de imágenes con prioridad _00.png -> _01.png -> Verna
+function handleImageError(imgElement, characterName) {
+    const currentSrc = imgElement.src;
+    
+    // Si la imagen falló intentando cargar el sufijo _00.png, probamos con _01.png
+    if (currentSrc.includes('_00.png')) {
+        imgElement.src = currentSrc.replace('_00.png', '_01.png');
+    } 
+    // Si falló _01.png o no tenía _00.png, probamos directamente con _00.png
+    else if (!currentSrc.includes('_00.png') && !currentSrc.includes('portrait_Verna_01.png')) {
+        imgElement.src = `assets/images/Character_Portrait/portrait_${characterName}_00.png`;
+    }
+    // Fallback final genérico si no se encuentra ninguna versión
+    else if (!currentSrc.includes('portrait_Verna_01.png')) {
+        imgElement.onerror = null; // Evitar bucle infinito de recargas
+        imgElement.src = 'assets/images/Character_Portrait/portrait_Verna_01.png';
+    }
 }
 
-function updateGridColsUI() {
-    [2, 3, 4, 5].forEach(n => {
-        const btn = document.getElementById(`colBtn${n}`);
-        if (btn) {
-            if (n === gridCols) {
-                btn.className = "px-2 py-0.5 text-xs font-extrabold rounded transition bg-cyan-500 text-white shadow-md shadow-cyan-950/50";
-            } else {
-                btn.className = "px-2 py-0.5 text-xs font-bold rounded transition text-slate-400 hover:bg-slate-700 hover:text-slate-200";
-            }
-        }
-    });
+// Obtener la colección guardada en el dispositivo
+function getUserCollection() {
+    return JSON.parse(localStorage.getItem('mongil_user_collection')) || {};
 }
 
-function saveUserCollection() {
-    localStorage.setItem('mongil_user_collection', JSON.stringify(userCollection));
-    updateOwnedCounter();
+// Guardar la colección en el dispositivo y sincronizar con la nube si corresponde
+function setUserCollection(collection) {
+    localStorage.setItem('mongil_user_collection', JSON.stringify(collection));
     if (typeof saveCloudData === 'function') {
         saveCloudData();
     }
 }
 
-function updateOwnedCounter() {
-    const totalChars = charactersData.length;
-    let ownedChars = 0;
-    
-    charactersData.forEach(c => {
-        if (userCollection[c.id] && userCollection[c.id].owned) {
-            ownedChars++;
-        }
-    });
-
-    const ownedBadge = document.getElementById('ownedCount');
-    if (ownedBadge) {
-        ownedBadge.innerText = `${ownedChars}/${totalChars}`;
-    }
-}
-
-function getCharData(id) {
-    if (!userCollection[id]) {
-        userCollection[id] = {
-            owned: false,
-            awakening: 0,
-            skills: { basic: 1, relay: 1, special: 1, charged: 1 },
-            equip: [null, null, null, null],
-            artifact: null,
-            monsterlings: { link: null, normal1: null, normal2: null, legendary: null }
-        };
-    }
-    if (!userCollection[id].equip) userCollection[id].equip = [null, null, null, null];
-    if (!userCollection[id].monsterlings) {
-        userCollection[id].monsterlings = { link: null, normal1: null, normal2: null, legendary: null };
-    }
-    return userCollection[id];
-}
-
-function getMaxSkillLevel(awakening) {
-    if (awakening >= 5) return 16;
-    if (awakening >= 3) return 14;
-    return 12;
-}
-
-function toggleCharOwned(event, id) {
-    if (event) event.stopPropagation();
-    const data = getCharData(id);
-    data.owned = !data.owned;
-    saveUserCollection();
-    filterCharacters();
-    
-    const modal = document.getElementById('charModal');
-    if (modal && !modal.classList.contains('hidden')) {
-        openCharacterModal(id);
-    }
-}
-
-function changeAwakening(id, delta) {
-    const data = getCharData(id);
-    if (!data.owned) return;
-
-    let newVal = (data.awakening || 0) + delta;
-    if (newVal < 0) newVal = 0;
-    if (newVal > 6) newVal = 6;
-    data.awakening = newVal;
-
-    const maxSkill = getMaxSkillLevel(newVal);
-    ['basic', 'relay', 'special', 'charged'].forEach(s => {
-        if (data.skills[s] > maxSkill) {
-            data.skills[s] = maxSkill;
-        }
-    });
-
-    saveUserCollection();
-    openCharacterModal(id);
-    filterCharacters();
-}
-
-function changeSkillLevel(id, skillType, delta) {
-    const data = getCharData(id);
-    if (!data.owned) return;
-
-    const maxSkill = getMaxSkillLevel(data.awakening || 0);
-    let current = data.skills[skillType] || 1;
-    let newVal = current + delta;
-
-    if (newVal < 1) newVal = 1;
-    if (newVal > maxSkill) newVal = maxSkill;
-
-    data.skills[skillType] = newVal;
-    saveUserCollection();
-    openCharacterModal(id);
-    filterCharacters();
-}
-
-function handleImageError(img, characterName) {
-    if (img.src.includes('_00.png')) {
-        img.src = img.src.replace('_00.png', '_01.png');
+// Alternar el estado de adquisición de un personaje (Obtenido / No obtenido)
+function toggleCharacterOwned(charId) {
+    const collection = getUserCollection();
+    if (!collection[charId]) {
+        collection[charId] = { owned: true, dupes: 0, skillLevel: 1 };
     } else {
-        img.onerror = null;
-        img.src = 'assets/images/Character_Portrait/portrait_Verna_01.png';
+        collection[charId].owned = !collection[charId].owned;
     }
+    setUserCollection(collection);
+    renderCharacters();
 }
 
-function getElementIconHTML(element) {
-    let iconFile = 'fire.png';
-    switch (element) {
-        case 'Fuego': iconFile = 'fire.png'; break;
-        case 'Hielo': iconFile = 'ice.png'; break;
-        case 'Rayo': iconFile = 'lightning.png'; break;
-        case 'Viento': iconFile = 'wind.png'; break;
-        case 'Tierra': iconFile = 'earth.png'; break;
-    }
-    const path = `assets/images/elements/icons/${iconFile}`;
-    return `<img src="${path}" alt="${element}" title="${element}" class="w-4 h-4 object-contain inline-block">`;
+// Cambiar nivel de Despertar / Duplicados (A0 - A6)
+function setCharacterDupes(charId, dupes) {
+    const collection = getUserCollection();
+    if (!collection[charId]) collection[charId] = { owned: true, dupes: 0, skillLevel: 1 };
+    collection[charId].dupes = parseInt(dupes);
+    collection[charId].owned = true;
+    setUserCollection(collection);
+    renderCharacters();
 }
 
-function filterCharacters() {
-    updateGridColsUI();
-    const searchInput = document.getElementById('charSearch');
-    const sortSelect = document.getElementById('charSort');
-    const raritySelect = document.getElementById('charRarity');
-    const roleSelect = document.getElementById('charRole');
-    const elementSelect = document.getElementById('charElement');
+// Obtener el número de columnas activo para la cuadrícula
+function getGridCols() {
+    return localStorage.getItem('mongil_grid_cols') || 4;
+}
 
-    const searchVal = searchInput ? searchInput.value.trim().toLowerCase() : '';
-    const sortVal = sortSelect ? sortSelect.value : 'default';
-    const rarityVal = raritySelect ? raritySelect.value : 'all';
-    const roleVal = roleSelect ? roleSelect.value : 'all';
-    const elementVal = elementSelect ? elementSelect.value : 'all';
+// Cambiar la cantidad de columnas (2, 3, 4 o 5)
+function setGridCols(cols) {
+    localStorage.setItem('mongil_grid_cols', cols);
+    updateGridButtons(cols);
+    renderCharacters();
+}
+
+function updateGridButtons(cols) {
+    [2, 3, 4, 5].forEach(c => {
+        const btn = document.getElementById(`colBtn${c}`);
+        if (btn) {
+            if (parseInt(c) === parseInt(cols)) {
+                btn.className = "px-2 py-0.5 text-xs font-bold rounded bg-cyan-500 text-slate-900 shadow";
+            } else {
+                btn.className = "px-2 py-0.5 text-xs font-bold rounded text-slate-400 hover:bg-slate-700 transition";
+            }
+        }
+    });
+}
+
+// Renderizar la cuadrícula de personajes
+function renderCharacters() {
+    const container = document.getElementById('charGrid');
+    if (!container || typeof charactersData === 'undefined') return;
+
+    const collection = getUserCollection();
+    const cols = getGridCols();
+    updateGridButtons(cols);
+
+    // Ajustar clases del Grid según las columnas seleccionadas
+    const gridClasses = {
+        2: "grid grid-cols-2",
+        3: "grid grid-cols-3",
+        4: "grid grid-cols-2 sm:grid-cols-4",
+        5: "grid grid-cols-2 sm:grid-cols-5"
+    };
+    container.className = `${gridClasses[cols] || gridClasses[4]} gap-2 sm:gap-3`;
+
+    // Filtros
+    const searchVal = (document.getElementById('charSearch')?.value || '').toLowerCase();
+    const rarityVal = document.getElementById('charRarity')?.value || 'all';
+    const roleVal = document.getElementById('charRole')?.value || 'all';
+    const elementVal = document.getElementById('charElement')?.value || 'all';
+    const sortVal = document.getElementById('charSort')?.value || 'default';
 
     let filtered = charactersData.filter(c => {
-        const matchName = c.name.toLowerCase().includes(searchVal);
+        const matchSearch = c.name.toLowerCase().includes(searchVal);
         const matchRarity = rarityVal === 'all' || c.rarity === rarityVal;
         const matchRole = roleVal === 'all' || c.role === roleVal;
         const matchElement = elementVal === 'all' || c.element === elementVal;
-        return matchName && matchRarity && matchRole && matchElement;
+        return matchSearch && matchRarity && matchRole && matchElement;
     });
 
-    if (sortVal === 'default' || sortVal === 'az') {
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortVal === 'za') {
-        filtered.sort((a, b) => b.name.localeCompare(a.name));
-    } else if (sortVal === 'rarity-desc') {
-        filtered.sort((a, b) => b.rarity.localeCompare(a.rarity) || a.name.localeCompare(b.name));
-    } else if (sortVal === 'rarity-asc') {
-        filtered.sort((a, b) => b.rarity.localeCompare(b.rarity) || a.name.localeCompare(b.name));
-    }
+    // Ordenamiento
+    if (sortVal === 'az') filtered.sort((a,b) => a.name.localeCompare(b.name));
+    if (sortVal === 'za') filtered.sort((a,b) => b.name.localeCompare(a.name));
+    if (sortVal === 'rarity-desc') filtered.sort((a,b) => b.rarity.localeCompare(a.rarity));
+    if (sortVal === 'rarity-asc') filtered.sort((a,b) => a.rarity.localeCompare(b.rarity));
 
-    renderCharacterGrid(filtered);
-}
+    // Conteo de personajes poseídos
+    let totalOwned = 0;
+    charactersData.forEach(c => {
+        if (collection[c.id]?.owned) totalOwned++;
+    });
 
-function renderCharacterGrid(list) {
-    const charGrid = document.getElementById('charGrid');
-    const charCount = document.getElementById('charCount');
-    
-    if (charCount) charCount.innerText = `Mostrando: ${list.length}`;
-    if (!charGrid) return;
+    const ownedCountEl = document.getElementById('ownedCount');
+    if (ownedCountEl) ownedCountEl.innerText = `${totalOwned}/${charactersData.length}`;
 
-    if (list.length === 0) {
-        charGrid.className = "grid grid-cols-1 gap-3";
-        charGrid.innerHTML = `
-            <div class="col-span-full py-8 text-center text-slate-400 text-xs font-medium">
-                <i class="fa-solid fa-filter-circle-xmark text-2xl mb-2 text-slate-500 block"></i>
-                No se encontraron personajes con los filtros seleccionados.
-            </div>
-        `;
-        return;
-    }
+    const charCountEl = document.getElementById('charCount');
+    if (charCountEl) charCountEl.innerText = `Mostrando: ${filtered.length}`;
 
-    let gridColsClass = "grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-1.5 sm:gap-3";
-    switch(gridCols) {
-        case 2:
-            gridColsClass = "grid grid-cols-2 gap-2 sm:gap-3";
-            break;
-        case 3:
-            gridColsClass = "grid grid-cols-3 gap-2 sm:gap-3";
-            break;
-        case 4:
-            gridColsClass = "grid grid-cols-4 gap-1.5 sm:gap-3";
-            break;
-        case 5:
-            gridColsClass = "grid grid-cols-5 gap-1.5 sm:gap-2";
-            break;
-    }
-
-    charGrid.className = gridColsClass;
-
-    charGrid.innerHTML = list.map(c => {
-        const uData = getCharData(c.id);
-        const isOwned = uData.owned;
-        const elementIcon = getElementIconHTML(c.element);
+    // Renderizado HTML del catálogo
+    container.innerHTML = filtered.map(c => {
+        const userChar = collection[c.id] || { owned: false, dupes: 0 };
+        const isOwned = userChar.owned;
+        
+        // Prioridad de la ruta de imagen
+        const initialImagePath = `assets/images/Character_Portrait/portrait_${c.name}_00.png`;
 
         return `
-            <div onclick="openCharacterModal('${c.id}')" class="bg-brand-card border ${isOwned ? 'border-cyan-400/80 shadow-md shadow-cyan-950/50' : 'border-white/10 opacity-70'} rounded-lg p-1 sm:p-2 hover:border-cyan-400 cursor-pointer transition transform relative overflow-hidden group">
-                
-                <button onclick="toggleCharOwned(event, '${c.id}')" class="absolute top-1 left-1 z-10 w-4 h-4 sm:w-5 sm:h-5 rounded ${isOwned ? 'bg-cyan-500 text-white' : 'bg-slate-900/80 text-slate-500 border border-white/20'} flex items-center justify-center text-[9px] sm:text-xs shadow-md transition active:scale-90">
-                    <i class="fa-solid fa-check"></i>
-                </button>
-
-                ${isOwned && uData.awakening > 0 ? `
-                    <span class="absolute bottom-8 sm:bottom-10 right-1 z-10 bg-purple-600/90 text-white text-[8px] sm:text-[9px] font-extrabold px-1 py-0.2 rounded border border-purple-400">
-                        D${uData.awakening}
-                    </span>
-                ` : ''}
-
-                <div class="w-full h-20 sm:h-28 rounded-md bg-slate-900 overflow-hidden mb-1 relative flex items-center justify-center">
-                    <img src="${c.image}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top ${isOwned ? '' : 'grayscale'} group-hover:scale-105 transition duration-300" onerror="handleImageError(this, '${c.name}')">
-                    <span class="absolute top-0.5 right-0.5 bg-black/70 backdrop-blur-md text-yellow-400 font-bold text-[8px] sm:text-[10px] px-1 py-0.2 rounded border border-yellow-500/30">${c.rarity}</span>
-                </div>
-                
-                <div class="truncate mb-0.5 text-center sm:text-left">
-                    <h3 class="font-title font-bold text-[10px] sm:text-xs text-slate-100 truncate">${c.name}</h3>
-                </div>
-
-                ${isOwned ? `
-                    <div class="grid grid-cols-4 gap-0.5 bg-slate-900/80 rounded p-0.5 mb-1 text-[7px] text-center font-mono">
-                        <span class="text-cyan-400" title="Básico">B:${uData.skills.basic}</span>
-                        <span class="text-purple-400" title="Relevo">R:${uData.skills.relay}</span>
-                        <span class="text-yellow-400" title="Especial">E:${uData.skills.special}</span>
-                        <span class="text-pink-400" title="Cargado">C:${uData.skills.charged}</span>
+            <div class="bg-brand-surface border ${isOwned ? 'border-cyan-500/50' : 'border-white/10'} rounded-2xl p-2.5 flex flex-col justify-between relative group hover:border-cyan-400 transition duration-200">
+                <div class="relative aspect-square rounded-xl overflow-hidden bg-slate-900 mb-2 cursor-pointer" onclick="openCharacterModal('${c.id}')">
+                    <img src="${initialImagePath}" alt="${c.name}" class="w-full h-full object-cover object-top ${!isOwned ? 'grayscale opacity-40' : ''} transition duration-300 group-hover:scale-105" onerror="handleImageError(this, '${c.name}')">
+                    
+                    <div class="absolute top-1.5 left-1.5 bg-black/70 backdrop-blur-xs px-1.5 py-0.5 rounded text-[10px] font-bold text-yellow-400 flex items-center gap-0.5">
+                        <i class="fa-solid fa-star text-[8px]"></i> ${c.rarity}
                     </div>
-                ` : ''}
-                
-                <div class="flex items-center justify-between gap-0.5">
-                    <span class="p-0.5 rounded bg-slate-800/80 border border-white/10 flex items-center justify-center">
-                        ${elementIcon}
-                    </span>
-                    <span class="text-[8px] sm:text-[9px] text-purple-300 font-semibold truncate">${c.role}</span>
+
+                    ${isOwned ? `
+                        <div class="absolute top-1.5 right-1.5 bg-cyan-950/90 border border-cyan-400 text-cyan-300 px-1.5 py-0.5 rounded text-[9px] font-title font-bold">
+                            A${userChar.dupes}
+                        </div>
+                    ` : ''}
+
+                    <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-1.5 text-center">
+                        <span class="font-title font-bold text-xs text-slate-100 truncate block">${c.name}</span>
+                    </div>
                 </div>
+
+                <div class="flex items-center justify-between gap-1 text-[10px] text-slate-400 mb-2 px-1">
+                    <span class="font-semibold text-slate-300">${c.role}</span>
+                    <span class="px-1.5 py-0.5 rounded bg-brand-card border border-white/5">${c.element}</span>
+                </div>
+
+                <button onclick="toggleCharacterOwned('${c.id}')" class="w-full py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 ${isOwned ? 'bg-cyan-600/80 hover:bg-cyan-500 text-white' : 'bg-brand-card hover:bg-slate-700 text-slate-400 border border-white/10'}">
+                    <i class="fa-solid ${isOwned ? 'fa-check' : 'fa-plus'}"></i> ${isOwned ? 'Obtenido' : 'Marcar'}
+                </button>
             </div>
         `;
     }).join('');
 }
 
+// Abrir Modal de detalles del personaje
 function openCharacterModal(charId) {
-    const char = charactersData.find(c => c.id === charId);
-    if (!char) return;
+    const c = charactersData.find(item => item.id === charId);
+    if (!c) return;
 
+    const collection = getUserCollection();
+    const userChar = collection[c.id] || { owned: false, dupes: 0 };
     const modal = document.getElementById('charModal');
-    const modalContent = document.getElementById('charModalContent');
-    const uData = getCharData(char.id);
-    const isOwned = uData.owned;
-    const elementIcon = getElementIconHTML(char.element);
+    const content = document.getElementById('charModalContent');
 
-    modalContent.innerHTML = `
-        <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
-            <div class="flex items-center gap-3">
-                <img src="${char.image}" alt="${char.name}" class="w-14 h-14 rounded-xl object-cover object-top border border-purple-500/40 shadow-lg bg-slate-900 ${isOwned ? '' : 'grayscale'}" onerror="handleImageError(this, '${char.name}')">
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h3 class="font-title font-black text-base text-slate-100">${char.name}</h3>
-                        <div class="flex items-center gap-1 bg-brand-card/90 px-2 py-0.5 rounded-lg border border-purple-500/30 ${isOwned ? '' : 'opacity-40 pointer-events-none'}">
-                            <button onclick="changeAwakening('${char.id}', -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-xs flex items-center justify-center border border-white/10 cursor-pointer">-</button>
-                            <span class="font-title font-black text-xs text-purple-300 w-5 text-center">D${uData.awakening}</span>
-                            <button onclick="changeAwakening('${char.id}', 1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-xs flex items-center justify-center border border-white/10 cursor-pointer">+</button>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2 mt-1">
-                        <span class="text-xs text-yellow-400 font-bold">${char.rarity}</span>
-                        <span class="p-1 rounded bg-slate-800 border border-white/10 flex items-center justify-center">
-                            ${elementIcon}
-                        </span>
-                        <span class="text-xs text-purple-300 font-semibold">${char.role}</span>
-                    </div>
-                </div>
-            </div>
-            <button onclick="closeCharacterModal()" class="w-8 h-8 rounded-lg bg-brand-card hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm cursor-pointer">
+    if (content) {
+        content.innerHTML = `
+            <button onclick="closeCharacterModal()" class="absolute top-3 right-3 w-8 h-8 rounded-lg bg-brand-card hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm cursor-pointer z-10">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-        </div>
 
-        <div class="mb-3 p-2 rounded-xl bg-brand-card/90 border border-white/10 flex items-center justify-between">
-            <span class="text-xs font-semibold text-slate-200">¿Tienes a este personaje?</span>
-            <button onclick="toggleCharOwned(null, '${char.id}')" class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${isOwned ? 'bg-cyan-500 text-white shadow-md' : 'bg-slate-800 text-slate-400 border border-white/10'}">
-                <i class="fa-solid ${isOwned ? 'fa-check' : 'fa-plus'}"></i>
-                <span>${isOwned ? 'Obtenido' : 'No obtenido'}</span>
+            <div class="flex gap-4 items-center mb-4">
+                <div class="w-20 h-20 rounded-2xl overflow-hidden bg-slate-900 border border-cyan-500/40 flex-shrink-0">
+                    <img src="assets/images/Character_Portrait/portrait_${c.name}_00.png" alt="${c.name}" class="w-full h-full object-cover object-top" onerror="handleImageError(this, '${c.name}')">
+                </div>
+                <div>
+                    <span class="text-[10px] text-yellow-400 font-bold bg-yellow-950/60 border border-yellow-500/30 px-2 py-0.5 rounded-full">${c.rarity}</span>
+                    <h3 class="font-title font-black text-lg text-slate-100 mt-1">${c.name}</h3>
+                    <p class="text-xs text-cyan-400 font-semibold">${c.role} • ${c.element}</p>
+                </div>
+            </div>
+
+            <div class="space-y-3 text-xs bg-brand-card p-3 rounded-xl border border-white/10 mb-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-400">Nivel de Despertar (Dupes):</span>
+                    <select onchange="setCharacterDupes('${c.id}', this.value)" class="bg-brand-surface border border-cyan-500/40 rounded px-2 py-1 text-cyan-300 font-title font-bold focus:outline-none">
+                        ${[0,1,2,3,4,5,6].map(d => `<option value="${d}" ${userChar.dupes === d ? 'selected' : ''}>A${d}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-400">Arma Inseparable:</span>
+                    <span class="text-slate-200 font-semibold">${c.signatureWeapon || 'No especificada'}</span>
+                </div>
+            </div>
+
+            <p class="text-xs text-slate-300 leading-relaxed mb-4">${c.description || 'Sin descripción disponible.'}</p>
+
+            <button onclick="toggleCharacterOwned('${c.id}'); closeCharacterModal();" class="w-full py-2.5 rounded-xl text-xs font-bold transition cursor-pointer ${userChar.owned ? 'bg-red-600/80 hover:bg-red-500 text-white' : 'bg-cyan-600 hover:bg-cyan-500 text-white'}">
+                ${userChar.owned ? 'Quitar de mi colección' : 'Añadir a mi colección'}
             </button>
-        </div>
+        `;
+    }
 
-        <div class="space-y-4 text-xs max-h-[65vh] overflow-y-auto pr-1 relative">
-            ${!isOwned ? `
-                <div class="p-2.5 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-300 text-[11px] text-center font-medium flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-lock text-purple-400"></i> Marca este personaje como <strong>Obtenido</strong> para modificar sus estadísticas.
-                </div>
-            ` : ''}
-
-            <div class="space-y-1.5 ${isOwned ? '' : 'opacity-40 pointer-events-none select-none'}">
-                <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Nivel de Ataques</span>
-                <div class="grid grid-cols-2 gap-2">
-                    <div class="bg-brand-card/80 p-2.5 rounded-xl border border-white/10 flex flex-col justify-between items-center text-center gap-1.5">
-                        <span class="font-bold text-cyan-400 text-xs">Básico</span>
-                        <div class="flex items-center gap-2">
-                            <button onclick="changeSkillLevel('${char.id}', 'basic', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">-</button>
-                            <span class="text-xs font-mono font-bold text-slate-100 w-5 text-center">${uData.skills.basic}</span>
-                            <button onclick="changeSkillLevel('${char.id}', 'basic', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">+</button>
-                        </div>
-                    </div>
-                    <div class="bg-brand-card/80 p-2.5 rounded-xl border border-white/10 flex flex-col justify-between items-center text-center gap-1.5">
-                        <span class="font-bold text-purple-400 text-xs">Relevo</span>
-                        <div class="flex items-center gap-2">
-                            <button onclick="changeSkillLevel('${char.id}', 'relay', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">-</button>
-                            <span class="text-xs font-mono font-bold text-slate-100 w-5 text-center">${uData.skills.relay}</span>
-                            <button onclick="changeSkillLevel('${char.id}', 'relay', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">+</button>
-                        </div>
-                    </div>
-                    <div class="bg-brand-card/80 p-2.5 rounded-xl border border-white/10 flex flex-col justify-between items-center text-center gap-1.5">
-                        <span class="font-bold text-yellow-400 text-xs">Especial</span>
-                        <div class="flex items-center gap-2">
-                            <button onclick="changeSkillLevel('${char.id}', 'special', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">-</button>
-                            <span class="text-xs font-mono font-bold text-slate-100 w-5 text-center">${uData.skills.special}</span>
-                            <button onclick="changeSkillLevel('${char.id}', 'special', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">+</button>
-                        </div>
-                    </div>
-                    <div class="bg-brand-card/80 p-2.5 rounded-xl border border-white/10 flex flex-col justify-between items-center text-center gap-1.5">
-                        <span class="font-bold text-pink-400 text-xs">Cargado</span>
-                        <div class="flex items-center gap-2">
-                            <button onclick="changeSkillLevel('${char.id}', 'charged', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">-</button>
-                            <span class="text-xs font-mono font-bold text-slate-100 w-5 text-center">${uData.skills.charged}</span>
-                            <button onclick="changeSkillLevel('${char.id}', 'charged', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center justify-center border border-white/10 cursor-pointer">+</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="space-y-1.5 ${isOwned ? '' : 'opacity-40 pointer-events-none select-none'}">
-                <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Equipamientos y Artefacto</span>
-                <div class="grid grid-cols-5 gap-2">
-                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer"><i class="fa-solid fa-helmet-safety text-cyan-400 text-sm mb-1"></i><span class="text-[9px] text-slate-400 font-semibold">Casco</span></div>
-                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer"><i class="fa-solid fa-shirt text-cyan-400 text-sm mb-1"></i><span class="text-[9px] text-slate-400 font-semibold">Pechera</span></div>
-                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer"><i class="fa-solid fa-mitten text-cyan-400 text-sm mb-1"></i><span class="text-[9px] text-slate-400 font-semibold">Guantes</span></div>
-                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-cyan-400 transition cursor-pointer"><i class="fa-solid fa-socks text-cyan-400 text-sm mb-1"></i><span class="text-[9px] text-slate-400 font-semibold">Botas</span></div>
-                    <div class="aspect-square bg-purple-950/40 border border-purple-500/50 rounded-xl flex flex-col items-center justify-center p-1 text-center hover:border-purple-400 transition cursor-pointer"><i class="fa-solid fa-gem text-purple-400 text-sm mb-1"></i><span class="text-[9px] text-purple-300 font-bold">Artefacto</span></div>
-                </div>
-            </div>
-
-            <div class="space-y-1.5 ${isOwned ? '' : 'opacity-40 pointer-events-none select-none'}">
-                <span class="block font-title font-bold text-[11px] text-slate-300 uppercase tracking-wider">Monsterlings</span>
-                <div class="grid grid-cols-4 gap-2">
-                    <div class="aspect-square bg-amber-950/30 border-2 border-yellow-500 rounded-xl flex flex-col items-center justify-center p-1 text-center shadow-lg shadow-yellow-950/40 hover:scale-105 transition cursor-pointer"><i class="fa-solid fa-link text-yellow-400 text-base mb-1"></i><span class="text-[9px] text-yellow-300 font-extrabold">Link</span></div>
-                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex items-center justify-center hover:border-cyan-400 transition cursor-pointer"><i class="fa-solid fa-paw text-slate-400 text-lg"></i></div>
-                    <div class="aspect-square bg-slate-900/90 border border-white/10 rounded-xl flex items-center justify-center hover:border-cyan-400 transition cursor-pointer"><i class="fa-solid fa-paw text-slate-400 text-lg"></i></div>
-                    <div class="aspect-square bg-red-950/40 border border-red-500/60 rounded-xl flex items-center justify-center hover:border-red-400 transition cursor-pointer"><i class="fa-solid fa-dragon text-red-400 text-lg"></i></div>
-                </div>
-            </div>
-        </div>
-    `;
-
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
 }
 
 function closeCharacterModal() {
