@@ -1,4 +1,3 @@
-// Importar los SDKs necesarios de Firebase (versión modular)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
 import { 
     getDatabase, 
@@ -7,7 +6,6 @@ import {
     get 
 } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
-// Configuración de Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyA7UOK8iqYZJhFI_7FELm22cV6tQs6JdBw",
     authDomain: "mongilstardive-7a70a.firebaseapp.com",
@@ -19,13 +17,11 @@ const firebaseConfig = {
     measurementId: "G-W1GF3G9XJK"
 };
 
-// Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-window.tempCloudData = null; // Guardado temporal para resolver conflictos
+window.tempCloudData = null;
 
-// Obtener la clave formateada del Código de Amistad
 function getCleanFriendCode() {
     const codeInput = document.getElementById('pFriendCode');
     let code = codeInput ? codeInput.value.trim() : '';
@@ -38,11 +34,9 @@ function getCleanFriendCode() {
     return code ? code.replace(/[^a-zA-Z0-9-_]/g, '_') : null;
 }
 
-// Guardado automático en la nube
 window.saveCloudData = function(force = false) {
     const friendCodeKey = getCleanFriendCode();
     
-    // Si no hay código de amistad escrito, no se sincroniza a la nube (queda 100% local)
     if (!friendCodeKey) {
         updateCloudStatus(false);
         return;
@@ -67,7 +61,6 @@ window.saveCloudData = function(force = false) {
         });
 };
 
-// Verificar código automáticamente al completarlo/cambiarlo
 window.checkCodeAndSync = function() {
     const friendCodeKey = getCleanFriendCode();
     if (!friendCodeKey) return;
@@ -88,7 +81,6 @@ window.checkCodeAndSync = function() {
                 const localCollection = localStorage.getItem('mongil_user_collection') || '{}';
                 const cloudCollection = JSON.stringify(cloudData.collection || {});
 
-                // Si ya existe el código y hay diferencias, mostrar modal de conflicto automáticamente
                 if (localCollection !== cloudCollection && localCollection !== '{}') {
                     openConflictModal(cloudData);
                 } else {
@@ -96,7 +88,6 @@ window.checkCodeAndSync = function() {
                     if (typeof showToast === 'function') showToast('¡Cuenta sincronizada desde la nube!');
                 }
             } else {
-                // Si el código no existe en la base de datos, se crea automáticamente con el estado actual
                 saveCloudData(true);
                 if (typeof showToast === 'function') showToast('¡Nuevo perfil creado en la nube!');
             }
@@ -107,7 +98,6 @@ window.checkCodeAndSync = function() {
         });
 };
 
-// Aplicar datos descargados de la nube
 window.applyCloudData = function(data) {
     if (!data) return;
 
