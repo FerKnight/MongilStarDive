@@ -72,7 +72,6 @@
     <!-- Header Superior -->
     <header class="sticky top-0 z-40 bg-brand-surface/90 backdrop-blur-md border-b border-white/10 px-4 py-3 flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <!-- Botón para desplegar barra lateral SIEMPRE VISIBLE -->
             <button id="sidebarToggleBtn" onclick="toggleSidebar()" class="w-9 h-9 rounded-lg bg-brand-card hover:bg-slate-700 text-cyan-400 flex items-center justify-center text-base border border-white/10 cursor-pointer transition active:scale-95">
                 <i class="fa-solid fa-bars"></i>
             </button>
@@ -95,7 +94,7 @@
         </div>
     </header>
 
-    <!-- Menú Desplegable Lateral Fijo ÚNICO -->
+    <!-- Menú Desplegable Lateral Fijo -->
     <aside id="sidebarMenu" class="fixed inset-y-0 left-0 w-64 bg-brand-surface border-r border-white/10 z-50 transform -translate-x-full transition-transform duration-300 shadow-2xl flex flex-col justify-between p-4">
         <div>
             <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
@@ -216,7 +215,6 @@
                     <div class="flex gap-2">
                         <select id="charSort" onchange="filterCharacters()" class="w-full bg-brand-card border border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
                             <option value="default">Ordenar por: Defecto (A - Z)</option>
-                            <option value="az">Nombre: A - Z</option>
                             <option value="za">Nombre: Z - A</option>
                             <option value="rarity-desc">Rareza: Mayor a Menor (5★ - 4★)</option>
                             <option value="rarity-asc">Rareza: Menor a Mayor (4★ - 5★)</option>
