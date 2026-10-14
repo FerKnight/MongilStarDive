@@ -1,4 +1,3 @@
-// Abrir modal de selección de avatares utilizando el sistema de fallback inteligente
 function openAvatarSelectorModal() {
     const modal = document.getElementById('avatarModal');
     const grid = document.getElementById('avatarGrid');
@@ -30,13 +29,13 @@ function selectAvatarImage(imagePath, characterName) {
     const imgEl = document.getElementById('avatarImg');
     if (imgEl) {
         imgEl.src = imagePath;
-        // Asignar el listener de error en el elemento seleccionado por si la ruta _00.png no existe
         imgEl.onerror = function() { handleImageError(this, characterName); };
     }
     closeAvatarSelectorModal();
     saveProfile();
 }
 
+// Guardado local instantáneo y automático a la nube si hay código
 function saveProfile() {
     const avatarImg = document.getElementById('avatarImg');
     const profile = {
@@ -45,21 +44,26 @@ function saveProfile() {
         message: document.getElementById('pMessage') ? document.getElementById('pMessage').value : '',
         avatar: avatarImg ? avatarImg.src : 'assets/images/Character_Portrait/portrait_Verna_01.png'
     };
+    
     localStorage.setItem('mongil_player_profile', JSON.stringify(profile));
     
-    if (profile.friendCode && typeof saveCloudData === 'function') {
+    // Guardado automático en la nube
+    if (typeof saveCloudData === 'function') {
         saveCloudData();
-    } else if (typeof showToast === 'function') {
-        showToast('Guardado localmente');
+    }
+}
+
+// Evento al modificar el código de amistad (detecta si ya existe en la nube)
+function handleFriendCodeInput() {
+    saveProfile();
+    const code = document.getElementById('pFriendCode').value.trim();
+    if (code.length >= 4 && typeof checkCodeAndSync === 'function') {
+        checkCodeAndSync(code);
     }
 }
 
 function loadProfile() {
     const saved = localStorage.getItem('mongil_player_profile');
-    const syncStatusBadge = document.getElementById('syncStatusBadge');
-    const authBox = document.getElementById('authBox');
-    const profileBox = document.getElementById('profileBox');
-
     if (saved) {
         const profile = JSON.parse(saved);
         if (profile.name && document.getElementById('pName')) document.getElementById('pName').value = profile.name;
@@ -69,60 +73,10 @@ function loadProfile() {
             const avatarImg = document.getElementById('avatarImg');
             if (avatarImg) avatarImg.src = profile.avatar;
         }
-
-        if (profile.friendCode) {
-            if (syncStatusBadge) syncStatusBadge.innerText = "Sincronizado por Código";
-            if (authBox) authBox.classList.add('hidden');
-            if (profileBox) profileBox.classList.remove('hidden');
-        } else {
-            if (syncStatusBadge) syncStatusBadge.innerText = "Modo Local Anónimo";
-            if (authBox) authBox.classList.remove('hidden');
-            if (profileBox) profileBox.classList.add('hidden');
-        }
     }
 }
 
-// Conectar Código de Amistad
-function handleLoginSubmit() {
-    const nameInput = document.getElementById('loginName');
-    const codeInput = document.getElementById('loginCode');
-
-    const name = nameInput ? nameInput.value.trim() : '';
-    const code = codeInput ? codeInput.value.trim() : '';
-
-    if (!code) {
-        if (typeof showToast === 'function') showToast('Ingresa un Código de Amistad');
-        return;
-    }
-
-    const profile = {
-        name: name || 'DiveMaster',
-        friendCode: code,
-        message: '¡Explorando Belana!',
-        avatar: 'assets/images/Character_Portrait/portrait_Verna_01.png'
-    };
-
-    localStorage.setItem('mongil_player_profile', JSON.stringify(profile));
-    loadProfile();
-
-    if (typeof connectAndCheckSync === 'function') {
-        connectAndCheckSync(code);
-    }
-}
-
-// Desconectar cuenta y regresar a Modo Local
-function handleUnlinkAccount() {
-    localStorage.removeItem('mongil_player_profile');
-    loadProfile();
-    const statusEl = document.getElementById('cloudSyncStatus');
-    if (statusEl) {
-        statusEl.className = "inline-block w-2 h-2 rounded-full bg-slate-500";
-        statusEl.title = "Modo Local (Offline)";
-    }
-    if (typeof showToast === 'function') showToast('Desconectado de la nube (Modo Local)');
-}
-
-// Modal de conflicto de datos
+// Modal de resolución de conflictos
 function openConflictModal(cloudData) {
     const modal = document.getElementById('conflictModal');
     const cloudDateEl = document.getElementById('cloudLastUpdated');
@@ -149,7 +103,7 @@ function resolveConflictUseCloud() {
 function resolveConflictUseLocal() {
     if (typeof saveCloudData === 'function') {
         saveCloudData(true);
-        if (typeof showToast === 'function') showToast('¡Nube sobrescrita con el avance local!');
+        if (typeof showToast === 'function') showToast('¡Nube sobrescrita con tu sesión actual!');
     }
     closeConflictModal();
 }
