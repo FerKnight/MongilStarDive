@@ -59,6 +59,7 @@ function updateCharacterStat(charId, field, value) {
     collection[charId][field] = parseInt(value);
     collection[charId].owned = true;
     setUserCollection(collection);
+    renderCharacters();
 }
 
 function getGridCols() {
@@ -141,31 +142,35 @@ function renderCharacters() {
     if (charCountEl) charCountEl.innerText = `Mostrando: ${filtered.length}`;
 
     container.innerHTML = filtered.map(c => {
-        const userChar = collection[c.id] || { owned: false, awakening: 0 };
+        const userChar = collection[c.id] || { owned: false, awakening: 0, basic: 1, switch: 1, special: 1, ultimate: 1 };
         const isOwned = userChar.owned;
         const initialImagePath = getCharacterImagePath(c);
         const elementIcon = getElementIconHtml(c.element);
 
         return `
             <div class="bg-brand-surface border ${isOwned ? 'border-cyan-500/50' : 'border-white/10'} rounded-2xl p-2.5 flex flex-col justify-between relative group hover:border-cyan-400 transition duration-200">
+                
+                <!-- Imagen con Rareza Arriba-Izquierda y Nombre + Despertar Arriba-Sobrepuesto -->
                 <div class="relative aspect-square rounded-xl overflow-hidden bg-slate-900 mb-2 cursor-pointer" onclick="openCharacterModal('${c.id}')">
                     <img src="${initialImagePath}" alt="${c.name}" class="w-full h-full object-cover object-top ${!isOwned ? 'grayscale opacity-40' : ''} transition duration-300 group-hover:scale-105" onerror="handleImageError(this, ${JSON.stringify(c).replace(/"/g, '&quot;')})">
                     
+                    <!-- Rareza -->
                     <div class="absolute top-1.5 left-1.5 bg-black/70 backdrop-blur-xs px-1.5 py-0.5 rounded text-[10px] font-bold text-yellow-400 flex items-center gap-0.5">
                         <i class="fa-solid fa-star text-[8px]"></i> ${c.rarity}
                     </div>
 
-                    ${isOwned ? `
-                        <div class="absolute top-1.5 right-1.5 bg-cyan-950/90 border border-cyan-400 text-cyan-300 px-1.5 py-0.5 rounded text-[9px] font-title font-bold">
-                            D${userChar.awakening ?? 0}
-                        </div>
-                    ` : ''}
-
-                    <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-1.5 text-center">
-                        <span class="font-title font-bold text-xs text-slate-100 truncate block">${c.name}</span>
+                    <!-- Nombre del Personaje Arriba con Despertar al Lado -->
+                    <div class="absolute top-0 inset-x-0 bg-gradient-to-b from-black/90 via-black/50 to-transparent p-1.5 pt-1 flex items-center justify-between gap-1">
+                        <span class="font-title font-bold text-[11px] text-slate-100 truncate pl-12">${c.name}</span>
+                        ${isOwned ? `
+                            <span class="bg-cyan-950/90 border border-cyan-400 text-cyan-300 px-1.5 py-0.5 rounded text-[9px] font-title font-bold flex-shrink-0">
+                                D${userChar.awakening ?? 0}
+                            </span>
+                        ` : ''}
                     </div>
                 </div>
 
+                <!-- Rol y Elemento -->
                 <div class="flex items-center justify-between gap-1 text-[10px] text-slate-400 mb-2 px-1">
                     <span class="font-semibold text-slate-300">${c.role}</span>
                     <span class="px-1.5 py-0.5 rounded bg-brand-card border border-white/5 flex items-center gap-1">
@@ -173,6 +178,29 @@ function renderCharacters() {
                     </span>
                 </div>
 
+                <!-- Info B C E S en la parte Inferior de la Tarjeta (Solo si está obtenido) -->
+                ${isOwned ? `
+                    <div class="grid grid-cols-4 gap-1 text-[9px] font-mono text-center bg-brand-card/80 p-1 rounded-lg border border-white/5 mb-2">
+                        <div class="bg-slate-900/60 rounded py-0.5 border border-white/5" title="Ataque Básico">
+                            <span class="text-slate-400 font-bold block text-[8px]">B</span>
+                            <span class="text-cyan-300 font-bold">${userChar.basic ?? 1}</span>
+                        </div>
+                        <div class="bg-slate-900/60 rounded py-0.5 border border-white/5" title="Habilidad de Cambio">
+                            <span class="text-slate-400 font-bold block text-[8px]">C</span>
+                            <span class="text-cyan-300 font-bold">${userChar.switch ?? 1}</span>
+                        </div>
+                        <div class="bg-slate-900/60 rounded py-0.5 border border-white/5" title="Habilidad Especial">
+                            <span class="text-slate-400 font-bold block text-[8px]">E</span>
+                            <span class="text-cyan-300 font-bold">${userChar.special ?? 1}</span>
+                        </div>
+                        <div class="bg-slate-900/60 rounded py-0.5 border border-white/5" title="Habilidad Suprema">
+                            <span class="text-slate-400 font-bold block text-[8px]">S</span>
+                            <span class="text-purple-300 font-bold">${userChar.ultimate ?? 1}</span>
+                        </div>
+                    </div>
+                ` : ''}
+
+                <!-- Botón de Estado -->
                 <button onclick="toggleCharacterOwned('${c.id}')" class="w-full py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 ${isOwned ? 'bg-cyan-600/80 hover:bg-cyan-500 text-white' : 'bg-brand-card hover:bg-slate-700 text-slate-400 border border-white/10'}">
                     <i class="fa-solid ${isOwned ? 'fa-check' : 'fa-plus'}"></i> ${isOwned ? 'Obtenido' : 'Marcar'}
                 </button>
