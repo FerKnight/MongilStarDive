@@ -23,7 +23,7 @@
     <section id="seccion-mapa" class="w-full max-w-7xl mx-auto px-4 py-8">
         <div class="mb-6">
             <h2 class="text-2xl font-black text-amber-500 uppercase">Mapa de Regiones y Monstruitos</h2>
-            <p class="text-sm text-slate-400">Selecciona una región o busca un elemento para ver su ubicación y detalles.</p>
+            <p class="text-sm text-slate-400">Selecciona varias regiones de forma combinable o busca un elemento.</p>
         </div>
 
         <!-- Estructura del Mapa y Panel Integrado -->
@@ -36,16 +36,16 @@
                     <input type="text" id="searchInput" placeholder="Buscar por nombre o #nro..." class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500 transition">
                 </div>
 
-                <!-- Filtros de Región -->
+                <!-- Filtros de Región Combinables -->
                 <div class="px-4 py-2.5 bg-slate-950/50 border-b border-slate-800 flex gap-2 overflow-x-auto whitespace-nowrap text-xs" id="regionFilters">
-                    <button onclick="filterRegion('All')" class="px-3 py-1.5 bg-amber-600 font-bold rounded-lg text-white shrink-0">Todas</button>
-                    <button onclick="filterRegion('Elendor')" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0">Elendor</button>
-                    <button onclick="filterRegion('Varhine')" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0">Varhine</button>
-                    <button onclick="filterRegion('Serenia')" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0">Serenia</button>
-                    <button onclick="filterRegion('Surah')" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0">Surah</button>
-                    <button onclick="filterRegion('Namryung')" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0">Namryung</button>
-                    <button onclick="filterRegion('Muwon')" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0">Muwon</button>
-                    <button onclick="filterRegion('Sector 3')" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0">Sector 3</button>
+                    <button onclick="toggleRegion('All')" data-region="All" class="region-btn px-3 py-1.5 bg-amber-600 font-bold rounded-lg text-white shrink-0 transition">Todas</button>
+                    <button onclick="toggleRegion('Elendor')" data-region="Elendor" class="region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Elendor</button>
+                    <button onclick="toggleRegion('Varhine')" data-region="Varhine" class="region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Varhine</button>
+                    <button onclick="toggleRegion('Serenia')" data-region="Serenia" class="region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Serenia</button>
+                    <button onclick="toggleRegion('Surah')" data-region="Surah" class="region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Surah</button>
+                    <button onclick="toggleRegion('Namryung')" data-region="Namryung" class="region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Namryung</button>
+                    <button onclick="toggleRegion('Muwon')" data-region="Muwon" class="region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Muwon</button>
+                    <button onclick="toggleRegion('Sector 3')" data-region="Sector 3" class="region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Sector 3</button>
                 </div>
 
                 <!-- Lista Dinámica -->
@@ -83,7 +83,6 @@
     <script src="js/data/sector3.js"></script>
 
     <script>
-        // Unificación automática de todas las regiones en un solo arreglo global
         const monsterlingsData = [
             ...elendorData,
             ...varhineData,
@@ -136,7 +135,8 @@
 
                 const marker = L.marker(latLng, { icon: customIcon }).addTo(map);
                 marker.on('click', () => {
-                    filterRegion(regionName);
+                    // Al hacer clic en el mapa, activa esa región combinándola
+                    toggleRegionFromMap(regionName);
                     showRegionInfo(regionName, data);
                 });
             }
@@ -153,15 +153,68 @@
             document.getElementById('mapInfoCard').classList.add('hidden');
         }
 
-        let currentFilter = 'All';
+        // Arreglo para almacenar las regiones seleccionadas de forma múltiple/combinable
+        let selectedRegions = ['All'];
 
-        function renderList(filter = 'All', search = '') {
+        function toggleRegion(regionName) {
+            if (regionName === 'All') {
+                selectedRegions = ['All'];
+            } else {
+                // Si 'All' estaba seleccionado, lo quitamos
+                if (selectedRegions.includes('All')) {
+                    selectedRegions = [];
+                }
+
+                // Alternar la región seleccionada (agregar o quitar)
+                const index = selectedRegions.indexOf(regionName);
+                if (index > -1) {
+                    selectedRegions.splice(index, 1);
+                } else {
+                    selectedRegions.push(regionName);
+                }
+
+                // Si se desmarcan todas, vuelve a 'All' por defecto
+                if (selectedRegions.length === 0) {
+                    selectedRegions = ['All'];
+                }
+            }
+
+            updateFilterButtonsUI();
+            renderList();
+            closeInfoCard();
+        }
+
+        function toggleRegionFromMap(regionName) {
+            if (selectedRegions.includes('All')) {
+                selectedRegions = [regionName];
+            } else {
+                if (!selectedRegions.includes(regionName)) {
+                    selectedRegions.push(regionName);
+                }
+            }
+            updateFilterButtonsUI();
+            renderList();
+        }
+
+        function updateFilterButtonsUI() {
+            document.querySelectorAll('#regionFilters button').forEach(btn => {
+                const reg = btn.getAttribute('data-region');
+                if (selectedRegions.includes(reg)) {
+                    btn.className = "region-btn px-3 py-1.5 bg-amber-600 font-bold rounded-lg text-white shrink-0 transition shadow-lg shadow-amber-900/30";
+                } else {
+                    btn.className = "region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition";
+                }
+            });
+        }
+
+        function renderList() {
             const container = document.getElementById('monsterList');
             container.innerHTML = '';
+            const search = document.getElementById('searchInput').value;
 
-            // Filtrado y orden numérico ascendente estricto por defecto
+            // Filtrado combinable y orden numérico ascendente estricto
             const filtered = monsterlingsData.filter(m => {
-                const matchRegion = (filter === 'All' || m.region === filter);
+                const matchRegion = selectedRegions.includes('All') || selectedRegions.includes(m.region);
                 const matchSearch = m.name.toLowerCase().includes(search.toLowerCase()) || m.nro.includes(search);
                 return matchRegion && matchSearch;
             }).sort((a, b) => parseInt(a.nro) - parseInt(b.nro));
@@ -186,30 +239,8 @@
             });
         }
 
-        function filterRegion(regionName) {
-            currentFilter = regionName;
-            
-            document.querySelectorAll('#regionFilters button').forEach(btn => {
-                if (btn.innerText.includes(regionName) || (regionName === 'All' && btn.innerText === 'Todas')) {
-                    btn.className = "px-3 py-1.5 bg-amber-600 font-bold rounded-lg text-white shrink-0";
-                } else {
-                    btn.className = "px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0";
-                }
-            });
-
-            renderList(currentFilter, document.getElementById('searchInput').value);
-
-            if (regionName !== 'All' && regionCoordinates[regionName]) {
-                const coord = regionCoordinates[regionName];
-                map.setView(map.unproject([coord.x, coord.y], map.getMaxZoom()), 1);
-                showRegionInfo(regionName, regionCoordinates[regionName]);
-            } else {
-                closeInfoCard();
-            }
-        }
-
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            renderList(currentFilter, e.target.value);
+        document.getElementById('searchInput').addEventListener('input', () => {
+            renderList();
         });
 
         initMapSection();
