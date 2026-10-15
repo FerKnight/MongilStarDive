@@ -1,4 +1,4 @@
-// LÓGICA DE ARTEFACTOS
+// LÓGICA DE ARTEFACTOS CON BÚSQUEDA ROBUSTA DE ICONOS
 function renderArtifacts() {
     const container = document.getElementById('artifactGrid');
     const countLabel = document.getElementById('artifactCount');
