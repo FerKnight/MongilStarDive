@@ -1,4 +1,4 @@
-// LÓGICA DE MONSTERLINGS CON FILTROS Y ORDEN ASCENDENTE
+// LÓGICA DE MONSTERLINGS (CONECTADO CON LA BASE DE DATOS GLOBAL)
 let selectedRegions = ['All'];
 
 function toggleRegion(regionName) {
@@ -38,10 +38,15 @@ function renderMonsterlings() {
     if (!container) return;
     container.innerHTML = '';
 
-    const search = document.getElementById('monsterSearch').value.toLowerCase();
-    const chainFilter = document.getElementById('monsterChainFilter').value;
+    const searchInput = document.getElementById('monsterSearch');
+    const chainSelect = document.getElementById('monsterChainFilter');
+    
+    const search = searchInput ? searchInput.value.toLowerCase() : '';
+    const chainFilter = chainSelect ? chainSelect.value : 'all';
 
-    const filtered = monsterlingsDatabase.filter(m => {
+    const sourceData = typeof monsterlingsDatabase !== 'undefined' ? monsterlingsDatabase : [];
+
+    const filtered = sourceData.filter(m => {
         const matchRegion = selectedRegions.includes('All') || selectedRegions.includes(m.region);
         const matchSearch = m.name.toLowerCase().includes(search) || m.nro.includes(search);
         
@@ -84,3 +89,10 @@ function renderMonsterlings() {
         container.appendChild(card);
     });
 }
+
+// Inicializar renderizado al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        renderMonsterlings();
+    }, 100);
+});
