@@ -1,4 +1,4 @@
-// LÓGICA DE ARTEFACTOS CON BÚSQUEDA ROBUSTA DE ICONOS
+// LÓGICA DE ARTEFACTOS (CONECTADO CON ARTIFACTSDATA)
 function renderArtifacts() {
     const container = document.getElementById('artifactGrid');
     const countLabel = document.getElementById('artifactCount');
@@ -6,9 +6,13 @@ function renderArtifacts() {
 
     container.innerHTML = '';
 
-    const search = document.getElementById('artifactSearch')?.value.toLowerCase() || '';
-    const gradeFilter = document.getElementById('artifactGradeFilter')?.value || 'all';
-    const classFilter = document.getElementById('artifactClassFilter')?.value || 'all';
+    const searchInput = document.getElementById('artifactSearch');
+    const gradeSelect = document.getElementById('artifactGradeFilter');
+    const classSelect = document.getElementById('artifactClassFilter');
+
+    const search = searchInput ? searchInput.value.toLowerCase() : '';
+    const gradeFilter = gradeSelect ? gradeSelect.value : 'all';
+    const classFilter = classSelect ? classSelect.value : 'all';
 
     const sourceData = typeof artifactsData !== 'undefined' ? artifactsData : [];
 
@@ -78,3 +82,10 @@ function renderArtifacts() {
         container.appendChild(card);
     });
 }
+
+// Inicializar renderizado al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        renderArtifacts();
+    }, 100);
+});
