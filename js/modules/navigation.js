@@ -1,70 +1,58 @@
-function switchTab(tabId) {
-    // 1. Guardar la pestaña activa en localStorage
-    localStorage.setItem('mongil_active_tab', tabId);
+// LÓGICA DE NAVEGACIÓN Y PESTAÑAS CON SESSIONSTORAGE
+function switchTab(tabId, updateHistory = true) {
+    // Ocultar todas las secciones
+    const sections = document.querySelectorAll('.content-section');
+    sections.forEach(sec => sec.classList.remove('active'));
 
-    // 2. Ocultar todas las secciones
-    document.querySelectorAll('.content-section').forEach(sec => {
-        sec.classList.remove('active');
-    });
-
-    // 3. Mostrar la sección seleccionada
-    const target = document.getElementById(`tab-${tabId}`);
-    if (target) {
-        target.classList.add('active');
+    // Mostrar la sección seleccionada
+    const targetSection = document.getElementById(`tab-${tabId}`);
+    if (targetSection) {
+        targetSection.classList.add('active');
     }
 
-    // 4. Resaltar elemento activo en la barra lateral
-    document.querySelectorAll('.sidebar-nav-item').forEach(item => {
-        item.classList.remove('bg-brand-card', 'text-cyan-400');
-        item.classList.add('text-slate-300');
+    // Actualizar estados visuales de los botones de navegación en el menú lateral
+    const navItems = document.querySelectorAll('.sidebar-nav-item');
+    navItems.forEach(item => {
+        item.classList.remove('bg-purple-500/20', 'text-cyan-400');
     });
 
-    const navItem = document.getElementById(`nav-${tabId}`);
-    if (navItem) {
-        navItem.classList.add('bg-brand-card', 'text-cyan-400');
-        navItem.classList.remove('text-slate-300');
+    const activeNav = document.getElementById(`nav-${tabId}`);
+    if (activeNav) {
+        activeNav.classList.add('bg-purple-500/20', 'text-cyan-400');
     }
 
+    // Guardar en sessionStorage la pestaña actual para conservarla al recargar
+    sessionStorage.setItem('mongil_current_tab', tabId);
+
+    // Scroll al inicio de la página suavemente
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebarMenu');
     const overlay = document.getElementById('sidebarOverlay');
-    if (sidebar && overlay) {
-        sidebar.classList.toggle('-translate-x-full');
-        overlay.classList.toggle('hidden');
+    if (!sidebar || !overlay) return;
+
+    const isClosed = sidebar.classList.contains('-translate-x-full');
+    if (isClosed) {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+    } else {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
     }
 }
 
-function showToast(message) {
-    const toast = document.getElementById('toast');
-    const msgEl = document.getElementById('toastMsg');
-    if (toast && msgEl) {
-        msgEl.innerText = message;
-        toast.classList.remove('translate-x-full');
-        setTimeout(() => {
-            toast.classList.add('translate-x-full');
-        }, 3000);
-    }
-}
+// Inicialización al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    // Verificar si hay una pestaña guardada en la sesión actual (recarga)
+    const savedTab = sessionStorage.getItem('mongil_current_tab');
 
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    const btn = document.getElementById('installPwaBtn');
-    if (btn) btn.classList.remove('hidden');
+    if (savedTab) {
+        // Si ya estaba navegando en esta sesión, restaurar esa pestaña
+        switchTab(savedTab, false);
+    } else {
+        // Si es la primera vez que abre la web en esta pestaña/sesión, forzar 'inicio'
+        switchTab('inicio', false);
+    }
 });
-
-function installPWA() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                showToast('¡Aplicación instalada con éxito!');
-            }
-            deferredPrompt = null;
-        });
-    }
-}
