@@ -90,7 +90,7 @@ function renderMonsterlings() {
     });
 }
 
-// Inicializar renderizado al cargar la página
+// Renderizado inicial al cargar
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         renderMonsterlings();
