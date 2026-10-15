@@ -304,7 +304,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="equipGrid"></div>
         </section>
 
-        <!-- 4. MONSTERLINGS -->
+        <!-- 4. MONSTERLINGS (ACTUALIZADO CON FILTROS COMBINABLES Y ORDEN ASCENDENTE) -->
         <section id="tab-monsterlings" class="content-section">
             <h2 class="font-title font-extrabold text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3">MONSTERLINGS</h2>
 
@@ -339,7 +339,7 @@
             <div id="monsterListContainer" class="space-y-2"></div>
         </section>
 
-        <!-- 5. ARTEFACTOS (ACTUALIZADO CON FILTROS DE GRADO Y CLASE) -->
+        <!-- 5. ARTEFACTOS -->
         <section id="tab-artefactos" class="content-section">
             <div class="flex justify-between items-center mb-3">
                 <div>
@@ -460,7 +460,7 @@
     <script src="js/data/maps.js"></script>
     <script src="js/data/news.js"></script>
 
-    <!-- Archivos Regionales de Monsterlings -->
+    <!-- Archivos Regionales de Monsterlings (Actualizados desde Excel) -->
     <script src="js/data/elendor.js"></script>
     <script src="js/data/varhine.js"></script>
     <script src="js/data/serenia.js"></script>
@@ -477,7 +477,7 @@
 
     <!-- LÓGICA DE FILTROS PARA MONSTERLINGS Y ARTEFACTOS -->
     <script>
-        // FILTROS DE MONSTERLINGS
+        // FILTROS COMBINABLES DE MONSTERLINGS Y ORDEN NUMÉRICO ASCENDENTE
         let selectedRegions = ['All'];
 
         function toggleRegion(regionName) {
@@ -558,7 +558,7 @@
             });
         }
 
-        // FILTROS DE ARTEFACTOS ACTUALIZADOS
+        // FILTROS DE ARTEFACTOS
         function renderArtifacts() {
             const container = document.getElementById('artifactGrid');
             const countLabel = document.getElementById('artifactCount');
