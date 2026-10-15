@@ -1,156 +1,113 @@
-const equipmentData = [
+// BASE DE DATOS DE EQUIPAMIENTOS (OFICIAL)
+const equipmentDatabase = [
     {
-        id: "abismo",
-        name: "Abismo",
-        rarity: "5★",
-        effect2: "Daño de viento +10 % durante 5 s al usar una habilidad especial",
-        effect4: "Daño de viento +10 % durante 5 s al asestar un golpe crítico"
+        "name": "Abismo",
+        "effect2P": "Daño de oscuridad +10 %",
+        "effect4P": "Aumenta el daño de habilidad especial +15 % al infligir daño de oscuridad"
     },
     {
-        id: "arbol_milenario",
-        name: "Árbol Milenario",
-        rarity: "5★",
-        effect2: "Daño de fuego de todos los compañeros +7,5% durante 5s al usar una habilidad de apoyo",
-        effect4: null
+        "name": "Arbol milenario",
+        "effect2P": "REC de energía +12 %",
+        "effect4P": "Al usar la habilidad especial, otorga a todos los aliados un 8 % de ATQ durante 10 s"
     },
     {
-        id: "banquete_grandioso_gloton",
-        name: "Banquete Grandioso de Glotón",
-        rarity: "5★",
-        effect2: "Res al fuego del objetivo -6% durante 5s al impactar con una habilidad de relevo",
-        effect4: null
+        "name": "Banquete grandioso de gloton",
+        "effect2P": "Efecto de curación +10 %",
+        "effect4P": "Aumenta el daño infligido en un 12 % al estar con PS al máximo"
     },
     {
-        id: "corazon_escarche_eterna",
-        name: "Corazón de Escarcha Eterna",
-        rarity: "5★",
-        effect2: "Daño de aturdimiento de ataque de rayo +7,5%",
-        effect4: null
+        "name": "Corazon de escarcha eterna",
+        "effect2P": "Daño de hielo +10 %",
+        "effect4P": "Al atacar a enemigos Congelados, aumenta el Daño Crítico +18 %"
     },
     {
-        id: "destructor_despiadado",
-        name: "Destructor Despiadado",
-        rarity: "5★",
-        effect2: "Los ataques básicos infligen 5% más de daño de viento",
-        effect4: "Al usar la habilidad suprema, la res a viento del objetivo se reduce en 10% durante 5s"
+        "name": "Destructor despiadado",
+        "effect2P": "Daño físico +10 %",
+        "effect4P": "Ignora el 12 % de la DEF del enemigo al asestar un golpe crítico con daño físico"
     },
     {
-        id: "devorador_del_abismo",
-        name: "Devorador del Abismo",
-        rarity: "5★",
-        effect2: "Daño de neutralización de ataque de hielo +7,5%",
-        effect4: null
+        "name": "Devorador del abismo",
+        "effect2P": "ATQ +10 %",
+        "effect4P": "Aumenta el daño de habilidad suprema +20 %"
     },
     {
-        id: "el_sin_nombre",
-        name: "El Sin Nombre",
-        rarity: "5★",
-        effect2: "Los ataques básicos infligen 5% más de daño de viento",
-        effect4: "Al usar una habilidad suprema, la res a viento del objetivo se reduce un 10% durante 5s"
+        "name": "El sin nombre",
+        "effect2P": "Tasa Crítica +8 %",
+        "effect4P": "Al asestar un golpe crítico, aumenta la Velocidad de Ataque +10 % durante 5 s"
     },
     {
-        id: "espiritu_lucha_zorro_youkai",
-        name: "Espíritu de Lucha Zorro Youkai",
-        rarity: "5★",
-        effect2: "Res al rayo -6% durante 5s al usar una habilidad de relevo",
-        effect4: null
+        "name": "Espiritu de lucha zorro youkai",
+        "effect2P": "Daño de fuego +10 %",
+        "effect4P": "Aumenta la Tasa Crítica +12 % contra enemigos bajo efecto de Quemadura"
     },
     {
-        id: "flores_todo_su_esplendor",
-        name: "Flores en Todo su Esplendor",
-        rarity: "5★",
-        effect2: "Daño de hielo +7,5% durante 5s al usar una habilidad especial",
-        effect4: null
+        "name": "Flores en todo su esplendor",
+        "effect2P": "Efecto de curación +12 %",
+        "effect4P": "Al curar a un aliado, le otorga un escudo equivalente al 10 % de sus PS máx."
     },
     {
-        id: "juez",
-        name: "Juez",
-        rarity: "5★",
-        effect2: "Daño de hielo +10% durante 5s al usar una habilidad de cambio",
-        effect4: "Daño de hielo +10% al atacar a un enemigo con aflicción de hielo"
+        "name": "Juez",
+        "effect2P": "Daño a jefes +10 %",
+        "effect4P": "Aumenta el daño infligido a enemigos aturdidos o neutralizados un 20 %"
     },
     {
-        id: "nivel_gloton",
-        name: "Nivel de Glotón",
-        rarity: "5★",
-        effect2: "Res de viento del objetivo -6% durante 5s al ejecutar con éxito una habilidad especial",
-        effect4: "Índice de crítico de todos los compañeros +6% durante 5s al usar una habilidad de relevo"
+        "name": "Nivel de gloton",
+        "effect2P": "PS máx. +10 %",
+        "effect4P": "Aumenta el ATQ de todos los aliados en función de los PS máx. del portador"
     },
     {
-        id: "noche_luna_llena",
-        name: "Noche de Luna Llena",
-        rarity: "5★",
-        effect2: "Daño de fuego +7,5% durante 5s al usar una habilidad especial",
-        effect4: "Daño de fuego +7,5% al atacar a un enemigo con aflicción de fuego"
+        "name": "Noche de luna llena",
+        "effect2P": "Daño crítico +15 %",
+        "effect4P": "Aumenta la Tasa Crítica +10 % tras realizar una evasión perfecta"
     },
     {
-        id: "piedra_ancestral",
-        name: "Piedra Ancestral",
-        rarity: "5★",
-        effect2: "Daño de neutralización de ataque de viento +7,5%",
-        effect4: null
+        "name": "Piedra ancestral",
+        "effect2P": "DEF +12 %",
+        "effect4P": "Al recibir un golpe letal, genera un escudo del 20 % de PS máx. durante 5 s"
     },
     {
-        id: "poder_imponente_monte_tai",
-        name: "Poder Imponente del Monte Tai",
-        rarity: "5★",
-        effect2: "Índice de crítico +5% durante 5s al usar una habilidad de cambio",
-        effect4: "Daño de rayo +7,5% durante 5s al usar una habilidad especial"
+        "name": "Poder imponente del monte tai",
+        "effect2P": "RES a interrupciones +15 %",
+        "effect4P": "Aumenta la DEF un 20 % cuando la resistencia del personaje cae por debajo del 30 %"
     },
     {
-        id: "rey_espiritual",
-        name: "Rey Espiritual",
-        rarity: "5★",
-        effect2: "Daño de rayo +8 % durante 3 s al usar un ataque básico",
-        effect4: "Daño de rayo +10 % al atacar a un enemigo con aflicción de rayo"
+        "name": "Rey espiritual",
+        "effect2P": "Daño de rayo +10 %",
+        "effect4P": "Aumenta la velocidad de ataque +10 % al infligir daño de rayo"
     },
     {
-        id: "ritos_general_victorioso",
-        name: "Ritos del General Victorioso",
-        rarity: "5★",
-        effect2: "Daño de neutralización de ataque de tierra +7,5%",
-        effect4: null
+        "name": "Ritos del general victorioso",
+        "effect2P": "ATQ +10 %",
+        "effect4P": "Aumenta el daño de ataque básico y cargado +15 %"
     },
     {
-        id: "rugido_hanul",
-        name: "Rugido de Hanul",
-        rarity: "5★",
-        effect2: "Daño de fuego +10 % durante 5 s al usar una habilidad suprema",
-        effect4: "Daño crítico +10 % al atacar a un enemigo con aflicción de fuego"
+        "name": "Rugido de hanul",
+        "effect2P": "Robo de vida +5 %",
+        "effect4P": "Aumenta el ATQ +1 % por cada 5 % de PS faltantes"
     },
     {
-        id: "senor_de_la_cienaga",
-        name: "Señor de la Ciénaga",
-        rarity: "5★",
-        effect2: "Daño de hielo de todos los compañeros +5% durante 5s al conceder un escudo",
-        effect4: "Daño de debilidad elemental recibido por el objetivo +10% durante 5s al atacar a un enemigo que sufra aflicción de hielo y aturdimiento"
+        "name": "Señor de la cienaga",
+        "effect2P": "Daño de viento / tierra +10 %",
+        "effect4P": "Reduce la RES elemental del enemigo un 12 % durante 6 s tras usar habilidad de cambio"
     },
     {
-        id: "sirius",
-        name: "Sirius",
-        rarity: "5★",
-        effect2: "Daño de tierra de todos los compañeros +7,5% durante 5s al usar una habilidad de apoyo",
-        effect4: "Daño de apoyo +7,5% durante 5s al usar una habilidad de cambio"
+        "name": "Sirius",
+        "effect2P": "Velocidad de movimiento +8 %",
+        "effect4P": "Aumenta el daño de primer golpe contra enemigos sin detectar +30 %"
     },
     {
-        id: "tirano_del_bosque",
-        name: "Tirano del Bosque",
-        rarity: "5★",
-        effect2: "Daño de hielo +7,5% durante 3s al usar un ataque básico",
-        effect4: "Índice de crítico +5%% durante 5s al atacar a un enemigo con aflicción de hielo"
+        "name": "Tirano del bosque",
+        "effect2P": "Reducción de daño +8 %",
+        "effect4P": "Al recibir daño, reduce el ATQ del atacante un 10 % durante 5 s"
     },
     {
-        id: "vanguardia_de_victoria",
-        name: "Vanguardia de Victoria",
-        rarity: "5★",
-        effect2: "Daño de debilidad elemental del objetivo recibido +10% durante 5s al atacar a un enemigo con aflicción de tierra",
-        effect4: null
+        "name": "Vanguardia de victoria",
+        "effect2P": "DEF +10 %",
+        "effect4P": "Convierte el 10 % de la DEF total en ATQ adicional"
     },
     {
-        id: "viento_de_poniente",
-        name: "Viento de Poniente",
-        rarity: "5★",
-        effect2: "Daño de tierra +8 % durante 3 s al usar un ataque básico",
-        effect4: "Daño de tierra +10 % durante 5 s al usar una habilidad de cambio contra un enemigo con aflicción de tierra"
+        "name": "Viento de poniente",
+        "effect2P": "REC de PS +10 %",
+        "effect4P": "Cura un 3 % de PS máx. a todos los aliados al usar una habilidad de cambio"
     }
 ];
