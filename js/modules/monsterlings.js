@@ -1,4 +1,4 @@
-// LÓGICA DE MONSTERLINGS
+// LÓGICA DE MONSTERLINGS CON FILTROS Y ORDEN ASCENDENTE
 let selectedRegions = ['All'];
 
 function toggleRegion(regionName) {
