@@ -1,4 +1,31 @@
-const varhineData = [
-    { "region": "Varhine", "nro": "040", "name": "Secuaz de piedra", "effect": "-", "chain": "-" },
-    // ... registros 040 al 068 de Varhine
-];
+window.registrarRegion('Varhine', [
+    { "nro": "040", "name": "Secuaz de piedra", "effect": "-", "chain": "-" },
+    { "nro": "041", "name": "secuaz dorado", "effect": "-", "chain": "-" },
+    { "nro": "042", "name": "guerrero orco", "effect": "-", "chain": "-" },
+    { "nro": "043", "name": "secuaz orco rosa", "effect": "-", "chain": "-" },
+    { "nro": "044", "name": "asaltante orco", "effect": "-", "chain": "-" },
+    { "nro": "045", "name": "dragon petreo", "effect": "-", "chain": "-" },
+    { "nro": "046", "name": "dragon ermitaño hojudo", "effect": "-", "chain": "-" },
+    { "nro": "047", "name": "dragon peñasco", "effect": "-", "chain": "-" },
+    { "nro": "048", "name": "dragon ermitaño vikingo", "effect": "-", "chain": "-" },
+    { "nro": "049", "name": "trol", "effect": "-", "chain": "-" },
+    { "nro": "050", "name": "trol dañino", "effect": "-", "chain": "-" },
+    { "nro": "051", "name": "urgash", "effect": "-", "chain": "-" },
+    { "nro": "052", "name": "lobo", "effect": "-", "chain": "-" },
+    { "nro": "053", "name": "lobo labino", "effect": "-", "chain": "-" },
+    { "nro": "054", "name": "lobomoth", "effect": "Daño de contención +8 % durante 10 segundos al asestar un golpe crítico", "chain": "Condición: Impactar con un ataque\nEfecto de habilidad: Si el monstruito Lobomoth está equipado, aparece cuando se cumple su requisito de aparición. Salta hacia el enemigo y ruge, lo que inflige Daño físico a los objetivos cercanos.\n\n[Requisito de aparición]\nImpactar con un ataque\n\n[Información de aparición]\nDaño en función del ATQ del personaje que lo equipa: 20 %\nRecarga: 15 s\nTasa de daño: 20%\nTiempo de reaparición: 15 s" },
+    { "nro": "055", "name": "scar", "effect": "-", "chain": "-" },
+    { "nro": "056", "name": "lobo gelido", "effect": "Daño de habilidad especial +8.4 % durante 10 segundos al asestar un golpe crítico", "chain": "Condición: Asestar un golpe crítico\nEfecto de habilidad: Si el monstruito Lobo gélido está equipado, aparece cuando se cumple su requisito de aparición. Emerge de un salto de una grieta del Vacío y ataca al enemigo. A continuación, le asesta varios tajos con una espada imbuida de energía del Vacío, lo que inflige Daño oscuro y lanza al enemigo por los aires.\n\n[Requisito de aparición]\nAsestar un golpe crítico\n\n[Información de aparición]\nDaño en función del ATQ del personaje que lo equipa: 20 %\nRecarga: 15 s\nTasa de daño: 20%\nTiempo de reaparición: 15 s" },
+    { "nro": "057", "name": "dragon ermitaño", "effect": "-", "chain": "-" },
+    { "nro": "058", "name": "dragon ermitaño azulin", "effect": "-", "chain": "-" },
+    { "nro": "059", "name": "dragon ermitaño gigante", "effect": "-", "chain": "-" },
+    { "nro": "060", "name": "cosechador", "effect": "-", "chain": "-" },
+    { "nro": "061", "name": "ejecutor", "effect": "-", "chain": "-" },
+    { "nro": "062", "name": "fraile del vacio", "effect": "-", "chain": "-" },
+    { "nro": "063", "name": "sombra del monje", "effect": "-", "chain": "-" },
+    { "nro": "064", "name": "vectus", "effect": "-", "chain": "-" },
+    { "nro": "065", "name": "cimatauro", "effect": "Daño crítico +11 % contra jefes enemigos aturdidos", "chain": "Condición: Usar una habilidad de cambio\nEfecto de habilidad: Si el monstruito Cimatauro está equipado, aparece cuando se cumple su requisito de aparición. Lanza llamas contra el enemigo, lo que inflige Daño de fuego y aplica un efecto adicional.\n\n[Requisito de aparición]\nUsar una habilidad de cambio\n\n[Información de aparición]\nDaño en función del ATQ del personaje que lo equipa: 40 %\nRecarga: 15 s\n\n[Efecto adicional]\n5 % Reducción de RES a Fuego (5 s)\nTasa de daño: 40%\nTiempo de reaparición: 15 s\nRES Fuego -5% (5s)" },
+    { "nro": "066", "name": "trol azulado", "effect": "-", "chain": "-" },
+    { "nro": "067", "name": "amon", "effect": "El índice de crítico de todos los compañeros +11 % durante 10 segundos al atacar a un jefe enemigo 10 veces", "chain": "Condición: Usar una habilidad especial\nEfecto de habilidad: Si el monstruito Amón está equipado, aparece cuando se cumple su requisito de aparición. Salta hacia el enemigo y asesta un golpe con la espada, lo que inflige Daño oscuro, aplica un efecto adicional y lanza al enemigo por los aires.\n\n[Requisito de aparición]\nUsar una habilidad especial\n\n[Información de aparición]\nDaño en función del ATQ del personaje que lo equipa: 40 %\nRecarga: 15 s\n\n[Efecto adicional]\n5 % de potenciador de daño recibido por debilidad elemental(5 s)\nTasa de daño: 40%\nTiempo de reaparición: 15 s\nSi el monstruito {0} está equipado, aparece cuando se cumple su requisito de aparición. Impacta con su tótem contra el enemigo y a continuación atrae a los enemigos cercanos y provoca una explosión gigantesca, lo que inflige {1} y aplica efectos adicionales que lanzan al enemigo por los aires.[Requisito de aparición]{2}{3}[Información de aparición]Daño en función del ATQ del personaje que lo equipa: {5} %Recarga: {6} s[Efectos adicionales]10 % Reducción de RES a Fuego (5 s)15 % de reducción de DEF aturdidora (5 s)" },
+    { "nro": "068", "name": "sombra de amon", "effect": "-", "chain": "-" }
+]);
