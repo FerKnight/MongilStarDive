@@ -1,39 +1,36 @@
-const artifactSources = [
-    { name: "GameWith.ai Artifact DB (Español)", url: "https://gamewith.ai/mongil-stardive/es/artifact-db" },
-    { name: "Game8 Mongil Wiki", url: "https://game8.co/games/Mongil-Star-Dive" }
-];
-
-const artifactData = [
-    { 
-        name: "Eco del Vacío", 
-        rarity: "5★",
-        set2: "ATK +12%", 
-        set4: "+25% Daño al romper la barra Stagger del jefe.", 
-        howToGet: "Dominio de Artefactos / Invocación",
-        image: "assets/images/Icon_Artifact/artifact_void_eco.png" 
-    },
-    { 
-        name: "Guardián de Belana", 
-        rarity: "5★",
-        set2: "DEF +15%", 
-        set4: "Genera un escudo del 20% de la vida al hacer cambio de personaje (Tag).", 
-        howToGet: "Mazmorra de Desafío Semanal",
-        image: "assets/images/Icon_Artifact/artifact_belana_guardian.png" 
-    },
-    { 
-        name: "Congelación Profunda", 
-        rarity: "5★",
-        set2: "Daño Hielo +10%", 
-        set4: "+20% Prob. CRIT contra enemigos afectados por estado Hielo.", 
-        howToGet: "Dominio Elemental de Hielo",
-        image: "assets/images/Icon_Artifact/artifact_deep_freeze.png" 
-    },
-    { 
-        name: "Frenesí Elemental", 
-        rarity: "4★",
-        set2: "Recarga +15%", 
-        set4: "Reduce el tiempo de recarga de habilidades tras detonar una reacción.", 
-        howToGet: "Cofres de Misiones y Recompensas de Historia",
-        image: "assets/images/Icon_Artifact/artifact_elemental_frenzy.png" 
-    }
+const artifactsData = [
+    { "name": "Amigo De La Naturaleza", "grade": 5, "role": "Luchador", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Aquel Ante Quien Se Arrodillan Los Dokkaebi", "grade": 5, "role": "Luchador", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Escama Blanca Del Dragon Serpenteante", "grade": 5, "role": "Destructor", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Escoba De Los Vientos", "grade": 5, "role": "Asesino", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Fuego De Dragón Exquisito", "grade": 5, "role": "Destructor", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Halo Celestial De Vida", "grade": 5, "role": "Soporte", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Inversión Inteligente", "grade": 5, "role": "Luchador", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Kumiho Ardiente", "grade": 5, "role": "Luchador", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "La Llama Que Sueña Con La Justicia", "grade": 5, "role": "Luchador", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Lucha Frenética", "grade": 5, "role": "Luchador", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Melodía Interpretada Con Fibras Del Corazón", "grade": 5, "role": "Soporte", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Oscuridad Opresiva", "grade": 5, "role": "Asesino", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Recompensa La Bondad, Elimina La Maldad", "grade": 5, "role": "Destructor", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Rocío Bordador De Llanuras", "grade": 5, "role": "Soporte", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Temblores Tronidos", "grade": 5, "role": "Destructor", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Un Verano Empapado De Amor", "grade": 5, "role": "Soporte", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Veredicto Gélido", "grade": 5, "role": "Luchador", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Aventurero Soñador", "grade": 4, "role": "Destructor", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Caballería Implacable", "grade": 4, "role": "Destructor", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Caída En Desgracia", "grade": 4, "role": "Asesino", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Determinación Del Cazador De Tigres", "grade": 4, "role": "Asesino", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Espada De Fuego Honesta", "grade": 4, "role": "Luchador", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Fragancia Forestal", "grade": 4, "role": "Soporte", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Halo Celestial De Protección", "grade": 4, "role": "Soporte", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Halo Celestial De Sabiduría", "grade": 4, "role": "Soporte", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "La Llave De Futuras Cerraduras", "grade": 4, "role": "Luchador", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Loto Sombrío", "grade": 4, "role": "Asesino", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Lucha Sangrienta", "grade": 4, "role": "Luchador", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Miembro Descoordinado De Una Banda Militar", "grade": 4, "role": "Asesino", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Oscuridad Siniestra", "grade": 4, "role": "Asesino", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Plenitud De Amor", "grade": 4, "role": "Soporte", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Presagio De Despertar", "grade": 4, "role": "Destructor", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Subidón De Azúcar", "grade": 4, "role": "Destructor", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" },
+    { "name": "Vuelo Del Halcón", "grade": 4, "role": "Asesino", "effect2P": "-", "effect4P": "-", "icon": "fa-solid fa-gem" }
 ];
