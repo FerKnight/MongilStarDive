@@ -308,7 +308,6 @@
         <section id="tab-monsterlings" class="content-section">
             <h2 class="font-title font-extrabold text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3">MONSTERLINGS</h2>
 
-            <!-- Panel de Filtros para Monsterlings -->
             <div class="bg-brand-surface border border-purple-500/30 rounded-2xl p-4 mb-4 space-y-3 neon-glow">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div class="relative">
@@ -337,14 +336,46 @@
                 </div>
             </div>
 
-            <!-- Lista Dinámica de Monsterlings -->
             <div id="monsterListContainer" class="space-y-2"></div>
         </section>
 
-        <!-- 5. ARTEFACTOS -->
+        <!-- 5. ARTEFACTOS (ACTUALIZADO CON FILTROS DE GRADO Y CLASE) -->
         <section id="tab-artefactos" class="content-section">
-            <h2 class="font-title font-extrabold text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-1">SETS DE ARTEFACTOS</h2>
-            <p class="text-xs text-slate-400 mb-4">Bonificaciones de 2 y 4 piezas para cada rol</p>
+            <div class="flex justify-between items-center mb-3">
+                <div>
+                    <h2 class="font-title font-extrabold text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">SETS DE ARTEFACTOS</h2>
+                    <p class="text-xs text-slate-400">Filtra por grado, clase o nombre para consultar las bonificaciones</p>
+                </div>
+                <span id="artifactCount" class="text-xs px-2.5 py-1 bg-brand-card rounded-lg border border-purple-500/30 text-slate-300 font-semibold shadow-sm">
+                    Mostrando: 0
+                </span>
+            </div>
+
+            <div class="bg-brand-surface border border-purple-500/30 rounded-2xl p-4 mb-4 space-y-3 neon-glow">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div class="relative sm:col-span-1">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                        <input type="text" id="artifactSearch" oninput="renderArtifacts()" placeholder="Buscar artefacto..." class="w-full bg-brand-card border border-purple-500/30 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+                    </div>
+                    <div>
+                        <select id="artifactGradeFilter" onchange="renderArtifacts()" class="w-full bg-brand-card border border-purple-500/30 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+                            <option value="all">Todos los Grados (4★ y 5★)</option>
+                            <option value="5">Grado 5 (5★)</option>
+                            <option value="4">Grado 4 (4★)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="artifactClassFilter" onchange="renderArtifacts()" class="w-full bg-brand-card border border-purple-500/30 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:border-cyan-400 focus:outline-none">
+                            <option value="all">Todas las Clases</option>
+                            <option value="Luchador">Luchador</option>
+                            <option value="Asesino">Asesino</option>
+                            <option value="Destructor">Destructor</option>
+                            <option value="Soporte">Soporte</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="artifactGrid"></div>
         </section>
 
@@ -403,7 +434,7 @@
         <i class="fa-solid fa-circle-check"></i> <span id="toastMsg">Guardado</span>
     </div>
 
-    <!-- MOTOR DE REGISTRO DINÁMICO DE MONSTERLINGS POR ARCHIVOS REGIONALES -->
+    <!-- MOTOR DE REGISTRO DINÁMICO DE MONSTERLINGS -->
     <script>
         const monsterlingsDatabase = [];
 
@@ -444,8 +475,9 @@
     <script src="js/modules/characters.js"></script>
     <script src="js/modules/app-main.js"></script>
 
-    <!-- LÓGICA DE FILTROS COMBINABLES Y RENDERIZADO DE MONSTERLINGS -->
+    <!-- LÓGICA DE FILTROS PARA MONSTERLINGS Y ARTEFACTOS -->
     <script>
+        // FILTROS DE MONSTERLINGS
         let selectedRegions = ['All'];
 
         function toggleRegion(regionName) {
@@ -526,8 +558,84 @@
             });
         }
 
+        // FILTROS DE ARTEFACTOS ACTUALIZADOS
+        function renderArtifacts() {
+            const container = document.getElementById('artifactGrid');
+            const countLabel = document.getElementById('artifactCount');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            const search = document.getElementById('artifactSearch')?.value.toLowerCase() || '';
+            const gradeFilter = document.getElementById('artifactGradeFilter')?.value || 'all';
+            const classFilter = document.getElementById('artifactClassFilter')?.value || 'all';
+
+            const sourceData = typeof artifactsData !== 'undefined' ? artifactsData : [];
+
+            const filtered = sourceData.filter(item => {
+                const matchSearch = item.name.toLowerCase().includes(search);
+                const matchGrade = gradeFilter === 'all' || String(item.grade) === gradeFilter;
+                const matchClass = classFilter === 'all' || item.role.toLowerCase() === classFilter.toLowerCase();
+
+                return matchSearch && matchGrade && matchClass;
+            });
+
+            if (countLabel) {
+                countLabel.innerText = `Mostrando: ${filtered.length}`;
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center text-slate-500 py-12 text-xs bg-brand-surface border border-purple-500/20 rounded-xl">
+                        No se encontraron artefactos con los filtros seleccionados.
+                    </div>`;
+                return;
+            }
+
+            filtered.forEach(art => {
+                const isGrade5 = String(art.grade) === '5';
+                const gradeBadge = isGrade5 
+                    ? '<span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded font-bold">5★ Grado 5</span>'
+                    : '<span class="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/40 px-2 py-0.5 rounded font-bold">4★ Grado 4</span>';
+
+                const card = document.createElement('div');
+                card.className = "bg-brand-surface border border-purple-500/30 rounded-xl p-4 hover:border-cyan-400/50 transition text-xs shadow-md space-y-2 relative overflow-hidden";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-2 border-b border-purple-500/20 pb-2">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-lg bg-brand-card border border-purple-500/30 flex items-center justify-center text-cyan-400 text-sm">
+                                <i class="${art.icon || 'fa-solid fa-gem'}"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-100 text-sm">${art.name}</h4>
+                                <span class="text-[10px] text-cyan-400 font-semibold uppercase">${art.role}</span>
+                            </div>
+                        </div>
+                        <div>${gradeBadge}</div>
+                    </div>
+
+                    <div class="space-y-1.5 pt-1">
+                        ${art.effect2P && art.effect2P !== '-' ? `
+                            <div class="bg-brand-card/60 p-2 rounded-lg border border-white/5">
+                                <span class="text-[10px] font-bold text-purple-400 uppercase tracking-wider block mb-0.5">Conjunto 2 Piezas</span>
+                                <p class="text-slate-300 text-xs">${art.effect2P}</p>
+                            </div>
+                        ` : ''}
+                        ${art.effect4P && art.effect4P !== '-' ? `
+                            <div class="bg-brand-card/60 p-2 rounded-lg border border-white/5">
+                                <span class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block mb-0.5">Conjunto 4 Piezas</span>
+                                <p class="text-slate-300 text-xs">${art.effect4P}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             renderMonsterlings();
+            renderArtifacts();
         });
     </script>
 </body>
