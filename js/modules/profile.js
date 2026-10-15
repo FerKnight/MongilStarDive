@@ -1,31 +1,126 @@
-// Abrir modal de selección de avatares ordenados alfabéticamente
+// LÓGICA DE PERFIL DE JUGADOR Y GUARDADO LOCAL/NUBE
+const PROFILE_STORAGE_KEY = 'mongil_player_profile';
+
+// Estructura por defecto del perfil de usuario
+const defaultProfile = {
+    avatar: 'assets/images/Character_Portrait/portrait_Verna_01.png',
+    name: '',
+    friendCode: '',
+    message: '',
+    lastUpdated: null,
+    syncVersion: 1
+};
+
+// Cargar perfil guardado al iniciar
+function loadProfile() {
+    try {
+        const savedData = localStorage.getItem(PROFILE_STORAGE_KEY);
+        const profile = savedData ? { ...defaultProfile, ...JSON.parse(savedData) } : defaultProfile;
+
+        // Cargar valores en los inputs y elementos visuales
+        const pName = document.getElementById('pName');
+        const pFriendCode = document.getElementById('pFriendCode');
+        const pMessage = document.getElementById('pMessage');
+        const avatarImg = document.getElementById('avatarImg');
+
+        if (pName) pName.value = profile.name || '';
+        if (pFriendCode) pFriendCode.value = profile.friendCode || '';
+        if (pMessage) pMessage.value = profile.message || '';
+        if (avatarImg) avatarImg.src = profile.avatar || defaultProfile.avatar;
+
+    } catch (e) {
+        console.error("Error al cargar el perfil de usuario:", e);
+    }
+}
+
+// Guardar cambios en localStorage
+function saveProfile() {
+    try {
+        const currentProfile = {
+            avatar: document.getElementById('avatarImg')?.src || defaultProfile.avatar,
+            name: document.getElementById('pName')?.value.trim() || '',
+            friendCode: document.getElementById('pFriendCode')?.value.trim() || '',
+            message: document.getElementById('pMessage')?.value.trim() || '',
+            lastUpdated: new Date().toISOString(),
+            syncVersion: 1
+        };
+
+        localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(currentProfile));
+    } catch (e) {
+        console.error("Error al guardar el perfil:", e);
+    }
+}
+
+// Copiar un campo al portapapeles con feedback
+function copyField(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field || !field.value) {
+        showToast('¡El campo está vacío!');
+        return;
+    }
+
+    navigator.clipboard.writeText(field.value).then(() => {
+        showToast('¡Copiado al portapapeles!');
+    }).catch(err => {
+        // Fallback si la Clipboard API falla
+        field.select();
+        document.execCommand('copy');
+        showToast('¡Copiado al portapapeles!');
+    });
+}
+
+// Mostrar notificación Toast dinámica
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+    if (!toast || !toastMsg) return;
+
+    toastMsg.innerText = message;
+    toast.classList.remove('translate-x-full');
+
+    setTimeout(() => {
+        toast.classList.add('translate-x-full');
+    }, 2500);
+}
+
+// Modal de Selección de Avatar
 function openAvatarSelectorModal() {
     const modal = document.getElementById('avatarModal');
     const grid = document.getElementById('avatarGrid');
+    if (!modal || !grid) return;
 
-    if (grid && typeof charactersData !== 'undefined') {
-        // Ordenar los personajes alfabéticamente por nombre
-        const sortedCharacters = [...charactersData].sort((a, b) => a.name.localeCompare(b.name));
+    grid.innerHTML = '';
 
-        grid.innerHTML = sortedCharacters.map(c => {
-            // Utilizar exactamente la misma función de obtención de ruta que en personajes general
-            const imagePath = typeof getCharacterImagePath === 'function' 
-                ? getCharacterImagePath(c) 
-                : `assets/images/Character_Portrait/portrait_${c.imageName || c.name}_00.png`;
+    // Cargar retratos disponibles desde personajes si existen o fallback
+    const characters = typeof charactersData !== 'undefined' ? charactersData : [];
 
-            return `
-                <div onclick="selectAvatarImage('${imagePath}', '${c.imageName || c.name}')" class="aspect-square rounded-xl bg-slate-900 border border-white/10 hover:border-cyan-400 overflow-hidden cursor-pointer transition transform active:scale-95 group relative">
-                    <img src="${imagePath}" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-200" onerror="handleImageError(this, ${JSON.stringify(c).replace(/"/g, '&quot;')})">
-                    <span class="absolute bottom-0 inset-x-0 bg-black/80 text-slate-200 text-[8px] text-center font-semibold truncate py-0.5 px-1">${c.name}</span>
-                </div>
-            `;
-        }).join('');
+    if (characters.length > 0) {
+        characters.forEach(char => {
+            const cleanName = char.nombre.toLowerCase().replace(/\s+/g, '_').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const portraitPath = `assets/images/Character_Portrait/portrait_${char.nombre.replace(/\s+/g, '')}_01.png`;
+
+            const item = document.createElement('div');
+            item.className = "w-16 h-16 rounded-full p-0.5 bg-brand-card border border-purple-500/30 hover:border-cyan-400 cursor-pointer overflow-hidden transition active:scale-95 flex items-center justify-center";
+            item.onclick = () => selectAvatar(portraitPath);
+            item.innerHTML = `<img src="${portraitPath}" alt="${char.nombre}" class="w-full h-full rounded-full object-cover object-top bg-slate-900" onerror="this.onerror=null; this.src='assets/images/Character_Portrait/portrait_Verna_01.png';">`;
+            grid.appendChild(item);
+        });
+    } else {
+        // Avatares por defecto si la base de personajes no ha cargado aún
+        const defaultAvatars = [
+            'assets/images/Character_Portrait/portrait_Verna_01.png'
+        ];
+        defaultAvatars.forEach(path => {
+            const item = document.createElement('div');
+            item.className = "w-16 h-16 rounded-full p-0.5 bg-brand-card border border-purple-500/30 hover:border-cyan-400 cursor-pointer overflow-hidden transition active:scale-95 flex items-center justify-center";
+            item.onclick = () => selectAvatar(path);
+            item.innerHTML = `<img src="${path}" alt="Avatar" class="w-full h-full rounded-full object-cover object-top bg-slate-900">`;
+            grid.appendChild(item);
+        });
     }
 
-    if (modal) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-    }
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
 }
 
 function closeAvatarSelectorModal() {
@@ -36,55 +131,53 @@ function closeAvatarSelectorModal() {
     }
 }
 
-function selectAvatarImage(imagePath, characterName) {
-    const imgEl = document.getElementById('avatarImg');
-    if (imgEl) {
-        imgEl.src = imagePath;
-        imgEl.onerror = function() { 
-            if (typeof handleImageError === 'function') {
-                handleImageError(this, { name: characterName, imageName: characterName });
-            } else {
-                this.src = 'assets/images/Character_Portrait/portrait_Verna_01.png';
-            }
-        };
-    }
-    closeAvatarSelectorModal();
-    saveProfile();
-}
-
-// Guardado local automático instantáneo al escribir o elegir avatar
-function saveProfile() {
+function selectAvatar(path) {
     const avatarImg = document.getElementById('avatarImg');
-    const profile = {
-        name: document.getElementById('pName') ? document.getElementById('pName').value : '',
-        friendCode: document.getElementById('pFriendCode') ? document.getElementById('pFriendCode').value : '',
-        message: document.getElementById('pMessage') ? document.getElementById('pMessage').value : '',
-        avatar: avatarImg ? avatarImg.src : 'assets/images/Character_Portrait/portrait_Verna_01.png'
-    };
-    
-    localStorage.setItem('mongil_player_profile', JSON.stringify(profile));
+    if (avatarImg) {
+        avatarImg.src = path;
+    }
+    saveProfile();
+    closeAvatarSelectorModal();
+    showToast('Avatar actualizado');
 }
 
-// Cargar perfil guardado localmente
-function loadProfile() {
-    const saved = localStorage.getItem('mongil_player_profile');
-    if (saved) {
-        const profile = JSON.parse(saved);
-        if (profile.name && document.getElementById('pName')) document.getElementById('pName').value = profile.name;
-        if (profile.friendCode && document.getElementById('pFriendCode')) document.getElementById('pFriendCode').value = profile.friendCode;
-        if (profile.message && document.getElementById('pMessage')) document.getElementById('pMessage').value = profile.message;
-        if (profile.avatar) {
-            const avatarImg = document.getElementById('avatarImg');
-            if (avatarImg) avatarImg.src = profile.avatar;
+// ESTRUCTURA Y HOOKS PREPARADOS PARA FUTURA SINCRONIZACIÓN ENTRE DISPOSITIVOS
+const SyncManager = {
+    // Exportar todo el estado del perfil y avance a un objeto JSON
+    exportUserData: function() {
+        const profile = JSON.parse(localStorage.getItem(PROFILE_STORAGE_KEY) || '{}');
+        const ownedChars = JSON.parse(localStorage.getItem('mongil_owned_characters') || '[]');
+        
+        return {
+            profile: profile,
+            ownedCharacters: ownedChars,
+            exportedAt: new Date().toISOString(),
+            appVersion: '1.4'
+        };
+    },
+
+    // Importar datos recibidos de otro dispositivo / nube
+    importUserData: function(data) {
+        if (!data || !data.profile) {
+            console.error("Estructura de datos inválida para importar.");
+            return false;
         }
-    }
-}
 
-function copyField(elementId) {
-    const input = document.getElementById(elementId);
-    if (input) {
-        input.select();
-        navigator.clipboard.writeText(input.value);
-        if (typeof showToast === 'function') showToast('¡Copiado al portapapeles!');
+        if (data.profile) {
+            localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(data.profile));
+        }
+        if (data.ownedCharacters) {
+            localStorage.setItem('mongil_owned_characters', JSON.stringify(data.ownedCharacters));
+        }
+
+        loadProfile();
+        if (typeof renderCharacters === 'function') renderCharacters();
+        showToast('¡Datos sincronizados con éxito!');
+        return true;
     }
-}
+};
+
+// Inicialización
+document.addEventListener('DOMContentLoaded', () => {
+    loadProfile();
+});
