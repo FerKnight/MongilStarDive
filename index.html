@@ -49,6 +49,23 @@
         </div>
     </section>
 
+    <!-- MOTOR DE REGISTRO DINÁMICO -->
+    <script>
+        const monsterlingsDatabase = [];
+
+        window.registrarRegion = function(nombreRegion, monstruitosArray) {
+            monstruitosArray.forEach(m => {
+                monsterlingsDatabase.push({
+                    region: nombreRegion,
+                    nro: m.nro,
+                    name: m.name,
+                    effect: m.effect || '-',
+                    chain: m.chain || '-'
+                });
+            });
+        };
+    </script>
+
     <!-- Carga de archivos divididos por región -->
     <script src="js/data/elendor.js"></script>
     <script src="js/data/varhine.js"></script>
@@ -58,19 +75,8 @@
     <script src="js/data/muwon.js"></script>
     <script src="js/data/sector3.js"></script>
 
+    <!-- LÓGICA DE INTERFAZ Y FILTROS -->
     <script>
-        // Unificación automática de todas las regiones
-        const monsterlingsData = [
-            ...elendorData,
-            ...varhineData,
-            ...sereniaData,
-            ...surahData,
-            ...namryungData,
-            ...muwonData,
-            ...sector3Data
-        ];
-
-        // Arreglo para almacenar las regiones seleccionadas combinables
         let selectedRegions = ['All'];
 
         function toggleRegion(regionName) {
@@ -113,8 +119,8 @@
             container.innerHTML = '';
             const search = document.getElementById('searchInput').value;
 
-            // Filtrado combinable y orden numérico ascendente estricto
-            const filtered = monsterlingsData.filter(m => {
+            // Filtrado combinable y orden numérico ascendente estricto automático
+            const filtered = monsterlingsDatabase.filter(m => {
                 const matchRegion = selectedRegions.includes('All') || selectedRegions.includes(m.region);
                 const matchSearch = m.name.toLowerCase().includes(search.toLowerCase()) || m.nro.includes(search);
                 return matchRegion && matchSearch;
@@ -144,7 +150,7 @@
             renderList();
         });
 
-        // Inicializar listado ordenado por número ascendente
+        // Inicializar listado automáticamente al cargar la página
         renderList();
     </script>
 </body>
