@@ -1,4 +1,24 @@
-const muwonData = [
-    { "region": "Muwon", "nro": "145", "name": "cria de espiritu", "effect": "-", "chain": "-" },
-    // ... registros 145 al 166 de Muwon
-];
+window.registrarRegion('Muwon', [
+    { "nro": "145", "name": "cria de espiritu", "effect": "-", "chain": "-" },
+    { "nro": "146", "name": "espiritu ardilloso", "effect": "-", "chain": "-" },
+    { "nro": "147", "name": "espiritu ventoso", "effect": "-", "chain": "-" },
+    { "nro": "148", "name": "espiritu rencoroso", "effect": "-", "chain": "-" },
+    { "nro": "149", "name": "espiritu resentido", "effect": "-", "chain": "-" },
+    { "nro": "150", "name": "tigre de nieve fantasmal", "effect": "-", "chain": "-" },
+    { "nro": "151", "name": "tigre de piedra fantasmal", "effect": "-", "chain": "-" },
+    { "nro": "152", "name": "lagarto arquero", "effect": "-", "chain": "-" },
+    { "nro": "153", "name": "lagarto arqueo soleado", "effect": "-", "chain": "-" },
+    { "nro": "154", "name": "lagarto guerrero", "effect": "-", "chain": "-" },
+    { "nro": "155", "name": "lagarto guerrero jefe", "effect": "-", "chain": "-" },
+    { "nro": "156", "name": "croco", "effect": "-", "chain": "-" },
+    { "nro": "157", "name": "dragon croco", "effect": "-", "chain": "-" },
+    { "nro": "158", "name": "espadachin coneji", "effect": "-", "chain": "-" },
+    { "nro": "159", "name": "sapo blindado", "effect": "-", "chain": "-" },
+    { "nro": "160", "name": "guerrero quelonio", "effect": "-", "chain": "-" },
+    { "nro": "161", "name": "tortarbol", "effect": "-", "chain": "-" },
+    { "nro": "162", "name": "sunek", "effect": "-", "chain": "-" },
+    { "nro": "163", "name": "suhwa", "effect": "-", "chain": "-" },
+    { "nro": "164", "name": "sombra roja", "effect": "-", "chain": "-" },
+    { "nro": "165", "name": "sombra azul", "effect": "-", "chain": "-" },
+    { "nro": "166", "name": "nagi", "effect": "-", "chain": "-" }
+]);
