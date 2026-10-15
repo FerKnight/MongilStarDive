@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal - Sección Mapa</title>
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <title>Sección de Monstruitos</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .leaflet-popup-content-wrapper { background: #1e293b; color: #f8fafc; border: 1px solid #334155; border-radius: 0.75rem; }
-        .leaflet-popup-tip { background: #1e293b; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
@@ -19,60 +15,40 @@
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
 
-    <!-- SECCIÓN DEL MAPA -->
-    <section id="seccion-mapa" class="w-full max-w-7xl mx-auto px-4 py-8">
+    <!-- SECCIÓN DE MONSTRUITOS -->
+    <section id="seccion-monstruitos" class="w-full max-w-4xl mx-auto px-4 py-8">
         <div class="mb-6">
-            <h2 class="text-2xl font-black text-amber-500 uppercase">Mapa de Regiones y Monstruitos</h2>
-            <p class="text-sm text-slate-400">Selecciona varias regiones de forma combinable o busca un elemento.</p>
+            <h2 class="text-2xl font-black text-amber-500 uppercase tracking-wide">Listado de Monstruitos</h2>
+            <p class="text-sm text-slate-400">Selecciona una o varias regiones de forma combinable o busca por nombre o número.</p>
         </div>
 
-        <!-- Estructura del Mapa y Panel Integrado -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col lg:flex-row h-[700px]">
+        <!-- Contenedor Principal -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col h-[700px]">
             
-            <!-- Panel Lateral (Buscador y Lista) -->
-            <div class="w-full lg:w-[380px] bg-slate-900/90 border-r border-slate-800 flex flex-col h-1/2 lg:h-full z-10">
-                <!-- Buscador -->
-                <div class="p-4 border-b border-slate-800">
-                    <input type="text" id="searchInput" placeholder="Buscar por nombre o #nro..." class="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500 transition">
-                </div>
-
-                <!-- Filtros de Región Combinables -->
-                <div class="px-4 py-2.5 bg-slate-950/50 border-b border-slate-800 flex gap-2 overflow-x-auto whitespace-nowrap text-xs" id="regionFilters">
-                    <button onclick="toggleRegion('All')" data-region="All" class="region-btn px-3 py-1.5 bg-amber-600 font-bold rounded-lg text-white shrink-0 transition">Todas</button>
-                    <button onclick="toggleRegion('Elendor')" data-region="Elendor" class="region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Elendor</button>
-                    <button onclick="toggleRegion('Varhine')" data-region="Varhine" class="region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Varhine</button>
-                    <button onclick="toggleRegion('Serenia')" data-region="Serenia" class="region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Serenia</button>
-                    <button onclick="toggleRegion('Surah')" data-region="Surah" class="region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Surah</button>
-                    <button onclick="toggleRegion('Namryung')" data-region="Namryung" class="region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Namryung</button>
-                    <button onclick="toggleRegion('Muwon')" data-region="Muwon" class="region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Muwon</button>
-                    <button onclick="toggleRegion('Sector 3')" data-region="Sector 3" class="region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Sector 3</button>
-                </div>
-
-                <!-- Lista Dinámica -->
-                <div id="monsterList" class="flex-1 overflow-y-auto p-3 space-y-2.5">
-                    <!-- Se llena automáticamente con JS -->
-                </div>
+            <!-- Buscador -->
+            <div class="p-4 border-b border-slate-800 bg-slate-900/90">
+                <input type="text" id="searchInput" placeholder="Buscar por nombre o #nro..." class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500 transition">
             </div>
 
-            <!-- Lienzo del Mapa Interactivo -->
-            <div class="flex-1 relative h-1/2 lg:h-full bg-slate-950">
-                <div id="map" style="height: 100%; width: 100%;"></div>
-                
-                <!-- Tarjeta Informativa Flotante -->
-                <div id="mapInfoCard" class="absolute top-4 right-4 bg-slate-900/95 backdrop-blur border border-slate-800 p-4 rounded-xl shadow-xl z-[1000] max-w-xs hidden">
-                    <div class="flex justify-between items-start">
-                        <h3 id="infoRegionTitle" class="font-bold text-amber-400 text-base">Región</h3>
-                        <button onclick="closeInfoCard()" class="text-slate-400 hover:text-white">&times;</button>
-                    </div>
-                    <p id="infoRegionDesc" class="text-xs text-slate-300 mt-1.5">Descripción de la región...</p>
-                </div>
+            <!-- Filtros de Región Combinables -->
+            <div class="px-4 py-3 bg-slate-950/50 border-b border-slate-800 flex gap-2 overflow-x-auto whitespace-nowrap text-xs" id="regionFilters">
+                <button onclick="toggleRegion('All')" data-region="All" class="region-btn px-3.5 py-2 bg-amber-600 font-bold rounded-lg text-white shrink-0 transition shadow-md shadow-amber-900/30">Todas</button>
+                <button onclick="toggleRegion('Elendor')" data-region="Elendor" class="region-btn px-3.5 py-2 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Elendor</button>
+                <button onclick="toggleRegion('Varhine')" data-region="Varhine" class="region-btn px-3.5 py-2 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Varhine</button>
+                <button onclick="toggleRegion('Serenia')" data-region="Serenia" class="region-btn px-3.5 py-2 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Serenia</button>
+                <button onclick="toggleRegion('Surah')" data-region="Surah" class="region-btn px-3.5 py-2 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Surah</button>
+                <button onclick="toggleRegion('Namryung')" data-region="Namryung" class="region-btn px-3.5 py-2 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Namryung</button>
+                <button onclick="toggleRegion('Muwon')" data-region="Muwon" class="region-btn px-3.5 py-2 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Muwon</button>
+                <button onclick="toggleRegion('Sector 3')" data-region="Sector 3" class="region-btn px-3.5 py-2 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition">Sector 3</button>
+            </div>
+
+            <!-- Lista Dinámica de Monstruitos -->
+            <div id="monsterList" class="flex-1 overflow-y-auto p-4 space-y-3">
+                <!-- Se llena automáticamente con JS -->
             </div>
         </div>
     </section>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    
     <!-- Carga de archivos divididos por región -->
     <script src="js/data/elendor.js"></script>
     <script src="js/data/varhine.js"></script>
@@ -83,6 +59,7 @@
     <script src="js/data/sector3.js"></script>
 
     <script>
+        // Unificación automática de todas las regiones
         const monsterlingsData = [
             ...elendorData,
             ...varhineData,
@@ -93,79 +70,17 @@
             ...sector3Data
         ];
 
-        const regionCoordinates = {
-            "Elendor": { x: 300, y: 300, color: "#3b82f6", desc: "Región inicial norteña de bosques y hongos." },
-            "Varhine": { x: 850, y: 250, color: "#ef4444", desc: "Territorio montañoso y agreste." },
-            "Serenia": { x: 550, y: 650, color: "#10b981", desc: "Valle místico protegido por guardianes." },
-            "Surah": { x: 250, y: 950, color: "#f59e0b", desc: "Zonas pantanosas y ancestrales." },
-            "Namryung": { x: 900, y: 850, color: "#8b5cf6", desc: "Tierras orientales y vientos elementales." },
-            "Muwon": { x: 550, y: 1150, color: "#ec4899", desc: "Dominio sagrado de espíritus errantes." },
-            "Sector 3": { x: 1050, y: 550, color: "#6366f1", desc: "Área tecnológica industrializada." }
-        };
-
-        const map = L.map('map', {
-            crs: L.CRS.Simple,
-            minZoom: -1,
-            maxZoom: 3,
-            zoomControl: false
-        });
-
-        L.control.zoom({ position: 'bottomright' }).addTo(map);
-
-        const w = 1400, h = 1400;
-        const southWest = map.unproject([0, h], map.getMaxZoom());
-        const northEast = map.unproject([w, 0], map.getMaxZoom());
-        map.setMaxBounds(new L.LatLngBounds(southWest, northEast));
-        map.setView([ -h/2, w/2 ], 0);
-
-        function initMapSection() {
-            for (const [regionName, data] of Object.entries(regionCoordinates)) {
-                const latLng = map.unproject([data.x, data.y], map.getMaxZoom());
-                const count = monsterlingsData.filter(m => m.region === regionName).length;
-
-                const customIcon = L.divIcon({
-                    className: 'custom-region-marker',
-                    html: `<div style="background-color: ${data.color};" class="px-3 py-1.5 rounded-lg shadow-md border border-slate-800 text-white font-bold text-[11px] text-center cursor-pointer hover:scale-105 transition-transform flex flex-col items-center">
-                        <span>${regionName}</span>
-                        <span class="text-[9px] font-mono opacity-80">${count} un.</span>
-                    </div>`,
-                    iconSize: [120, 50],
-                    iconAnchor: [60, 25]
-                });
-
-                const marker = L.marker(latLng, { icon: customIcon }).addTo(map);
-                marker.on('click', () => {
-                    // Al hacer clic en el mapa, activa esa región combinándola
-                    toggleRegionFromMap(regionName);
-                    showRegionInfo(regionName, data);
-                });
-            }
-        }
-
-        function showRegionInfo(regionName, data) {
-            const card = document.getElementById('mapInfoCard');
-            document.getElementById('infoRegionTitle').innerText = regionName;
-            document.getElementById('infoRegionDesc').innerText = data.desc;
-            card.classList.remove('hidden');
-        }
-
-        function closeInfoCard() {
-            document.getElementById('mapInfoCard').classList.add('hidden');
-        }
-
-        // Arreglo para almacenar las regiones seleccionadas de forma múltiple/combinable
+        // Arreglo para almacenar las regiones seleccionadas combinables
         let selectedRegions = ['All'];
 
         function toggleRegion(regionName) {
             if (regionName === 'All') {
                 selectedRegions = ['All'];
             } else {
-                // Si 'All' estaba seleccionado, lo quitamos
                 if (selectedRegions.includes('All')) {
                     selectedRegions = [];
                 }
 
-                // Alternar la región seleccionada (agregar o quitar)
                 const index = selectedRegions.indexOf(regionName);
                 if (index > -1) {
                     selectedRegions.splice(index, 1);
@@ -173,25 +88,11 @@
                     selectedRegions.push(regionName);
                 }
 
-                // Si se desmarcan todas, vuelve a 'All' por defecto
                 if (selectedRegions.length === 0) {
                     selectedRegions = ['All'];
                 }
             }
 
-            updateFilterButtonsUI();
-            renderList();
-            closeInfoCard();
-        }
-
-        function toggleRegionFromMap(regionName) {
-            if (selectedRegions.includes('All')) {
-                selectedRegions = [regionName];
-            } else {
-                if (!selectedRegions.includes(regionName)) {
-                    selectedRegions.push(regionName);
-                }
-            }
             updateFilterButtonsUI();
             renderList();
         }
@@ -200,9 +101,9 @@
             document.querySelectorAll('#regionFilters button').forEach(btn => {
                 const reg = btn.getAttribute('data-region');
                 if (selectedRegions.includes(reg)) {
-                    btn.className = "region-btn px-3 py-1.5 bg-amber-600 font-bold rounded-lg text-white shrink-0 transition shadow-lg shadow-amber-900/30";
+                    btn.className = "region-btn px-3.5 py-2 bg-amber-600 font-bold rounded-lg text-white shrink-0 transition shadow-md shadow-amber-900/30";
                 } else {
-                    btn.className = "region-btn px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition";
+                    btn.className = "region-btn px-3.5 py-2 bg-slate-800 text-slate-300 rounded-lg shrink-0 transition hover:bg-slate-700";
                 }
             });
         }
@@ -220,20 +121,20 @@
             }).sort((a, b) => parseInt(a.nro) - parseInt(b.nro));
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="text-center text-slate-500 py-8 text-xs">No se encontraron resultados</div>`;
+                container.innerHTML = `<div class="text-center text-slate-500 py-12 text-sm">No se encontraron resultados</div>`;
                 return;
             }
 
             filtered.forEach(m => {
                 const card = document.createElement('div');
-                card.className = "bg-slate-950 border border-slate-800/80 rounded-lg p-3 hover:border-amber-500/50 transition cursor-pointer text-xs";
+                card.className = "bg-slate-950 border border-slate-800/80 rounded-xl p-4 hover:border-amber-500/50 transition cursor-pointer text-xs shadow-sm";
                 card.innerHTML = `
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="font-mono font-bold text-amber-500">#${m.nro}</span>
-                        <span class="text-[9px] uppercase px-2 py-0.5 bg-slate-900 text-slate-400 rounded border border-slate-800">${m.region}</span>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <span class="font-mono font-bold text-amber-500 text-sm">#${m.nro}</span>
+                        <span class="text-[10px] uppercase px-2.5 py-0.5 bg-slate-900 text-slate-300 rounded-md border border-slate-800 font-semibold">${m.region}</span>
                     </div>
-                    <h4 class="font-bold text-slate-100 capitalize mb-1">${m.name}</h4>
-                    <p class="text-slate-400 truncate"><strong class="text-slate-300">Efecto:</strong> ${m.effect}</p>
+                    <h4 class="font-bold text-slate-100 capitalize text-sm mb-1">${m.name}</h4>
+                    <p class="text-slate-400"><strong class="text-slate-300">Efecto:</strong> ${m.effect}</p>
                 `;
                 container.appendChild(card);
             });
@@ -243,7 +144,7 @@
             renderList();
         });
 
-        initMapSection();
+        // Inicializar listado ordenado por número ascendente
         renderList();
     </script>
 </body>
