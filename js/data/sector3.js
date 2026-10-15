@@ -1,4 +1,29 @@
-const sector3Data = [
-    { "region": "Sector 3", "nro": "167", "name": "ochob", "effect": "-", "chain": "-" },
-    // ... registros 167 al 193 de Sector 3
-];
+window.registrarRegion('Sector 3', [
+    { "nro": "167", "name": "ochob", "effect": "-", "chain": "-" },
+    { "nro": "168", "name": "rojob", "effect": "-", "chain": "-" },
+    { "nro": "169", "name": "hak-yu", "effect": "-", "chain": "-" },
+    { "nro": "170", "name": "capq", "effect": "-", "chain": "-" },
+    { "nro": "171", "name": "promo", "effect": "-", "chain": "-" },
+    { "nro": "172", "name": "bizpomo", "effect": "-", "chain": "-" },
+    { "nro": "173", "name": "piiipo", "effect": "-", "chain": "-" },
+    { "nro": "174", "name": "coloso", "effect": "-", "chain": "-" },
+    { "nro": "175", "name": "coloso ajustado", "effect": "-", "chain": "-" },
+    { "nro": "176", "name": "horda de chatarra", "effect": "-", "chain": "-" },
+    { "nro": "177", "name": "horda limpia", "effect": "-", "chain": "-" },
+    { "nro": "178", "name": "basurator", "effect": "-", "chain": "-" },
+    { "nro": "179", "name": "silbinator", "effect": "-", "chain": "-" },
+    { "nro": "180", "name": "agarrin", "effect": "-", "chain": "-" },
+    { "nro": "181", "name": "felicin", "effect": "-", "chain": "-" },
+    { "nro": "182", "name": "machacador", "effect": "-", "chain": "-" },
+    { "nro": "183", "name": "titus", "effect": "-", "chain": "-" },
+    { "nro": "184", "name": "mechrodon", "effect": "-", "chain": "-" },
+    { "nro": "185", "name": "blanquin", "effect": "-", "chain": "-" },
+    { "nro": "186", "name": "temerario", "effect": "-", "chain": "-" },
+    { "nro": "187", "name": "temible", "effect": "-", "chain": "-" },
+    { "nro": "188", "name": "lodo", "effect": "-", "chain": "-" },
+    { "nro": "189", "name": "ragnadon", "effect": "-", "chain": "-" },
+    { "nro": "190", "name": "raptor fidelis", "effect": "-", "chain": "-" },
+    { "nro": "191", "name": "raptor altus", "effect": "-", "chain": "-" },
+    { "nro": "192", "name": "el mas alla", "effect": "-", "chain": "-" },
+    { "nro": "193", "name": "olvido", "effect": "-", "chain": "-" }
+]);
