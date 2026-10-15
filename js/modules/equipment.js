@@ -1,4 +1,4 @@
-// LÓGICA DE EQUIPAMIENTOS
+// LÓGICA DE EQUIPAMIENTOS CON ICONOS DINÁMICOS
 function renderEquipment() {
     const container = document.getElementById('equipGrid');
     if (!container) return;
