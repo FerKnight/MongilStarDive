@@ -471,6 +471,7 @@
     <script src="js/modules/app-main.js"></script>
 
     <script>
+        // LÓGICA MONSTERLINGS CON ICONOS
         let selectedRegions = ['All'];
 
         function toggleRegion(regionName) {
@@ -533,21 +534,99 @@
             }
 
             filtered.forEach(m => {
+                const paddedNro = String(m.nro).padStart(3, '0');
+                const regionClean = m.region.toLowerCase().replace(/\s+/g, '');
+                const iconPath = `assets/images/Monsterlings/${regionClean}_${paddedNro}.png`;
+
                 const card = document.createElement('div');
-                card.className = "bg-brand-surface border border-purple-500/30 rounded-xl p-3 hover:border-cyan-400/50 transition text-xs shadow-md";
+                card.className = "bg-brand-surface border border-purple-500/30 rounded-xl p-3 hover:border-cyan-400/50 transition text-xs shadow-md flex items-start gap-3";
                 card.innerHTML = `
-                    <div class="flex justify-between items-center mb-1.5">
-                        <span class="font-mono font-bold text-cyan-400 text-sm">#${m.nro}</span>
-                        <span class="text-[10px] uppercase px-2 py-0.5 bg-brand-card text-slate-300 rounded border border-purple-500/20 font-semibold">${m.region}</span>
+                    <div class="w-12 h-12 rounded-lg bg-brand-card border border-purple-500/30 flex items-center justify-center overflow-hidden shrink-0">
+                        <img src="${iconPath}" alt="${m.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fa-solid fa-paw text-purple-400 text-base\'></i>'">
                     </div>
-                    <h4 class="font-bold text-slate-100 capitalize text-sm mb-1">${m.name}</h4>
-                    <p class="text-slate-300 mb-1"><strong class="text-slate-400">Efecto:</strong> ${m.effect}</p>
-                    <p class="text-slate-400"><strong class="text-slate-400">Cadena:</strong> ${m.chain}</p>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-mono font-bold text-cyan-400 text-sm">#${paddedNro}</span>
+                            <span class="text-[10px] uppercase px-2 py-0.5 bg-brand-card text-slate-300 rounded border border-purple-500/20 font-semibold">${m.region}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-100 capitalize text-sm mb-1">${m.name}</h4>
+                        <p class="text-slate-300 mb-1"><strong class="text-slate-400">Efecto:</strong> ${m.effect}</p>
+                        <p class="text-slate-400"><strong class="text-slate-400">Cadena:</strong> ${m.chain}</p>
+                    </div>
                 `;
                 container.appendChild(card);
             });
         }
 
+        // LÓGICA EQUIPAMIENTOS CON ICONOS
+        function renderEquipment() {
+            const container = document.getElementById('equipGrid');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const search = document.getElementById('equipSearch')?.value.toLowerCase() || '';
+            const piecesFilter = document.getElementById('equipPiecesFilter')?.value || 'all';
+            const sortOrder = document.getElementById('equipSort')?.value || 'az';
+
+            const sourceData = typeof equipmentData !== 'undefined' ? equipmentData : [];
+
+            const filtered = sourceData.filter(item => {
+                const matchSearch = item.conjuntos.toLowerCase().includes(search);
+                const has2 = item['conjunto de 2'] && item['conjunto de 2'] !== '-';
+                const has4 = item['conjunto de 4'] && item['conjunto de 4'] !== '-';
+
+                let matchPieces = true;
+                if (piecesFilter === '2') matchPieces = has2;
+                if (piecesFilter === '4') matchPieces = has4;
+
+                return matchSearch && matchPieces;
+            }).sort((a, b) => {
+                if (sortOrder === 'az') return a.conjuntos.localeCompare(b.conjuntos);
+                if (sortOrder === 'za') return b.conjuntos.localeCompare(a.conjuntos);
+                return 0;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center text-slate-500 py-12 text-xs bg-brand-surface border border-purple-500/20 rounded-xl">No se encontraron equipamientos.</div>`;
+                return;
+            }
+
+            filtered.forEach(eq => {
+                const cleanName = eq.conjuntos.toLowerCase().replace(/\s+/g, '_').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                const iconPath = `assets/images/Equipment/equip_${cleanName}.png`;
+
+                const card = document.createElement('div');
+                card.className = "bg-brand-surface border border-purple-500/30 rounded-xl p-4 hover:border-cyan-400/50 transition text-xs shadow-md space-y-2";
+                card.innerHTML = `
+                    <div class="flex items-center gap-3 border-b border-purple-500/20 pb-2">
+                        <div class="w-10 h-10 rounded-lg bg-brand-card border border-purple-500/30 flex items-center justify-center overflow-hidden shrink-0">
+                            <img src="${iconPath}" alt="${eq.conjuntos}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fa-solid fa-shield-halved text-cyan-400 text-base\'></i>'">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-100 uppercase tracking-wide text-sm">${eq.conjuntos}</h4>
+                            <span class="text-[10px] text-cyan-400">Conjunto de Equipo</span>
+                        </div>
+                    </div>
+                    <div class="space-y-1.5 pt-1">
+                        ${eq['conjunto de 2'] && eq['conjunto de 2'] !== '-' ? `
+                            <div class="bg-brand-card/60 p-2 rounded-lg border border-white/5">
+                                <span class="text-[10px] font-bold text-purple-400 uppercase block mb-0.5">2 Piezas</span>
+                                <p class="text-slate-300">${eq['conjunto de 2']}</p>
+                            </div>
+                        ` : ''}
+                        ${eq['conjunto de 4'] && eq['conjunto de 4'] !== '-' ? `
+                            <div class="bg-brand-card/60 p-2 rounded-lg border border-white/5">
+                                <span class="text-[10px] font-bold text-cyan-400 uppercase block mb-0.5">4 Piezas</span>
+                                <p class="text-slate-300">${eq['conjunto de 4']}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // LÓGICA ARTEFACTOS CON BÚSQUEDA ROBUSTA DE ICONOS (MAYÚSCULAS/MINÚSCULAS)
         function renderArtifacts() {
             const container = document.getElementById('artifactGrid');
             const countLabel = document.getElementById('artifactCount');
@@ -587,8 +666,11 @@
                     ? '<span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded font-bold">5★ Grado 5</span>'
                     : '<span class="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/40 px-2 py-0.5 rounded font-bold">4★ Grado 4</span>';
 
-                const iconFileName = art.originalName || art.name;
-                const iconPath = `assets/images/Icon_Artifact/${iconFileName}.png`;
+                const rawName = art.originalName || art.name;
+                const capitalizedName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+                const lowercaseName = rawName.toLowerCase();
+                const iconPath = `assets/images/Icon_Artifact/${capitalizedName}.png`;
+                const fallbackPath = `assets/images/Icon_Artifact/${lowercaseName}.png`;
 
                 const card = document.createElement('div');
                 card.className = "bg-brand-surface border border-purple-500/30 rounded-xl p-4 hover:border-cyan-400/50 transition text-xs shadow-md space-y-2 relative overflow-hidden";
@@ -596,7 +678,7 @@
                     <div class="flex justify-between items-start gap-2 border-b border-purple-500/20 pb-2">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-lg bg-brand-card border border-purple-500/30 flex items-center justify-center overflow-hidden shrink-0">
-                                <img src="${iconPath}" alt="${art.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fa-solid fa-gem text-cyan-400 text-base\'></i>'">
+                                <img src="${iconPath}" alt="${art.name}" class="w-full h-full object-cover" onerror="this.onerror=function(){this.src='${fallbackPath}'; this.onerror=function(){this.parentElement.innerHTML='<i class=\'fa-solid fa-gem text-cyan-400 text-base\'></i>';}};">
                             </div>
                             <div>
                                 <h4 class="font-bold text-slate-100 text-sm">${art.name}</h4>
@@ -627,6 +709,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             renderMonsterlings();
+            renderEquipment();
             renderArtifacts();
         });
     </script>
